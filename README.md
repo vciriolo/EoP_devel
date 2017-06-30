@@ -2,7 +2,7 @@ ECALELF
 =======
 
 Code for electron calibration in CMS
-Testing
+
 
 ======
 Preliminary instructions: GitHub account
@@ -14,7 +14,7 @@ Be sure to have a GitHub account and have followed the instructions here:
 Download instructions.
 
 ```
-wget --no-check-certificate https://raw.githubusercontent.com/ECALELFS/ECALELF/HEAD/setup_git.sh
+wget -q --no-check-certificate -O setup_git.sh https://gitlab.cern.ch/shervin/ECALELF/raw/master/setup_git.sh
 chmod +x setup_git.sh
 CMSSW_VERSION=CMSSW_9_2_0_patch5
 ./setup_git.sh $CMSSW_VERSION
@@ -24,24 +24,22 @@ cd Calibration/ZFitter && make && cd -
 ```
 
 If you are using a tcsh shell:
-`cd Calibration && source initCmsEnvCRAB2.csh`
+`cd Calibration && source initCmsEnvCRAB.csh`
 
 If you are using a bash shell:
-`cd Calibration && source initCmsEnvCRAB2.sh`
-
-(CRAB3 is not currently supported)
+`cd Calibration && source initCmsEnvCRAB.sh`
 
 Every time you enter in a new shell you have to do:
-`source initCmsEnvCRAB2.csh`
+`source initCmsEnvCRAB.csh`
 or
-`source initCmsEnvCRAB2.sh`
+`source initCmsEnvCRAB.sh`
 
 
 ======
 Code documentation:
 Code documentation is updated using doxygen system.
 You can find the documentation related to the master branch here:
-http://ecalelfs.github.io/ECALELF/index.html
+https://project-cms-ecal-calibration.web.cern.ch/project-cms-ecal-calibration/ECALELF_doc/
 
 It can be generated locally following the instructions below:
 Once downloaded the code, in Calibration/ you can run the command
@@ -54,12 +52,7 @@ to have the code documentation produced by doxygen opening the `doc/doxygen/full
 ======
 Instructions for developments:
 fork the repository in GIT to your own area (if you didn't it already)
-`git@github.com:ECALELFS/ECALELF.git`
-
-Add your git repository to the list of remotes to be used like:
-`git remote add -f myfork git@github.com:hengne/ECALELF.git`
-`git checkout devel-42X_44X_53X`
-
+`https://shervin@gitlab.cern.ch/shervin/ECALELF.git`
 
 ======
 If you want to develop the code:

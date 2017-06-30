@@ -3,7 +3,8 @@
 \author Shervin Nourbakhsh
 \tableofcontents
 
-\section DOC Documentation
+==============================
+\section DOC Code Documentation
 
 The documentation of this packaged is provided in these pages extracted with doxygen from the source code and several txt files contained in the package itself.
 
@@ -16,15 +17,43 @@ If you have doxygen, you can run the command
 from the Calibration/ directory and you can navigate instructions and code locally with
 \verbatim firefox doc/doxygen/fulldoc/html/index.html \endverbatim
 
+
+
+==============================
 \section START Getting Started
 \subpage preReq
 
 \subpage INTRODUCTION
 
-<A HREF="https://github.com/ECALELFS/ECALELF/blob/HEAD/README.md"> Download instructions </A>
+==============================
+\section DOWNLOAD  Download instructions
 
+\verbatim
+wget -q --no-check-certificate -O setup_git.sh https://gitlab.cern.ch/shervin/ECALELF/raw/master/setup_git.sh
+chmod +x setup_git.sh
+CMSSW_VERSION=CMSSW_9_2_0_patch5
+./setup_git.sh $CMSSW_VERSION
+cd $CMSSW_VERSION/src/
+cmsenv
+cd Calibration/ZFitter && make && cd -
+\endverbatim
+
+If you are using a tcsh shell:
+\verbatim cd Calibration && source initCmsEnvCRAB.csh \endverbatim
+
+If you are using a bash shell:
+\verbatim cd Calibration && source initCmsEnvCRAB.sh \endverbatim
+
+Every time you enter in a new shell you have to do:
+\verbatim source initCmsEnvCRAB.csh \endverbatim
+or
+\verbatim source initCmsEnvCRAB.sh \endverbatim
+
+==============================
+\section DEV How to develop in ECALELF
 \subpage NAMECONVENTIONS_
 
+==============================
 \subpage WORKNTUPLES
 
 \section Energy scales and smearings

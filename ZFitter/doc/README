@@ -68,7 +68,7 @@ The inputs to the ZFitter program are given in the form of:
    - More info here: \subpage ZFitterConfigFiles
  - command line options
 
-First, familiarize with the ntuple content: \subpage NtupleStructure
+First, familiarize with the ntuple content: \subpage NTUPLESTRUCTURE
 
 \subpage PUFILES_
 

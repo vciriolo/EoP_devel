@@ -4,5 +4,6 @@
   - get a grid certificate:
 <A HREF="https://twiki.cern.ch/twiki/bin/view/CMSPublic/SWGuideLcgAccessLeftBar?redirectedfrom=CMS.SWGuideLcgAccess;topic=SWGuideLcgAccess"> GRID & CRAB setup </A>
   - have access to the eos ecal group space (ask to DPG conveners)
-  - have a git account
+  - have a git account on github.com
+  - have a git account on gitlab.cern.ch
 */

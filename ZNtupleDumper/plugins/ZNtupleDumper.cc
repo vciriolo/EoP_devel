@@ -234,7 +234,7 @@ private:
 	// ntuple members, private to make them visible in doxygen
 private:
 	/**
-		\addtogroup BRANCHES
+		\addtogroup NTUPLESTRUCTURE
 		@{
 	 */
 	UInt_t     	runNumber;		///< run number

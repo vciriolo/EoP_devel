@@ -2,6 +2,7 @@ stages:
   - releaseSetup
   - compile
   - test
+  - doc
 
 variables:
   GIT_STRATEGY: none
@@ -65,3 +66,25 @@ ntuple_rereco_test:
     - cd Calibration/EcalAlCaRecoProducers/
     - rm tmp/* -Rf
     - ./scripts/releaseValidation.sh
+  artifacts:
+    paths:
+      - tmp/releaseValidation/
+  only:
+    - master
+
+pages:
+  stage: doc
+  variables:
+    GIT_STRATEGY: none
+  script:
+    - dir=$PWD
+    - cd $CMSSW_VERSION/src/Calibration
+    - doxygen fulldoc
+    - rm -Rf $dir/public
+    - mv doc/doxygen/fulldoc/html/ $dir/public
+    - ls public/
+  only:
+   - doc_pipeline
+  artifacts:
+    paths:
+    - public/

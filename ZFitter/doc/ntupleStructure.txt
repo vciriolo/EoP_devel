@@ -1,6 +1,6 @@
+The rest is documented in ZNtupleDumper.cc
 /**
-\page NtupleStructure Ntuple content and logic of use
-\defgroup BRANCHES
+\defgroup NTUPLESTRUCTURE Ntuple content and logic of use
  
 ECALELF ntuples are produced by the ZNtupleDumper class. Follow the
 link to see the branches that are implemented. 
