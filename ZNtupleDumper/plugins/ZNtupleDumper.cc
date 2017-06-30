@@ -255,6 +255,11 @@ private:
 	UChar_t		nPV;            ///< nVtx
 	UChar_t		nPU;		    ///< number of PU (filled only for MC)
 
+        // primary vertex
+        Float_t         vtxX;           ///< primary vertex x coordinate
+        Float_t         vtxY;           ///< primary vertex y coordinate
+        Float_t         vtxZ;           ///< primary vertex z coordinate
+
 	// selection
 	UInt_t eleID[NELE] = initInt;      ///< bit mask for eleID: 1=fiducial, 2=loose, 6=medium, 14=tight, 16=WP90PU, 48=WP80PU, 112=WP70PU, 128=loose25nsRun2, 384=medium25nsRun2, 896=tight25nsRun2, 1024=loose50nsRun2, 3072=medium50nsRun2, 7168=tight50nsRun2. Selection from https://twiki.cern.ch/twiki/bin/viewauth/CMS/EgammaCutBasedIdentification#Electron_ID_Working_Points
 
@@ -272,7 +277,9 @@ private:
 	Short_t ySeedSC[NELE]			 = initInt;		///< iphi(iy) of the SC seed in EB(EE)
 	UChar_t gainSeedSC[NELE]		 = initInt;	///< Gain switch 0==gain12, 1==gain6, 2==gain1; gain status of the seed of the SC
 	Float_t energySeedSC[NELE]		 = initFloat;		///< energy of the rechit seeding the SC
-	Float_t timeSeedSC[NELE]         = initFloat;       ///< time of the rechit seeding the SC
+	Float_t energySecondToSeedSC[NELE]	 = initFloat;		///< energy of the rechit with the second highest energy in the SC
+	Float_t timeSeedSC[NELE]                 = initFloat;       ///< time of the rechit seeding the SC
+	Float_t timeSecondToSeedSC[NELE]         = initFloat;       ///< time of the rechit with the second highest energy in the SC
 	Float_t laserSeedSC[NELE]		 = initFloat;		///< laser correction of the SC seed crystal
 	Float_t avgLCSC[NELE]			 = initFloat;
 	Float_t alphaSeedSC[NELE]		 = initFloat;		///<alpha of the seed
@@ -387,7 +394,10 @@ private:
 	void TreeSetDiElectronVar(const pat::Electron& electron1, const pat::Electron& electron2);
 	void TreeSetDiElectronVar(const pat::Electron& electron1, const reco::SuperCluster& electron2);
 	void TreeSetMuMuGammaVar(const pat::Photon& photon, const pat::Muon& muon1, const pat::Muon& muon2);
-	DetId findSCseed(const reco::SuperCluster& cluster);
+        /*
+         * sort the hits belonging to the SuperCluster in descending energy and return the DetId and energy of the one ranked `rank`
+         */
+        std::pair<DetId, float> findEnergySortedHit(const reco::SuperCluster& cluster, const EcalRecHitCollection * recHits, size_t rank = 0);
 
 	void InitExtraCalibTree(void);
 	void resetExtraVariables(int index);
@@ -412,6 +422,7 @@ private:
 	//  void Tree_output(TString filename);
 	void TreeSetEventSummaryVar(const edm::Event& iEvent);
 	void TreeSetPileupVar(void);
+	void TreeSetPrimaryVertex(void);
 	float GetESPlaneRawEnergy(const reco::SuperCluster& sc, unsigned int planeIndex) const;
 
 	bool elePreselection(const pat::Electron& electron) const;
@@ -726,6 +737,7 @@ void ZNtupleDumper::analyze(const edm::Event& iEvent, const edm::EventSetup& iSe
 	//Here the HLTBits are filled. TriggerResults
 	TreeSetEventSummaryVar(iEvent);
 	TreeSetPileupVar(); // this can be filled once per event
+	TreeSetPrimaryVertex(); // this can be filled once per event
 
 
 	// at least one of the triggers
@@ -1121,6 +1133,11 @@ void ZNtupleDumper::InitNewTree()
 	tree->Branch("nPV", &nPV, "nPV/b");
 	tree->Branch("nPU", &nPU, "nPU/b");
 
+        // vertex
+	tree->Branch("vtxX", &vtxX, "vtxX/F");
+	tree->Branch("vtxY", &vtxY, "vtxY/F");
+	tree->Branch("vtxZ", &vtxZ, "vtxZ/F");
+
 	// ele
 	tree->Branch("eleID", eleID, "eleID[3]/i");
 	tree->Branch("chargeEle",   chargeEle,    "chargeEle[3]/S");
@@ -1154,7 +1171,9 @@ void ZNtupleDumper::InitNewTree()
 	tree->Branch("ySeedSC",            ySeedSC,            "ySeedSC[3]/S");
 	tree->Branch("gainSeedSC", gainSeedSC, "gainSeedSC[3]/b");
 	tree->Branch("energySeedSC",       energySeedSC,       "energySeedSC[3]/F");
+	tree->Branch("energySecondToSeedSC",       energySecondToSeedSC,       "energySecondToSeedSC[3]/F");
 	tree->Branch("timeSeedSC",       timeSeedSC,       "timeSeedSC[3]/F");
+	tree->Branch("timeSecondToSeedSC",       timeSecondToSeedSC,       "timeSecondToSeedSC[3]/F");
 	tree->Branch("laserSeedSC",        laserSeedSC,        "laserSeedSC[3]/F");
 	tree->Branch("alphaSeedSC",        alphaSeedSC,        "alphaSeedSC[3]/F");
 	tree->Branch("slewRateDeltaESeed", slewRateDeltaESeed, "slewRateDeltaESeed[3]/F");
@@ -1215,6 +1234,20 @@ void ZNtupleDumper::TreeSetEventSummaryVar(const edm::Event& iEvent)
 }
 
 
+void ZNtupleDumper::TreeSetPrimaryVertex(void)
+{
+        vtxX = -999.;
+        vtxY = -999.;
+        vtxZ = -999.;
+        for(reco::VertexCollection::const_iterator v = primaryVertexHandle->begin(); v != primaryVertexHandle->end(); ++v) {
+                vtxX = (*v).x();
+                vtxY = (*v).y();
+                vtxZ = (*v).z();
+                break;
+        }
+}
+
+
 void ZNtupleDumper::TreeSetPileupVar(void)
 {
 	rho = *rhoHandle;
@@ -1247,26 +1280,30 @@ void ZNtupleDumper::TreeSetPileupVar(void)
 
 
 
-DetId ZNtupleDumper::findSCseed(const reco::SuperCluster& cluster)
+std::pair<DetId, float> ZNtupleDumper::findEnergySortedHit(const reco::SuperCluster& cluster, const EcalRecHitCollection * recHits, size_t rank)
 {
-	DetId seedDetId;
-	float seedEnergy = 0;
 	std::vector< std::pair<DetId, float> > hitsFractions = cluster.hitsAndFractions();
-	for(std::vector< std::pair<DetId, float> >::const_iterator hitsAndFractions_itr = hitsFractions.begin();
-	        hitsAndFractions_itr != hitsFractions.end();
-	        hitsAndFractions_itr++) {
-		if(hitsAndFractions_itr->second > seedEnergy)
-			seedDetId = hitsAndFractions_itr->first;
+	std::vector< std::pair<DetId, float> > ordered;
+	for(auto & it : hitsFractions) {
+                auto rh = recHits->find(it.first);
+                if (rh != recHits->end()) {
+			ordered.push_back(std::make_pair(it.first, it.second * rh->energy()));
+                } else {
+                        std::cerr << "[ERROR findEnergySortedHit] RecHit not found for DetID: " << it.first.rawId() << std::endl;
+                }
 	}
+        std::sort(ordered.begin(), ordered.end(), [](auto &a, auto &b) {return a.second > b.second;});
 #ifdef DEBUG
-	std::cout << "[DEBUG findSCseed] seedDetIt: " << seedDetId.rawId() << std::endl
-	          << cluster << std::endl
-	          << *(cluster.seed()) << std::endl;
+        for (auto & it : ordered) {
+                std::cout << "[DEBUG findEnergySortedHit]  DetId: " << it.first.rawId() << " energy: " << it.second << "\n";
+        }
 #endif
-	if(seedDetId.null()) {
-		std::cerr << "[ERROR] Invalid detID: " << cluster << std::endl;
-	}
-	return seedDetId;
+        size_t s = ordered.size();
+        if (rank >= s) {
+                std::cerr << "[ERROR findEnergySortedHit] Requesting rank " << rank << " for a SC with only " << s << " crystal(s).\n";
+                return std::make_pair(DetId(0), 0);
+        }
+	return ordered[rank];
 }
 
 
@@ -1401,6 +1438,11 @@ void ZNtupleDumper::TreeSetSingleSCVar(const reco::SuperCluster& sc, int index)
 	assert(seedRecHit != recHits->end());
 	energySeedSC[index] = seedRecHit->energy();
 	timeSeedSC[index]   = seedRecHit->time();
+
+        auto snd_seed = findEnergySortedHit(sc, recHits, 1);
+        energySecondToSeedSC[index] = snd_seed.second;
+        auto snd_rh = recHits->find(snd_seed.first);
+	timeSecondToSeedSC[index]   = snd_rh->time();
 
 	const edm::ESHandle<EcalLaserDbService>& laserHandle_ = clustertools->getLaserHandle();
 	laserSeedSC[index] = laserHandle_->getLaserCorrection(seedDetId, eventTime_);
