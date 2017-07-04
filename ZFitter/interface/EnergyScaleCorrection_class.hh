@@ -37,7 +37,8 @@ public:
 	float phi, phi_err;
 	float Emean, Emean_err;
 
-	correctionValue_class(void) {
+	correctionValue_class(void)
+	{
 		scale = 1;
 		scale_err = 0;
 		scale_err_syst = 0;
@@ -50,7 +51,8 @@ public:
 		Emean_err = 0;
 	};
 
-	friend std::ostream& operator << (std::ostream& os, const correctionValue_class a) {
+	friend std::ostream& operator << (std::ostream& os, const correctionValue_class a)
+	{
 		os <<  "( "
 		   << a.scale << " +/- " << a.scale_err << " +/- " << a.scale_err_syst << " +/- " << a.scale_err_gain << ")"
 		   <<  "\t"
@@ -95,7 +97,8 @@ public:
 	correctionCategory_class(TString category_); ///< constructor with name of the category according to ElectronCategory_class
 
 	/// this constructor is used to assign a category to the electron/photon given values in input
-	inline  correctionCategory_class(const unsigned int runNumber, const float etaEle, const float R9Ele, const float EtEle, const unsigned int gainSeed) {
+	inline  correctionCategory_class(const unsigned int runNumber, const float etaEle, const float R9Ele, const float EtEle, const unsigned int gainSeed)
+	{
 		runmin = runNumber;
 		runmax = runNumber;
 		etamin = fabs(etaEle);
@@ -111,7 +114,8 @@ public:
 	bool operator<(const correctionCategory_class& b) const;
 
 	/// for DEBUG
-	friend std::ostream& operator << (std::ostream& os, const correctionCategory_class a) {
+	friend std::ostream& operator << (std::ostream& os, const correctionCategory_class a)
+	{
 		os <<         "RUN("  << a.runmin << ", " << a.runmax << ")"
 		   << "\t" << "eta("  << a.etamin << ", " << a.etamax << ")"
 		   << "\t" << "r9("   << a.r9min  << ", " << a.r9max  << ")"
@@ -203,7 +207,8 @@ private:
 	                 double rho, double err_rho, double phi, double err_phi, double Emean, double err_Emean);
 	void ReadSmearingFromFile(TString filename); ///< File structure: category constTerm alpha;
 public:
-	inline void SetSmearingType(fileFormat_t value) {
+	inline void SetSmearingType(fileFormat_t value)
+	{
 		if(value >= 0 && value <= 1) {
 			smearingType_ = value;
 		} else {

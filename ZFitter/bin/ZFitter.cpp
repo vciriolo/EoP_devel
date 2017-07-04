@@ -1291,7 +1291,7 @@ int main(int argc, char **argv)
 			anyVar._exclusiveCategories = false;
 			anyVar.Import(commonCut, eleID, activeBranchList, modulo); //activeBranchList is the list of branches for category selections
 
-			system(("mkdir -p "+outDirFitResMC).c_str()); 
+			system(("mkdir -p " + outDirFitResMC).c_str());
 			anyVar_class anyVarMC(mc, branchListAny, cutter, invMass_var, outDirFitResMC + "/", dirMC, true); // vm.count("updateOnly"));
 			anyVarMC._exclusiveCategories = false;
 			anyVarMC.Import(commonCut, eleID, activeBranchList, modulo); //activeBranchList is the list of branches for category selections

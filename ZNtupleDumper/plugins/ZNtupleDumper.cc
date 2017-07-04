@@ -1301,7 +1301,7 @@ void ZNtupleDumper::TreeSetSingleElectronVar(const pat::Electron& electron, int 
 
 	TreeSetSingleSCVar(*sc, index);
 	energy_ECAL_ele[index]			  = (_isMINIAOD) ? electron.correctedEcalEnergy()     : electron.userFloat("energySCEleMust");
-	if(eventNumber==96020403 || eventNumber == 96020411 || eventNumber == 98010168){
+	if(eventNumber == 96020403 || eventNumber == 96020411 || eventNumber == 98010168) {
 		std::cout << electron.eta() << "\t" << electron.phi() << "\t" << electron.superCluster()->rawEnergy() << "\t" << electron.energy() << "\t" << electron.correctedEcalEnergy() << "\t" << (bool) _isMINIAOD << "\t" << energy_ECAL_ele[index] << "\t" << index << std::endl;
 		assert(_isMINIAOD);
 	}

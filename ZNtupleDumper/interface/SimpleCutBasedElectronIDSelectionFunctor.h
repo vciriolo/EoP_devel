@@ -145,7 +145,8 @@ public: // interface
 
 #ifdef shervin
 	// initialize it by inserting directly the cut values in a parameter set
-	SimpleCutBasedElectronIDSelectionFunctor(edm::ParameterSet const & parameters) {
+	SimpleCutBasedElectronIDSelectionFunctor(edm::ParameterSet const & parameters)
+	{
 		// get the cuts from the PS
 		initialize( parameters.getParameter<Double_t>("trackIso_EB"),
 		            parameters.getParameter<Double_t>("ecalIso_EB"),
@@ -180,7 +181,8 @@ public: // interface
 		ConversionsHandle_(ConversionsHandle),
 		BeamSpotHandle_(BeamSpotHandle),
 		rhoHandle_(rhoHandle), EgammaCutBasedEleId::IsoDepositMaps {
-		if (version == NONE) {
+		if (version == NONE)
+		{
 			std::cout << "SimpleCutBasedElectronIDSelectionFunctor: If you want to use version NONE "
 			<< "then you have also to provide the selection cuts by yourself " << std::endl;
 			std::cout << "SimpleCutBasedElectronIDSelectionFunctor: ID Version is changed to 80cIso "
@@ -208,7 +210,8 @@ public: // interface
 		chIsoValsHandle_(chIsoValsHandle),
 		emIsoValsHandle_(emIsoValsHandle),
 		nhIsoValsHandle_(nhIsoValsHandle),
-		rhoHandle_(rhoHandle) {
+		rhoHandle_(rhoHandle)
+	{
 		Version_t version = NONE;
 		if (versionStr.CompareTo("NONE") == 0) {
 			std::cout << "SimpleCutBasedElectronIDSelectionFunctor: If you want to use version NONE "
@@ -241,7 +244,8 @@ public: // interface
 		retInternal_ = getBitTemplate();
 	}
 
-	void initialize( Version_t version ) {
+	void initialize( Version_t version )
+	{
 		version_ = version;
 
 		//------------------------------ initialize the cut variables (to be put in the bitmask)
@@ -667,7 +671,8 @@ public: // interface
 	                Double_t trackIso_EE, Double_t ecalIso_EE, Double_t hcalIso_EE,
 	                Double_t sihih_EE, Double_t  dphi_EE, Double_t deta_EE, Double_t hoe_EE,
 	                Double_t cIso_EE, Int_t conversionRejection,
-	                Int_t maxNumberOfExpectedMissingHits_EB, Int_t maxNumberOfExpectedMissingHits_EE) {
+	                Int_t maxNumberOfExpectedMissingHits_EB, Int_t maxNumberOfExpectedMissingHits_EE)
+	{
 		version_ = NONE;
 		push_back("trackIso_EB");
 		push_back("trackIso_EE");
@@ -713,13 +718,15 @@ public: // interface
 	}
 #endif
 
-	bool operator()( const electronRef_t& electron, pat::strbitset& ret) {
+	bool operator()( const electronRef_t& electron, pat::strbitset& ret)
+	{
 		// new electron, clear old electron bitmask
 		retInternal_ = getBitTemplate();
 		// for the time being only WPxx_PU variable definition
 		return WPxx_PU(electron, ret );
 	}
-	float result() {
+	float result()
+	{
 		// this should be modified in order to return:
 		//    // 0: fails,
 		// 1: passes electron ID only,
@@ -734,7 +741,8 @@ public: // interface
 
 	using Selector<electronRef_t>::operator();
 	// function with the Spring10 variable definitions
-	bool WPxx_PU( const electronRef_t electronRef, pat::strbitset& ret) {
+	bool WPxx_PU( const electronRef_t electronRef, pat::strbitset& ret)
+	{
 		const auto electron = *electronRef;
 
 		//    ret.set(false);
@@ -985,7 +993,8 @@ public: // interface
 		return (bool)retInternal_;
 	}
 
-	int bitMask() {
+	int bitMask()
+	{
 		int mask = 0;
 		pat::strbitset::bit_vector retBits = retInternal_.bits();
 		for(pat::strbitset::bit_vector::const_iterator bitIter = retBits.begin();

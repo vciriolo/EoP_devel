@@ -413,20 +413,20 @@ TTree* addBranch_class::AddBranch_invMassSigma(TChain* originalChain, TString tr
 
 		originalChain->GetEntry(ientry);
 		float smearEle_[2];
-		UChar_t g[2] = {0,0};
-		for(size_t i=0; i <2; ++i){
-			switch (gainSeedSC[i]){
-			case 0: 
-				g[i]=12;
+		UChar_t g[2] = {0, 0};
+		for(size_t i = 0; i < 2; ++i) {
+			switch (gainSeedSC[i]) {
+			case 0:
+				g[i] = 12;
 				break;
 			case 1:
-				g[i]=6;
+				g[i] = 6;
 				break;
 			case 2:
-				g[i]=1;
+				g[i] = 1;
 				break;
 			case 3:
-				g[i]=1;
+				g[i] = 1;
 				break;
 			}
 		}
@@ -608,7 +608,7 @@ TTree* addBranch_class::AddBranch_smearerCat(TChain* originalChain, TString tree
 
 				std::set<TString> branchNames2 = cutter.GetBranchNameNtuple(*region_ele2_itr);
 				for(std::set<TString>::const_iterator itr = branchNames2.begin();
-						itr != branchNames2.end(); itr++) {
+				        itr != branchNames2.end(); itr++) {
 					if(branchNames.count(*itr) != 0 ) continue;
 					std::cout << "Activating branches in addBranch_class.cc" << std::endl;
 					std::cout << "Branch is " << *itr << std::endl;
@@ -721,20 +721,20 @@ TTree * addBranch_class::AddBranch_scaleEle(TChain * ch, TString treeName, TStri
 	Long64_t nentries = ch->GetEntries();
 	for(Long64_t ientry = 0; ientry < nentries; ientry++) {
 		ch->GetEntry(ientry);
-		UChar_t g[2] = {0,0};
-		for(size_t i=0; i <2; ++i){
-			switch (gainSeedSC[i]){
-			case 0: 
-				g[i]=12;
+		UChar_t g[2] = {0, 0};
+		for(size_t i = 0; i < 2; ++i) {
+			switch (gainSeedSC[i]) {
+			case 0:
+				g[i] = 12;
 				break;
 			case 1:
-				g[i]=6;
+				g[i] = 6;
 				break;
 			case 2:
-				g[i]=1;
+				g[i] = 1;
 				break;
 			case 3:
-				g[i]=1;
+				g[i] = 1;
 				break;
 			}
 		}
@@ -792,20 +792,20 @@ TTree * addBranch_class::AddBranch_smearEle(TChain * ch, TString treeName, TStri
 	Long64_t nentries = ch->GetEntries();
 	for(Long64_t ientry = 0; ientry < ch->GetEntriesFast(); ientry++) {
 		ch->GetEntry(ientry);
-		UChar_t g[2] = {0,0};
-		for(size_t i=0; i <2; ++i){
-			switch (gainSeedSC_[i]){
-			case 0: 
-				g[i]=12;
+		UChar_t g[2] = {0, 0};
+		for(size_t i = 0; i < 2; ++i) {
+			switch (gainSeedSC_[i]) {
+			case 0:
+				g[i] = 12;
 				break;
 			case 1:
-				g[i]=6;
+				g[i] = 6;
 				break;
 			case 2:
-				g[i]=1;
+				g[i] = 1;
 				break;
 			case 3:
-				g[i]=1;
+				g[i] = 1;
 				break;
 			}
 		}

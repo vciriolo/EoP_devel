@@ -76,7 +76,8 @@ public:
 	void Import(TString commonCut, TString eleID_, std::set<TString>& branchList, unsigned int modulo = 1); ///< to be called in the main
 	void TreeAnalyzeShervin(std::string region, TCut cut_ele1, TCut cut_ele2, std::vector<TString> runRanges = std::vector<TString>(), std::string commonCut = "", float scale = 1., float smearing = 0.); ///<
 	void SetOutDirName(std::string dirname, bool updateOnly = true);
-	void ChangeModulo(unsigned int moduloIndex) {
+	void ChangeModulo(unsigned int moduloIndex)
+	{
 		reduced_data = reduced_data_vec[moduloIndex].get();
 		goodEntries.clear();
 		Long64_t nentries = reduced_data->GetEntriesFast();
@@ -84,12 +85,14 @@ public:
 			goodEntries.insert(goodEntries.end(), i);
 		}
 	};
-	void SaveReducedTree(TFile* f) {
+	void SaveReducedTree(TFile* f)
+	{
 		f->cd();
 		reduced_data->Write();
 	}
 
-	void SetDir(TDirectory *dir_) {
+	void SetDir(TDirectory *dir_)
+	{
 		if(_dir != NULL) delete _dir;
 		_dir = dir_;
 	}

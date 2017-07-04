@@ -36,7 +36,8 @@ struct Sorter {
 	int time;
 	int entry;
 
-	bool operator() (const Sorter& s1, const Sorter& s2) {
+	bool operator() (const Sorter& s1, const Sorter& s2)
+	{
 		return s1.time < s2.time;
 	}
 };
@@ -54,7 +55,8 @@ struct myEvent {
 	float scLaserCorr;
 	float seedLaserAlpha;
 
-	bool operator() (const myEvent& s1, const myEvent& s2) {
+	bool operator() (const myEvent& s1, const myEvent& s2)
+	{
 		return s1.timeStampHigh < s2.timeStampHigh;
 	}
 };
@@ -64,7 +66,8 @@ struct SorterLC {
 	float laserCorr;
 	int entry;
 
-	bool operator() (const SorterLC& s1, const SorterLC& s2) {
+	bool operator() (const SorterLC& s1, const SorterLC& s2)
+	{
 		return s1.laserCorr < s2.laserCorr;
 	}
 };

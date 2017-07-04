@@ -1,16 +1,16 @@
 {
-  gROOT->ProcessLine(".L macro/PlotDataMC.C+");
-  gROOT->ProcessLine(".L macro/addChainWithFriends.C+");
+	gROOT->ProcessLine(".L macro/PlotDataMC.C+");
+	gROOT->ProcessLine(".L macro/addChainWithFriends.C+");
 
 
-  TChain *data   = (TChain *) _file0->Get("selected");
+	TChain *data   = (TChain *) _file0->Get("selected");
 
-  ReassociateFriends(_file0, data);
+	ReassociateFriends(_file0, data);
 
-  TDirectory *curDir = new TDirectory("curDir","");
-  curDir->cd();
+	TDirectory *curDir = new TDirectory("curDir", "");
+	curDir->cd();
 
-  TString outputPath="tmp/";
+	TString outputPath = "tmp/";
 
 }
 

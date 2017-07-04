@@ -23,10 +23,12 @@ public:
 	treeReader (TTree *, bool verbosity = false) ;
 	~treeReader () ;
 
-	void GetEntry (int iEvent) {
+	void GetEntry (int iEvent)
+	{
 		m_tree->GetEntry (iEvent) ;
 	} ;
-	int GetEntries () {
+	int GetEntries ()
+	{
 		return m_tree->GetEntries () ;
 	} ;
 
