@@ -15,17 +15,17 @@ echo "DATASETPATH=$DATASETPATH"
 
 runMin=`das_client --query="run dataset=$DATASETPATH | min(run.run_number)" | tail -1 | cut -d '=' -f 2`
 runMax=`das_client --query="run dataset=$DATASETPATH | max(run.run_number)" | tail -1 | cut -d '=' -f 2`
-das_client --query="site dataset=$DATASETPATH" 
-das_client --query="run dataset=$DATASETPATH | grep  run.modification_time, run.run_number" --limit=1000 | sed '/Showing/ d' | sort | awk '(NF!=0){print $2}' > das.time
+dasgoclient --query="site dataset=$DATASETPATH" --limit=-1
+dasgoclient --query="run dataset=$DATASETPATH | grep  run.modification_time, run.run_number"  sort | awk '(NF!=0){print $2}' > das.time
 #| awk '(NF!=0){printf("%d\t",$2); system("date -u -d "$1" +%s")}' > das.time
 #das_client --query="run dataset=$DATASETPATH |sort run.modification_time" --format=json --limit=1000 | sed 's|"run":|"\nrun":|g' | grep modification_time >  das.json
 #cat das.json | cut -d ' ' -f 3,4 |sed 's|,||;s|\"||g'
 #exit 0
 let timeNow="`date +%s`-3600*24*4"
 
-echo -n "lastWeekRun="
+#echo -n "lastWeekRun="
 #awk "(\$2<$timeNow){print \$0 }" das.time | sort | tail -1
-cat das.time | sort | tail -1
+#cat das.time | sort | tail -1
 rm das.time
 
 #`echo $line2 | cut -d ' ' -f 1`"
@@ -34,7 +34,7 @@ rm das.time
 
 #das_client --query="run dataset=$DATASETPATH run.modification_time=
 
-das_client --query="config dataset=${DATASETPATH} | grep config.global_tag"
+das_client --query="config dataset=${DATASETPATH} | grep config.global_tag" | sed '/Showing/ d'
 ./scripts/lastJSON.sh
 
 echo -e "$runMin-$runMax\t$DATASETPATH"

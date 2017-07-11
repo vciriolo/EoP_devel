@@ -336,3 +336,11 @@ allRange	/ZToEE_NNPDF30_13TeV-powheg_M_50_120/RunIISummer16MiniAODv2-PUMoriond17
 #allRange        /DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISummer16MiniAODv2-PUMoriond17_plus5percentMaterial_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM              DYJets_amcatnlo-plus5percentMaterial-RunIISummer16MiniAODv2 caf database VALID - -
 #allRange        /DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISummer16DR80Premix-PUMoriond17_plus10percentMaterial_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/AODSIM                       DYJets_amcatnlo-plus10percentMaterial-RunIISummer16DR80Premix   caf group/dpg_ecal/alca_ecalcalib/ecalelf/alcareco       VALID - -
 #allRange        /DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISummer16MiniAODv2-PUMoriond17_plus10percentMaterial_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM              DYJets_amcatnlo-plus10percentMaterial-RunIISummer16MiniAODv2 caf database VALID - -
+#
+296168-296174	/DoubleEG/Run2017A-PromptReco-v2/ALCARECO	DoubleEG-Run2017A-ZSkim-Prompt-v2	caf	database	VALID	RUN2017A
+296880-297004	/DoubleEG/Run2017A-PromptReco-v3/ALCARECO	DoubleEG-Run2017A-ZSkim-Prompt-v3	caf	database	VALID	RUN2017A
+297046-297723	/DoubleEG/Run2017B-PromptReco-v1/ALCARECO	DoubleEG-Run2017B-ZSkim-Prompt-v1	caf	database	VALID	RUN2017B
+#
+296168-296174	/SingleElectron/Run2017A-PromptReco-v2/ALCARECO	SingleElectron-Run2017A-WSkim-Prompt-v2	caf	database	VALID	RUN2017A
+296880-297004	/SingleElectron/Run2017A-PromptReco-v3/ALCARECO	SingleElectron-Run2017A-WSkim-Prompt-v3	caf	database	VALID	RUN2017A
+297046-297723	/SingleElectron/Run2017B-PromptReco-v1/ALCARECO	SingleElectron-Run2017B-WSkim-Prompt-v1	caf	database	VALID	RUN2017B
