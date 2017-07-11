@@ -69,8 +69,6 @@ ntuple_rereco_test:
   artifacts:
     paths:
       - tmp/releaseValidation/
-  only:
-    - master
 
 pages:
   stage: doc

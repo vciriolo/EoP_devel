@@ -8,7 +8,7 @@ function testStep(){
 	stepLog=$3
 	stepCommand=$4
 	
-	dir=tmp/releaseValidation/$stepIndex
+	dir=tmp/releaseValidation/$CMSSW_VERSION/$stepIndex
 	if [ ! -d "$dir" ];then mkdir $dir; fi
 
 	if [ -e "$dir/done" ]; then
@@ -38,7 +38,7 @@ function testStep(){
 ############################################################
 
 echo "[`basename $0`] CMSSW RELEASE: $CMSSW_VERSION"
-if [ ! -d "tmp/releaseValidation" ];then mkdir tmp/releaseValidation -p; fi
+if [ ! -d "tmp/releaseValidation/$CMSSW_VERSION" ];then mkdir tmp/releaseValidation/$CMSSW_VERSION -p; fi
 
 case $CMSSW_VERSION in
 	CMSSW_8_0_*|CMSSW_9_2_*)
@@ -77,12 +77,11 @@ testStep 1 "Testing local production of ntuples from MINIAODSIM (MC)" $logName "
 	}
 
 	echo -n "[`basename $0`] Checking difference in dump of ntuple content ... "
-	diff -q {$dir,test}/${logName}.dump > /dev/null || {
+	diff -q {$dir,test/releaseValidation/$CMSSW_VERSION}/${logName}.dump > /dev/null || {
 		echo "${bold}ERROR${normal}"
-		echo "{$dir,test}/${logName}.dump are different" 
+		echo "{$dir,test/releaseValidation/$CMSSW_VERSION}/${logName}.dump are different" 
 		echo "you can use"
-		echo "wdiff -n {$dir,test}/${logName}.dump | colordiff --difftype=wdiff  | less -RS"
-		diff {$dir,test}/${logName}.dump
+		echo "wdiff -n {$dir,test/releaseValidation/$CMSSW_VERSION}/${logName}.dump | colordiff --difftype=wdiff  | less -RS"
 		exit 1
 	}
 	echo "OK"
@@ -103,11 +102,11 @@ testStep 2 "Testing local production of ntuples from MINIAODSIM (DATA)" $logName
 	}
 
 	echo -n "[`basename $0`] Checking difference in dump of ntuple content ... "
-	diff -q {$dir,test}/${logName}.dump > /dev/null || {
+	diff -q {$dir,test/releaseValidation/$CMSSW_VERSION}/${logName}.dump > /dev/null || {
 		echo "${bold}ERROR${normal}"
-		echo "{$dir,test}/${logName}.dump are different" 
+		echo "{$dir,test/releaseValidation/$CMSSW_VERSION}/${logName}.dump are different" 
 		echo "you can use"
-		echo "wdiff -n {$dir,test}/${logName}.dump | colordiff --difftype=wdiff  | less -RS"
+		echo "wdiff -n {$dir,test/releaseValidation/$CMSSW_VERSION}/${logName}.dump | colordiff --difftype=wdiff  | less -RS"
 		exit 1
 	}
 	echo "OK"
@@ -136,11 +135,11 @@ testStep 4 "Testing local production of ntuples from alcarereco (DATA)" $logName
 	}
 
 	echo -n "[`basename $0`] Checking difference in dump of ntuple content ... "
-	diff -q {$dir,test}/${logName}.dump > /dev/null || {
+	diff -q {$dir,test/releaseValidation/$CMSSW_VERSION}/${logName}.dump > /dev/null || {
 		echo "${bold}ERROR${normal}"
-		echo "{$dir,test}/${logName}.dump are different" 
+		echo "{$dir,test/releaseValidation/$CMSSW_VERSION}/${logName}.dump are different" 
 		echo "you can use"
-		echo "wdiff -n {$dir,test}/${logName}.dump | colordiff --difftype=wdiff  | less -RS"
+		echo "wdiff -n {$dir,test/releaseValidation/$CMSSW_VERSION}/${logName}.dump | colordiff --difftype=wdiff  | less -RS"
 		exit 1
 	}
 	echo "OK"

@@ -35,6 +35,6 @@ EoPDir:=../EOverPCalibration
 #SCRAM_ARCH=`scram arch`
 #################
 INCLUDE=-I$(INCLUDEDIR) $(FWCORE_INCLUDE) -isystem$(ROOT_INCLUDE)   -I$(ROOFIT_INCLUDE) -I$(BOOST)/include 
-LIB=-L/usr/lib64 -L$(BOOST)/lib
+LIB=-L$(BOOST)/lib -L/usr/lib64 
 
 
