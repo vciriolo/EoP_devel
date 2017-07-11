@@ -1,29 +1,27 @@
 #!/bin/bash
-jsonDCS=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/DCSOnly/json_DCSONLY.txt
-json=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/ReReco/Final/Cert_271036-284044_13TeV_23Sep2016ReReco_Collisions16_JSON.txt
+jsonDCS=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions17/13TeV/DCSOnly/json_DCSONLY.txt
+json=$jsonDCS
+#json=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/ReReco/Final/Cert_271036-284044_13TeV_23Sep2016ReReco_Collisions16_JSON.txt
 #Cert_271036-275125_13TeV_PromptReco_Collisions16_JSON.txt
 
 jsonName=DCSONLY
-jsonName=271036-284044_23Sep2016_v1
+#jsonName=271036-284044_23Sep2016_v1
 
 
-CHECK=--check
-#CHECK=--createOnly
+#CHECK=--check
+CHECK=--createOnly
 
 
 #where=remoteGlidein
 scheduler=caf
-tag_MC=config/reRecoTags/80X_mcRun2_asymptotic_2016_TrancheIV_v8.py
-tag_Prompt=config/reRecoTags/80X_dataRun2_Prompt_v16.py
-tag_Rereco=config/reRecoTags/80X_dataRun2_2016SeptRepro_v7.py
+tag_Prompt=config/reRecoTags/92X_dataRun2_Prompt_v4.py
 
 fileList=alcareco_datasets.dat
-PERIOD=MORIOND17
-PERIOD=MORIOND2017
+PERIOD=RUN2017
 
 IFS=$'\n'
 datasetsData=(`./scripts/parseDatasetFile.sh $fileList | grep VALID | sed 's|$|,|' | grep "${PERIOD}," | grep -v SIM`)
-datasetsMC=(`./scripts/parseDatasetFile.sh $fileList | grep VALID | sed 's|$|,|' | grep "${PERIOD}," | grep SIM`)
+#datasetsMC=(`./scripts/parseDatasetFile.sh $fileList | grep VALID | sed 's|$|,|' | grep "${PERIOD}," | grep SIM`)
 # set IFS to newline in order to divide using new line the datasets
 
 
@@ -32,21 +30,15 @@ for dataset in ${datasetsMC[@]} ${datasetsData[@]} #
 do
 	datasetName=`echo $dataset | awk '{print $6}'`
 	echo $datasetName
-#	continue
-	case $datasetName in
-		*miniAODv2)
-#			echo $datasetName
-			./scripts/prodNtuples.sh  --isMC --type=MINIAOD -t ${tag_MC} -s noSkim --scheduler=${scheduler}   ${CHECK} $dataset
-			;;
-		*Run2016H*MINIAOD)
-			#extraName=regressionMoriond17v2
-			./scripts/prodNtuples.sh   --type=MINIAOD -t ${tag_Prompt} -s noSkim --scheduler=${scheduler}  --extraName=newRegrFix --json=$json --json_name=$jsonName ${CHECK} $dataset
-			;;
-		*Run2016*MINIAOD)
-			#extraName=regressionMoriond17v2
-			./scripts/prodNtuples.sh   --type=MINIAOD -t ${tag_Rereco} -s noSkim --scheduler=${scheduler}  --extraName=newRegrFix --json=$json --json_name=$jsonName ${CHECK} $dataset
+	echo $dataset
 
+	case $datasetName in
+		*)
+			#extraName=regressionMoriond17v2
+			./scripts/prodNtuples.sh --type=MINIAOD -t ${tag_Rereco} -s noSkim --scheduler=${scheduler}   --json=$json --json_name=$jsonName ${CHECK} $dataset
+			;;
 	esac
+	break
 done
 exit 0
 for dataset in ${datasetsData[@]}
