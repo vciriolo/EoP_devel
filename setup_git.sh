@@ -70,7 +70,7 @@ if [ ! -d "$myDir" ]; then
 		echo "[INFO] user=$USER"
 		case "$USER" in 
 			shervin)
-				git clone --single-branch https://shervin@gitlab.cern.ch/shervin/ECALELF.git $myDir  >> setup.log || exit 1 # read-only mode
+				git clone  https://shervin@gitlab.cern.ch/shervin/ECALELF.git $myDir  >> setup.log || exit 1 # read-only mode
 				;;
 			gitlab-runner)
 				git clone  https://gitlab.cern.ch/shervin/ECALELF.git $myDir >> setup.log || exit 1 # read-only mode
@@ -83,6 +83,7 @@ if [ ! -d "$myDir" ]; then
 				;;
     esac
 
+		git clone https://github.com/ECALELFS/LSFsubmit Tools/LSFsubmit/scripts
 fi
 
 cd $CMSSW_BASE/src
@@ -104,6 +105,8 @@ esac
 echo "[INFO] Starting to compile"
 case $USER in
     gitlab-runner)
+		cd Tools/LSFsubmit/scripts
+		scram b # just to copy the LSFsubmit scripts 
 	;;
     *)
 	scram b -j16 || {
@@ -112,4 +115,11 @@ case $USER in
 	}
 	;;
 esac
+
+echo "[INFO] Checking LSFsubmit commands"
+
+which create || exit 1
+which submit || exit 1
+which check  || exit 1
+which resubmit || exit 1
 
