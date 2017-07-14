@@ -1419,7 +1419,6 @@ void ZNtupleDumper::TreeSetSingleElectronTrackVar(const pat::Electron& electron,
 
 void ZNtupleDumper::TreeSetSingleSCVar(const reco::SuperCluster& sc, int index)
 {
-        fprintf(stderr, "------------------------------\n");
 	etaSCEle[index] = sc.eta();
 	phiSCEle[index] = sc.phi();
 
