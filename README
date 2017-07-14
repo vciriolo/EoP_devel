@@ -31,7 +31,7 @@ from the Calibration/ directory and you can navigate instructions and code local
 \verbatim
 wget -q --no-check-certificate -O setup_git.sh https://gitlab.cern.ch/shervin/ECALELF/raw/master/setup_git.sh
 chmod +x setup_git.sh
-CMSSW_VERSION=CMSSW_9_2_0_patch5
+CMSSW_VERSION=CMSSW_9_2_3_patch2
 ./setup_git.sh $CMSSW_VERSION
 cd $CMSSW_VERSION/src/
 cmsenv
@@ -39,10 +39,10 @@ cd Calibration/ZFitter && make && cd -
 \endverbatim
 
 If you are using a tcsh shell:
-\verbatim cd Calibration && source initCmsEnvCRAB.csh \endverbatim
+\verbatim cd Calibration && source initCmsEnv.csh \endverbatim
 
 If you are using a bash shell:
-\verbatim cd Calibration && source initCmsEnvCRAB.sh \endverbatim
+\verbatim cd Calibration && source initCmsEnv.sh \endverbatim
 
 Every time you enter in a new shell you have to do:
 \verbatim source initCmsEnvCRAB.csh \endverbatim
