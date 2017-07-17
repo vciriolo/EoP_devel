@@ -67,6 +67,11 @@ options.register('doExtraStudyTree',
                  VarParsing.VarParsing.multiplicity.singleton, # singleton or list
                  VarParsing.VarParsing.varType.int,          # string, int, or float
                  "0=false")
+options.register('doTrackTree',
+                 0, #default value False
+                 VarParsing.VarParsing.multiplicity.singleton, # singleton or list
+                 VarParsing.VarParsing.varType.int,          # string, int, or float
+                 "0=false")
 options.register('doTreeOnly',
                  0, #default value False
                  VarParsing.VarParsing.multiplicity.singleton, # singleton or list
@@ -139,7 +144,7 @@ else:
     
 doTreeOnly=False
 doAnyTree=False
-if(options.doTree>0 or options.doEleIDTree>0 or options.doExtraCalibTree>0 or options.doExtraStudyTree>0):
+if(options.doTree>0 or options.doEleIDTree>0 or options.doExtraCalibTree>0 or options.doExtraStudyTree>0 or options.doTrackTree>0):
     doAnyTree=True
 if(doAnyTree==True and options.doTreeOnly==1):
     print "doTreeOnly"
@@ -446,6 +451,8 @@ if(options.doExtraCalibTree>0):
     process.zNtupleDumper.doExtraCalibTree=cms.bool(True)
 if(options.doExtraStudyTree>0):
     process.zNtupleDumper.doExtraStudyTree=cms.bool(True)
+if(options.doTrackTree>0):
+    process.zNtupleDumper.doTrackTree=cms.bool(True)
 
 
 ############################################################
@@ -857,6 +864,10 @@ if(options.type=="ALCARERECO"):
     else:
         print "[ERROR] only bunchSpacing of 50 and 25 are implemented"
         exit(1)
+
+    process.alCaIsolatedElectrons.uncalibRecHitCollectionEB = process.ecalRecHit.EBuncalibRecHitCollection
+    process.alCaIsolatedElectrons.uncalibRecHitCollectionEE = process.ecalRecHit.EEuncalibRecHitCollection
+
     process.zNtupleDumper.uncalibRecHitCollectionEB = cms.InputTag("alCaIsolatedElectrons", process.alCaIsolatedElectrons.alcaBarrelUncalibHitCollection.value())
     process.zNtupleDumper.uncalibRecHitCollectionEE = cms.InputTag("alCaIsolatedElectrons", process.alCaIsolatedElectrons.alcaEndcapUncalibHitCollection.value())
     process.electronRegressionValueMapProducer.ebReducedRecHitCollectionMiniAOD = cms.InputTag('alCaIsolatedElectrons', process.alCaIsolatedElectrons.alcaBarrelHitCollection.value())

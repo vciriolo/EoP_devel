@@ -58,9 +58,11 @@
 #include "SimDataFormats/GeneratorProducts/interface/GenEventInfoProduct.h"
 
 #include "DataFormats/Common/interface/Handle.h"
-#include "DataFormats/GsfTrackReco/interface/GsfTrack.h"
 #include "DataFormats/EgammaCandidates/interface/GsfElectron.h"
+#include "DataFormats/GsfTrackReco/interface/GsfTrack.h"
+#include "DataFormats/GsfTrackReco/interface/GsfTrackExtra.h"
 #include "DataFormats/GsfTrackReco/interface/GsfTrackFwd.h"
+#include "DataFormats/GsfTrackReco/interface/GsfTrackExtraFwd.h"
 #include "DataFormats/EgammaCandidates/interface/Photon.h"
 #include "DataFormats/HepMCCandidate/interface/GenParticle.h"
 
@@ -68,6 +70,8 @@
 
 #include "RecoEcal/EgammaCoreTools/interface/EcalClusterTools.h"
 #include "RecoEcal/EgammaCoreTools/interface/EcalClusterLazyTools.h"
+
+#include "TrackPropagation/SteppingHelixPropagator/interface/SteppingHelixPropagator.h"
 
 #include "DataFormats/EcalDetId/interface/EcalSubdetector.h"
 #include "DataFormats/EcalDetId/interface/EBDetId.h"
@@ -231,6 +235,7 @@ private:
 	bool doExtraCalibTree; ///< bool to activate the dump of the extra calib tree for E/p ICs
 	bool doExtraStudyTree; ///< bool to activate the dump of the extra tree for study with values for single recHits
 	bool doEleIDTree;      ///< bool to activate the dump of the electronID variables in a separate tree
+	bool doTrackTree;      ///< bool to activate the dump of the track tree for studies with electron tracks
 
 	TTree *tree;                   //< output file for standard ntuple
 
@@ -311,6 +316,8 @@ private:
 	Float_t pAtVtxGsfEle[NELE]			= initFloat;	///< momentum estimated at the vertex
 	Float_t trackMomentumErrorEle[NELE] = initFloat;	///< track momentum error from standard electron method
 	Float_t pNormalizedChi2Ele[NELE]	= initFloat;	///< track normalized chi2 of the fit (GSF)
+        Float_t gsfTrackLengthFromVtxP[NELE] = initFloat; ///< track length computed from the vertex position and momentum to the extrapolated impact on the calorimeter
+        Float_t gsfTrackLengthFromTangents[NELE] = initFloat; ///< track length computed from the vertex position to the extrapolated impact on the calorimeter, using at each tracker layer its mometum estimate (and position)
 
 	Float_t invMass;
 	Float_t invMass_rawSC;
@@ -358,6 +365,32 @@ private:
 	std::vector<float>               chi2UncalibRecHitSCEle[3];
 	std::vector<uint32_t>            flagsUncalibRecHitSCEle[3];
 
+	//============================== TrackTree
+	TFile *trackTreeFile;
+	TTree *trackTree;
+        Float_t   gsfTrackLengthFromOuterP[NELE] = initFloat;
+        Float_t   gsfTrackLengthFromEleP[NELE] = initFloat;
+        Float_t   gsfTrackOuterPt[NELE] = initFloat;
+        Float_t   gsfTrackOuterEta[NELE] = initFloat;
+        Float_t   gsfTrackOuterPhi[NELE] = initFloat;
+        Float_t   gsfTrackVtxPt[NELE] = initFloat;
+        Float_t   gsfTrackVtxEta[NELE] = initFloat;
+        Float_t   gsfTrackVtxPhi[NELE] = initFloat;
+        Float_t   gsfTrackVtxX[NELE] = initFloat;
+        Float_t   gsfTrackVtxY[NELE] = initFloat;
+        Float_t   gsfTrackVtxZ[NELE] = initFloat;
+        Float_t   gsfTrackCaloX[NELE] = initFloat;
+        Float_t   gsfTrackCaloY[NELE] = initFloat;
+        Float_t   gsfTrackCaloZ[NELE] = initFloat;
+        std::vector<float> gsfTrackTangentsPt[NELE];
+        std::vector<float> gsfTrackTangentsEta[NELE];
+        std::vector<float> gsfTrackTangentsPhi[NELE];
+        std::vector<float> gsfTrackTangentsDeltaP[NELE];
+        std::vector<float> gsfTrackTangentsDeltaPErr[NELE];
+        std::vector<float> gsfTrackTangentsX[NELE];
+        std::vector<float> gsfTrackTangentsY[NELE];
+        std::vector<float> gsfTrackTangentsZ[NELE];
+
 	//============================== check ele-id and iso
 	TFile *eleIDTreeFile;
 	TTree *eleIDTree;
@@ -396,7 +429,6 @@ private:
 
 	void TreeSetSingleElectronVar(const pat::Electron& electron1, int index);
 	void TreeSetSingleElectronVar(const reco::SuperCluster& sc, int index);
-	void TreeSetSingleElectronTrackVar(const pat::Electron& electron1, int index);
 	void TreeSetSinglePhotonVar(const pat::Photon& photon, int index);
 	void TreeSetSingleMuonVar(const pat::Muon& muon1, int index);
 	void TreeSetDiElectronVar(const pat::Electron& electron1, const pat::Electron& electron2);
@@ -419,6 +451,11 @@ private:
 	void TreeSetExtraCalibVar(const std::vector<std::pair<DetId, float> > & hitsFracs, int index, bool isEB);
 
 	void InitExtraStudyTree(void); // the extra study tree uses the method of the extracalibtree
+
+	void InitTrackTree(void);
+        void ResetTrackVar();
+	void TreeSetTrackVar(const pat::Electron & electron1, const pat::Electron & electron2);
+	void TreeSetTrackVar(const pat::Electron & electron1, int index);
 
 	void InitEleIDTree(void);
 	void TreeSetEleIDVar(const pat::Electron& electron1, int index);
@@ -509,6 +546,7 @@ ZNtupleDumper::ZNtupleDumper(const edm::ParameterSet& iConfig):
 	doExtraCalibTree(iConfig.getParameter<bool>("doExtraCalibTree")),
 	doExtraStudyTree(iConfig.getParameter<bool>("doExtraStudyTree")),
 	doEleIDTree(iConfig.getParameter<bool>("doEleIDTree")),
+	doTrackTree(iConfig.getParameter<bool>("doTrackTree")),
 	preselID_(iConfig.getParameter<bool>("useIDforPresel")),
 	// used for preselection and event type determination
 	eleID_loose(iConfig.getParameter< std::string>("eleID_loose")),
@@ -599,6 +637,19 @@ void ZNtupleDumper::beginJob()
 		InitEleIDTree();
 	}
 
+
+	if(doTrackTree) {
+		trackTreeFile = new TFile("trackTree.root", "recreate");
+		if(trackTreeFile->IsZombie()) {
+			throw cms::Exception("OutputError") <<  "Output tree for track studies not created (Zombie): " << ntupleFileName;
+			return;
+		}
+		trackTreeFile->cd();
+
+		trackTree = new TTree("trackTree", "trackTree");
+		trackTree->SetDirectory(trackTreeFile);
+		InitTrackTree();
+	}
 #ifdef DEBUG
 	std::cout << "[DEBUG] End creation of ntuples" << std::endl;
 #endif
@@ -626,7 +677,7 @@ void ZNtupleDumper::analyze(const edm::Event& iEvent, const edm::EventSetup& iSe
 	pEvent = &iEvent;
 	pSetup = &iSetup;
 
-
+        ResetTrackVar();
 
 	// filling infos runNumber, eventNumber, lumi
 	if( !iEvent.isRealData() ) {
@@ -841,6 +892,8 @@ void ZNtupleDumper::analyze(const edm::Event& iEvent, const edm::EventSetup& iSe
 		if(doEleIDTree) {
 			TreeSetEleIDVar(*eleIter1, *eleIter2);
 		}
+                // always set track vars, two of them are in the main tree
+                TreeSetTrackVar(*eleIter1, *eleIter2);
 	} else if(eventType == ZEE || eventType == WENU || eventType == UNKNOWN) {
 #ifdef DEBUG
 		std::cout << "[DEBUG] Electrons in the event: " << electronsHandle->size() << std::endl;
@@ -874,6 +927,8 @@ void ZNtupleDumper::analyze(const edm::Event& iEvent, const edm::EventSetup& iSe
 					TreeSetEleIDVar(*eleIter1, 0);
 					TreeSetEleIDVar(*eleIter1, -1);
 				}
+                                // always set track vars, two of them are in the main tree
+                                TreeSetTrackVar(*eleIter1, 0);
 			} else { //ZEE or UNKNOWN
 				// take only the fist di-electron pair (highest pt)
 				for(pat::ElectronCollection::const_iterator eleIter2 = eleIter1 + 1;
@@ -919,6 +974,8 @@ void ZNtupleDumper::analyze(const edm::Event& iEvent, const edm::EventSetup& iSe
 					if(doEleIDTree) {
 						TreeSetEleIDVar(*eleIter1, *eleIter2);
 					}
+                                        // always set track vars, two of them are in the main tree
+                                        TreeSetTrackVar(*eleIter1, *eleIter2);
 
 					// if(electronsHandle->size() < NELE &&  eventType == SINGLEELE){
 
@@ -968,7 +1025,6 @@ void ZNtupleDumper::analyze(const edm::Event& iEvent, const edm::EventSetup& iSe
 					if(doEleIDTree) {
 						TreeSetEleIDVar(*phoIter1, *muIter1, *muIter2);
 					}
-
 				}
 
 			}
@@ -1031,6 +1087,8 @@ void ZNtupleDumper::analyze(const edm::Event& iEvent, const edm::EventSetup& iSe
 			if(doExtraCalibTree || doExtraStudyTree) {
 				TreeSetExtraCalibVar(*PatEle1, *HighEtaSC1);
 			}
+                        // always set track vars, two of them are in the main tree
+                        TreeSetTrackVar(*PatEle1, 0);
 		}
 	}
 
@@ -1039,6 +1097,7 @@ void ZNtupleDumper::analyze(const edm::Event& iEvent, const edm::EventSetup& iSe
 		if(doExtraCalibTree) extraCalibTree->Fill();
 		if(doEleIDTree)      eleIDTree->Fill();
 		if(doExtraStudyTree) extraStudyTree->Fill();
+		if(doTrackTree) trackTree->Fill();
 	}
 	delete clustertools;
 	return;
@@ -1071,6 +1130,7 @@ void ZNtupleDumper::endJob()
 		if(doEleIDTree)       eleIDTree->BuildIndex("runNumber", "eventNumber");
 		if(doExtraCalibTree) extraCalibTree->BuildIndex("runNumber", "eventNumber");
 		if(doExtraStudyTree) extraStudyTree->BuildIndex("runNumber", "eventNumber");
+		if(doTrackTree) trackTree->BuildIndex("runNumber", "eventNumber");
 	}
 	// save the tree into the file
 	tree_file->cd();
@@ -1091,6 +1151,11 @@ void ZNtupleDumper::endJob()
 		eleIDTreeFile->cd();
 		eleIDTree->Write();
 		eleIDTreeFile->Close();
+	}
+	if(doTrackTree) {
+		trackTreeFile->cd();
+		trackTree->Write();
+		trackTreeFile->Close();
 	}
 }
 
@@ -1168,6 +1233,9 @@ void ZNtupleDumper::InitNewTree()
 	tree->Branch("fbremEle",    fbremEle,     "fbremEle[3]/F");
 	tree->Branch("R9Ele", R9Ele, "R9Ele[3]/F");
 
+        // ele track lenths
+        tree->Branch("gsfTrackLengthFromVtxP", gsfTrackLengthFromVtxP, "gsfTrackLengthFromVtxP[3]/F");
+	tree->Branch("gsfTrackLengthFromTangents", gsfTrackLengthFromTangents, "gsfTrackLengthFromTangents[3]/F");
 
 	// SC
 	tree->Branch("etaSCEle",      etaSCEle,       "etaSCEle[3]/F");
@@ -1427,10 +1495,134 @@ void ZNtupleDumper::TreeSetSingleElectronVar(const pat::Electron& electron, int 
 	return;
 }
 
+void ZNtupleDumper::TreeSetTrackVar(const pat::Electron& electron1, const pat::Electron & electron2)
+{
+        TreeSetTrackVar(electron1, 0);
+        TreeSetTrackVar(electron2, 1);
+}
 
-void ZNtupleDumper::TreeSetSingleElectronTrackVar(const pat::Electron& electron, int index)
+// can very likely find a better usage of GlobalPoint and GlobalVector
+void ZNtupleDumper::TreeSetTrackVar(const pat::Electron& electron, int index)
 {
         reco::GsfTrackRef track = electron.gsfTrack();
+        edm::ESHandle<MagneticField> magFieldHandle; 
+        pSetup->get<IdealMagneticFieldRecord>().get(magFieldHandle);
+        auto magField = magFieldHandle.product(); 
+
+        // momentum and position at vertex
+        GlobalPoint gx_vtx(track->vx(), track->vy(), track->vz());
+        GlobalVector gp_vtx(track->px(), track->py(), track->pz());
+        GlobalVector gp_ele(electron.px(), electron.py(), electron.pz());
+
+        // fill track momentum at vertex and vertex position
+        gsfTrackVtxPt[index]  = track->pt();
+        gsfTrackVtxEta[index] = track->eta();
+        gsfTrackVtxPhi[index] = track->phi();
+        gsfTrackVtxX[index]   = track->vx();
+        gsfTrackVtxY[index]   = track->vy();
+        gsfTrackVtxZ[index]   = track->vz();
+
+        // position extrapolated at the impact point on the calorimeter
+        auto tpc = electron.trackPositionAtCalo();
+        GlobalPoint gx_calo(tpc.x(), tpc.y(), tpc.z());
+        gsfTrackCaloX[index] = tpc.x();
+        gsfTrackCaloY[index] = tpc.y();
+        gsfTrackCaloZ[index] = tpc.z();
+
+        //fprintf(stderr, "--> pt: %f  eta: %f  phi: %f  %u  fbrem: %f\n", electron.pt(), electron.eta(), electron.phi(), track->gsfExtra()->tangentsSize(), electron.fbrem());
+
+        SteppingHelixPropagator helix(magField);
+        // path length in one go from momentum at vertex
+        FreeTrajectoryState trajectory(gx_vtx, gp_vtx, track->charge(), magField);
+        auto tpOne = helix.propagateWithPath(trajectory, gx_calo);
+        //fprintf(stderr, "path length in one go: %f (in: %f %f %f, pt = %f)\n", tpOne.second, gp_vtx.x(), gp_vtx.y(), gp_vtx.z(), sqrt(gp_vtx.x()*gp_vtx.x() + gp_vtx.y()*gp_vtx.y()));
+        gsfTrackLengthFromVtxP[index] = tpOne.second;
+
+        // path length in one go from electron momentum
+        FreeTrajectoryState trajectoryEle(gx_vtx, gp_ele, track->charge(), magField);
+        auto tpOneEle = helix.propagateWithPath(trajectoryEle, gx_calo);
+        gsfTrackLengthFromEleP[index] = tpOneEle.second;
+
+        // path length in one go from outer momentum
+        GlobalVector pOut(electron.trackMomentumOut().x(), electron.trackMomentumOut().y(), electron.trackMomentumOut().z());
+
+        // fill track momentum at outermost layer
+        gsfTrackOuterPt[index]  = electron.trackMomentumOut().rho();
+        gsfTrackOuterEta[index] = electron.trackMomentumOut().eta();
+        gsfTrackOuterPhi[index] = electron.trackMomentumOut().phi();
+
+        // propagate from vtx with outer momentum
+        FreeTrajectoryState trajectoryOut(gx_vtx, pOut, track->charge(), magField);
+        auto tpOut = helix.propagateWithPath(trajectoryOut, gx_calo);
+        //fprintf(stderr, "path length in one go: %f (out: %f %f %f, pt = %f)\n", tpOut.second, pOut.x(), pOut.y(), pOut.z(), sqrt(pOut.x()*pOut.x() + pOut.y()*pOut.y()));
+        gsfTrackLengthFromOuterP[index] = tpOut.second;
+
+        // path length in steps
+        double pathLength = 0.;
+        auto & tangents = track->gsfExtra()->tangents();
+        if (!tangents.size()) {
+                return;
+        }
+        reco::GsfTrackExtra::Point start_x, stop_x;
+        reco::GsfTrackExtra::Vector start_p;
+        auto & tg = tangents[0];
+
+        // from vtx to first tangent
+        stop_x = tg.position();
+        GlobalPoint gx_stop(stop_x.x(), stop_x.y(), stop_x.z());
+        FreeTrajectoryState traj_beg(gx_vtx, gp_vtx, track->charge(), magField);
+        auto tp = helix.propagateWithPath(traj_beg, gx_stop);
+        double length = tp.second;
+        pathLength += length;
+
+        // for next step (the first inside the loop)
+        start_x = stop_x;
+        start_p = tg.momentum();
+
+        // fill first tangent
+        gsfTrackTangentsPt[index].push_back(start_p.rho());
+        gsfTrackTangentsEta[index].push_back(start_p.eta());
+        gsfTrackTangentsPhi[index].push_back(start_p.phi());
+        gsfTrackTangentsDeltaP[index].push_back(tg.deltaP().value());
+        gsfTrackTangentsDeltaPErr[index].push_back(tg.deltaP().error());
+        gsfTrackTangentsX[index].push_back(start_x.x());
+        gsfTrackTangentsY[index].push_back(start_x.y());
+        gsfTrackTangentsZ[index].push_back(start_x.z());
+
+        for (size_t it = 1; it < tangents.size(); ++it) {
+                auto tg = tangents[it];
+                stop_x = tg.position();
+                GlobalPoint gx_start(start_x.x(), start_x.y(), start_x.z());
+                GlobalPoint gx_stop(stop_x.x(), stop_x.y(), stop_x.z());
+                GlobalVector gp_start(start_p.x(), start_p.y(), start_p.z());
+                FreeTrajectoryState traj(gx_start, gp_start, track->charge(), magField);
+                tp = helix.propagateWithPath(traj, gx_stop);
+                length = tp.second;
+                pathLength += length;
+                //fprintf(stderr, "segment length: %f (deltaP = %f +/- %f)  total length: %f\n", length, tg.deltaP().value(), tg.deltaP().error(), pathLength);
+                start_x = stop_x;
+                start_p = tg.momentum();
+                // fill tangents
+                gsfTrackTangentsPt[index].push_back(start_p.rho());
+                gsfTrackTangentsEta[index].push_back(start_p.eta());
+                gsfTrackTangentsPhi[index].push_back(start_p.phi());
+                gsfTrackTangentsDeltaP[index].push_back(tg.deltaP().value());
+                gsfTrackTangentsDeltaPErr[index].push_back(tg.deltaP().error());
+                gsfTrackTangentsX[index].push_back(start_x.x());
+                gsfTrackTangentsY[index].push_back(start_x.y());
+                gsfTrackTangentsZ[index].push_back(start_x.z());
+        }
+        GlobalPoint gx_start(start_x.x(), start_x.y(), start_x.z());
+        GlobalVector gp_start(start_p.x(), start_p.y(), start_p.z());
+        FreeTrajectoryState traj_end(gx_start, gp_start, track->charge(), magField);
+        tp = helix.propagateWithPath(traj_end, gx_calo);
+        length = tp.second;
+        pathLength += length;
+        
+        // fill track length from steps
+        gsfTrackLengthFromTangents[index] = pathLength;
+        //fprintf(stderr, "segment length: %f  total length: %f\n", length, pathLength);
+        return;
 }
 
 
@@ -1472,6 +1664,8 @@ void ZNtupleDumper::TreeSetSingleSCVar(const reco::SuperCluster& sc, int index)
                 } else {
                         amplitudeSeedSC[index] = uHitSeed->amplitude();
                 }
+        } else {
+                fprintf(stderr, "NO UNCHITS - seed\n");
         }
 
 	const EcalRecHitCollection *recHits = (seedDetId.subdetId() == EcalBarrel) ?  clustertools->getEcalEBRecHitCollection() : clustertools->getEcalEERecHitCollection();
@@ -1494,7 +1688,10 @@ void ZNtupleDumper::TreeSetSingleSCVar(const reco::SuperCluster& sc, int index)
                 } else {
                         amplitudeSecondToSeedSC[index] = uHitSeed->amplitude();
                 }
+        } else {
+                fprintf(stderr, "NO UNCHITS - second to seed\n");
         }
+
 
 	const EcalIntercalibConstantMap & icalMap = clustertools->getEcalIntercalibConstants();
         icSeedSC[index] = *(icalMap.find(seedDetId)); // unsafe, but never found a missing IC in years of running ;)
@@ -1680,8 +1877,10 @@ void ZNtupleDumper:: TreeSetDiElectronVar(const pat::Electron& electron1, const 
 	TreeSetSingleElectronVar(electron1, 0);
 	TreeSetSingleElectronVar(electron2, 1);
 
-        TreeSetSingleElectronTrackVar(electron1, 0);
-        TreeSetSingleElectronTrackVar(electron2, 1);
+        if (doTrackTree) {
+                TreeSetTrackVar(electron1, 0);
+                TreeSetTrackVar(electron2, 1);
+        }
 
 	double t1 = TMath::Exp(-etaEle[0]);
 	double t2 = TMath::Exp(-etaEle[1]);
@@ -2091,6 +2290,73 @@ void ZNtupleDumper::InitExtraStudyTree()
 	extraStudyTree->Branch("pedUncalibRecHitSCEle2", &(pedEUncalibRecHitSCEle[1]));
 
 	return;
+}
+
+//#============================== extra study tree
+void ZNtupleDumper::InitTrackTree()
+{
+
+	std::cout << "[STATUS] InitTrackTree" << std::endl;
+	if(trackTree == NULL) return;
+
+	trackTree->Branch("runNumber",     &runNumber,   "runNumber/i");
+	trackTree->Branch("lumiBlock",     &lumiBlock,   "lumiBlock/s");
+	trackTree->Branch("eventNumber",   &eventNumber, "eventNumber/l");
+	trackTree->Branch("eventTime",     &eventTime,     "eventTime/i");
+
+	trackTree->Branch("gsfTrackLengthFromOuterP", gsfTrackLengthFromOuterP, "gsfTrackLengthFromOuterP[3]/F");
+	trackTree->Branch("gsfTrackLengthFromEleP", gsfTrackLengthFromEleP, "gsfTrackLengthFromEleP[3]/F");
+	trackTree->Branch("gsfTrackOuterPt",  gsfTrackOuterPt,  "gsfTrackOuterPt[3]/F");
+	trackTree->Branch("gsfTrackOuterEta", gsfTrackOuterEta, "gsfTrackOuterEta[3]/F");
+	trackTree->Branch("gsfTrackOuterPhi", gsfTrackOuterPhi, "gsfTrackOuterPhi[3]/F");
+	trackTree->Branch("gsfTrackVtxPt",    gsfTrackVtxPt,    "gsfTrackVtxPt[3]/F");
+	trackTree->Branch("gsfTrackVtxEta",   gsfTrackVtxEta,   "gsfTrackVtxEta[3]/F");
+	trackTree->Branch("gsfTrackVtxPhi",   gsfTrackVtxPhi,   "gsfTrackVtxPhi[3]/F");
+	trackTree->Branch("gsfTrackVtxX",     gsfTrackVtxX,     "gsfTrackVtxX[3]/F");
+	trackTree->Branch("gsfTrackVtxY",     gsfTrackVtxY,     "gsfTrackVtxY[3]/F");
+	trackTree->Branch("gsfTrackVtxZ",     gsfTrackVtxZ,     "gsfTrackVtxZ[3]/F");
+	trackTree->Branch("gsfTrackCaloX",    gsfTrackCaloX,    "gsfTrackCaloX[3]/F");
+	trackTree->Branch("gsfTrackCaloY",    gsfTrackCaloY,    "gsfTrackCaloY[3]/F");
+	trackTree->Branch("gsfTrackCaloZ",    gsfTrackCaloZ,    "gsfTrackCaloZ[3]/F");
+	trackTree->Branch("gsfTrackTangentsPt", &(gsfTrackTangentsPt[0]));
+	trackTree->Branch("gsfTrackTangentsEta", &(gsfTrackTangentsEta[0]));
+	trackTree->Branch("gsfTrackTangentsPhi", &(gsfTrackTangentsPhi[0]));
+	trackTree->Branch("gsfTrackTangentsDeltaP", &(gsfTrackTangentsDeltaP[0]));
+	trackTree->Branch("gsfTrackTangentsDeltaPErr", &(gsfTrackTangentsDeltaPErr[0]));
+	trackTree->Branch("gsfTrackTangentsX", &(gsfTrackTangentsX[0]));
+	trackTree->Branch("gsfTrackTangentsY", &(gsfTrackTangentsY[0]));
+	trackTree->Branch("gsfTrackTangentsZ", &(gsfTrackTangentsZ[0]));
+	return;
+}
+
+void ZNtupleDumper::ResetTrackVar()
+{
+        for (int i = 0; i < NELE; ++i) {
+                gsfTrackLengthFromOuterP[i] = -999.;
+                gsfTrackLengthFromVtxP[i] = -999.;
+                gsfTrackLengthFromEleP[i] = -999.;
+                gsfTrackLengthFromTangents[i] = -999.;
+                gsfTrackOuterPt[i] = -999.;
+                gsfTrackOuterEta[i] = -999.;
+                gsfTrackOuterPhi[i] = -999.;
+                gsfTrackVtxPt[i] = -999.;
+                gsfTrackVtxEta[i] = -999.;
+                gsfTrackVtxPhi[i] = -999.;
+                gsfTrackVtxX[i] = -999.;
+                gsfTrackVtxY[i] = -999.;
+                gsfTrackVtxZ[i] = -999.;
+                gsfTrackCaloX[i] = -999.;
+                gsfTrackCaloY[i] = -999.;
+                gsfTrackCaloZ[i] = -999.;
+                gsfTrackTangentsPt[i].clear();
+                gsfTrackTangentsEta[i].clear();
+                gsfTrackTangentsPhi[i].clear();
+                gsfTrackTangentsDeltaP[i].clear();
+                gsfTrackTangentsDeltaPErr[i].clear();
+                gsfTrackTangentsX[i].clear();
+                gsfTrackTangentsY[i].clear();
+                gsfTrackTangentsZ[i].clear();
+        }
 }
 
 //#============================== Ele ID tree
