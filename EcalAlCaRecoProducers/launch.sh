@@ -8,9 +8,9 @@ jsonName=DCSONLY
 #jsonName=271036-284044_23Sep2016_v1
 
 
-#CHECK=--check
-CHECK=--createOnly
-
+CHECK=--check
+#CHECK=--createOnly
+#CHECK=--submitOnly
 
 #where=remoteGlidein
 scheduler=caf
@@ -18,6 +18,7 @@ tag_Prompt=config/reRecoTags/92X_dataRun2_Prompt_v4.py
 
 fileList=alcareco_datasets.dat
 PERIOD=RUN2017
+PERIOD=LEGACY2016
 
 IFS=$'\n'
 datasetsData=(`./scripts/parseDatasetFile.sh $fileList | grep VALID | sed 's|$|,|' | grep "${PERIOD}," | grep -v SIM`)
@@ -29,16 +30,15 @@ datasetsData=(`./scripts/parseDatasetFile.sh $fileList | grep VALID | sed 's|$|,
 for dataset in ${datasetsMC[@]} ${datasetsData[@]} #
 do
 	datasetName=`echo $dataset | awk '{print $6}'`
-	echo $datasetName
-	echo $dataset
+#	echo $datasetName
+#	echo $dataset
 
 	case $datasetName in
 		*)
 			#extraName=regressionMoriond17v2
-			./scripts/prodNtuples.sh --type=MINIAOD -t ${tag_Rereco} -s noSkim --scheduler=${scheduler}   --json=$json --json_name=$jsonName ${CHECK} $dataset
+			./scripts/prodNtuples.sh --type=MINIAOD -t ${tag_Prompt} -s noSkim --scheduler=${scheduler}   --json=$json --json_name=$jsonName ${CHECK} $dataset
 			;;
 	esac
-	break
 done
 exit 0
 for dataset in ${datasetsData[@]}
