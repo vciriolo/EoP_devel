@@ -482,6 +482,7 @@ case ${ORIGIN_REMOTE_DIR_BASE} in
 dataset=${DATASETPATH}
 datasetname=${DATASETNAME}
 runrange=${RUNRANGE}
+datasetsite=any
 #dbs_url = phys03
 EOF
 		else

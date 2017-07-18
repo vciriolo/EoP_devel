@@ -1,11 +1,11 @@
 #!/bin/bash
 jsonDCS=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions17/13TeV/DCSOnly/json_DCSONLY.txt
-json=$jsonDCS
-#json=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/ReReco/Final/Cert_271036-284044_13TeV_23Sep2016ReReco_Collisions16_JSON.txt
+#json=$jsonDCS
+jsonRereco=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/ReReco/Final/Cert_271036-284044_13TeV_23Sep2016ReReco_Collisions16_JSON.txt
 #Cert_271036-275125_13TeV_PromptReco_Collisions16_JSON.txt
 
-jsonName=DCSONLY
-#jsonName=271036-284044_23Sep2016_v1
+jsonNamePrompt=DCSONLY
+jsonNameRereco=271036-284044_23Sep2016_v1
 
 
 CHECK=--check
@@ -15,6 +15,7 @@ CHECK=--check
 #where=remoteGlidein
 scheduler=caf
 tag_Prompt=config/reRecoTags/92X_dataRun2_Prompt_v4.py
+tag_Rereco=config/reRecoTags/80X_dataRun2_2016LegacyRepro_v3.py
 
 fileList=alcareco_datasets.dat
 PERIOD=RUN2017
@@ -34,9 +35,16 @@ do
 #	echo $dataset
 
 	case $datasetName in
-		*)
+		*03Feb*)
+			json=$jsonDCS
+			jsonName=$jsonNamePrompt
 			#extraName=regressionMoriond17v2
 			./scripts/prodNtuples.sh --type=MINIAOD -t ${tag_Prompt} -s noSkim --scheduler=${scheduler}   --json=$json --json_name=$jsonName ${CHECK} $dataset
+			;;
+		*18Apr*)
+			json=$jsonRereco
+			jsonName=$jsonNameRereco
+			./scripts/prodNtuples.sh --type=MINIAOD -t ${tag_Rereco} -s noSkim --scheduler=${scheduler}   --json=$json --json_name=$jsonName ${CHECK} $dataset
 			;;
 	esac
 done
