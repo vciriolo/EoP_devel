@@ -15,15 +15,15 @@ CHECK=--check
 #where=remoteGlidein
 scheduler=caf
 tag_Prompt=config/reRecoTags/92X_dataRun2_Prompt_v4.py
-tag_Rereco=config/reRecoTags/80X_dataRun2_2016LegacyRepro_v3.py
-
+tag_Rereco=config/reRecoTags/80X_dataRun2_2016SeptRepro_v7.py
+tag_MC=config/reRecoTags/80X_mcRun2_asymptotic_2016_TrancheIV_v7.py
 fileList=alcareco_datasets.dat
 PERIOD=RUN2017
 PERIOD=LEGACY2016
 
 IFS=$'\n'
 datasetsData=(`./scripts/parseDatasetFile.sh $fileList | grep VALID | sed 's|$|,|' | grep "${PERIOD}," | grep -v SIM`)
-#datasetsMC=(`./scripts/parseDatasetFile.sh $fileList | grep VALID | sed 's|$|,|' | grep "${PERIOD}," | grep SIM`)
+datasetsMC=(`./scripts/parseDatasetFile.sh $fileList | grep VALID | sed 's|$|,|' | grep "${PERIOD}," | grep SIM`)
 # set IFS to newline in order to divide using new line the datasets
 
 
