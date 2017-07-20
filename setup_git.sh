@@ -17,6 +17,9 @@ checkVERSION(){
 		 CMSSW_8_0_26_patch1)
 			echo "[INFO] Installing for $CMSSW_VERSION (2016 13TeV)"
 			;;
+		CMSSW_8_0_28)
+			echo "[INFO] Installing for $CMSSW_VERSION (Legacy 2016 13TeV)"
+			;;
 		CMSSW_9_2_3_patch2)
 			echo "[INFO] Installing for $CMSSW_VERSION (2017 13TeV)"
 			;;
@@ -66,24 +69,25 @@ git cms-init
 echo "[STATUS] Download ECALELF directory"
 myDir=Calibration
 if [ ! -d "$myDir" ]; then
-
-		echo "[INFO] user=$USER"
-		case "$USER" in 
-			shervin)
-				git clone  https://shervin@gitlab.cern.ch/shervin/ECALELF.git $myDir  >> setup.log || exit 1 # read-only mode
-				;;
-			gitlab-runner)
-				git clone  https://gitlab.cern.ch/shervin/ECALELF.git $myDir >> setup.log || exit 1 # read-only mode
-				;;
+	
+	echo "[INFO] user=$USER"
+	case "$USER" in 
+		shervin)
+			git clone  https://shervin@gitlab.cern.ch/shervin/ECALELF.git $myDir  >> setup.log || exit 1 # read-only mode
+			git remote set-url --push origin ssh://git@gitlab.cern.ch:7999/shervin/ECALELF.git
+			;;
+		gitlab-runner)
+			git clone  https://gitlab.cern.ch/shervin/ECALELF.git $myDir >> setup.log || exit 1 # read-only mode
+			;;
 		*)
             ### if you are not Shervin download this to have some useful scripts
-				git clone  --single-branch https://shervin@gitlab.cern.ch/shervin/ECALELF.git $myDir >> setup.log || exit 1 # read-only mode
-				cd $myDir/EcalAlCaRecoProducers/
-				git clone  --single-branch https://github.com/ECALELFS/Utilities.git bin
-				;;
+			git clone  --single-branch https://shervin@gitlab.cern.ch/shervin/ECALELF.git $myDir >> setup.log || exit 1 # read-only mode
+			cd $myDir/EcalAlCaRecoProducers/
+			git clone  --single-branch https://github.com/ECALELFS/Utilities.git bin
+			;;
     esac
-
-		git clone https://github.com/ECALELFS/LSFsubmit Tools/LSFsubmit/scripts
+	
+	git clone https://github.com/ECALELFS/LSFsubmit Tools/LSFsubmit/scripts
 fi
 
 cd $CMSSW_BASE/src
@@ -109,11 +113,14 @@ case $USER in
 		scram b # just to copy the LSFsubmit scripts 
 	;;
     *)
-	scram b -j16 || {
-	    echo "[INFO for USERS] You could get a C++ seg fault: Be persistent! from $CMSSW_BASE/src go for a scram b -j16 again :-)"
-	    scram b
-	}
-	;;
+		cd Tools/LSFsubmit/scripts
+		scram b # just to copy the LSFsubmit scripts 
+		cd -
+		scram b -j16 || {
+			echo "[INFO for USERS] You could get a C++ seg fault: Be persistent! from $CMSSW_BASE/src go for a scram b -j16 again :-)"
+			scram b
+		}
+		;;
 esac
 
 echo "[INFO] Checking LSFsubmit commands"
