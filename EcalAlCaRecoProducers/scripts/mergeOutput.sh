@@ -55,10 +55,12 @@ source $config
 USER_REMOTE_DIR=$user_remote_dir
 STORAGE_PATH=$storage_path
 
-echo $STORAGE_PATH $USER_REMOTE_DIR
-echo "RUNRANGE=${RUNRANGE}"
-if [ -z "$RUNRANGE" ];then 
-    echo "RUNRANGE=${RUNRANGE:=allRange}"
+echo "------------------------------JOB STATUS"
+echo $UI_WORKING_DIR
+#echo $STORAGE_PATH $USER_REMOTE_DIR
+#echo "runrange=${runrange}"
+if [ -z "$runrange" ];then 
+    echo "runrange=${runrange:=allRange}"
 fi
 DATASETNAME=${datasetname}
 
@@ -86,18 +88,18 @@ esac
 
 
 if [ "${FILENAME_BASE}" == "PUDumper" ];then
-    MERGEDFILE=PUDumper-${DATASETNAME}-${RUNRANGE}.root
+    MERGEDFILE=PUDumper-${DATASETNAME}-${runrange}.root
 elif [ "`echo ${FILENAME_BASE} | awk '(/eleIDTree/){printf(\"1\")}'`" == "1" ]; then
-    MERGEDFILE=eleIDTree-${DATASETNAME}-${RUNRANGE}.root
+    MERGEDFILE=eleIDTree-${DATASETNAME}-${runrange}.root
 elif [ "`echo ${FILENAME_BASE} | awk '(/extraCalibTree/){printf(\"1\")}'`" == "1" ]; then
-    MERGEDFILE=extraCalibTree-${DATASETNAME}-${RUNRANGE}.root
+    MERGEDFILE=extraCalibTree-${DATASETNAME}-${runrange}.root
 elif [ "`echo ${FILENAME_BASE} | awk '(/extraStudyTree/){printf(\"1\")}'`" == "1" ]; then
-    MERGEDFILE=extraStudyTree-${DATASETNAME}-${RUNRANGE}.root
+    MERGEDFILE=extraStudyTree-${DATASETNAME}-${runrange}.root
 else
-    MERGEDFILE=${DATASETNAME}-${RUNRANGE}.root
+    MERGEDFILE=${DATASETNAME}-${runrange}.root
 fi
 #else
-#    MERGEDFILE=${DATASETNAME}-${RUNRANGE}-JSON_${JSON}.root
+#    MERGEDFILE=${DATASETNAME}-${runrange}-JSON_${JSON}.root
 #fi
 
 case ${MERGED_REMOTE_DIR} in 
@@ -112,6 +114,7 @@ esac
 if [ -e "${UI_WORKING_DIR}/res/merged_${FILENAME_BASE}" ];then
     echo "[REPORT] Ntuples ${FILENAME_BASE} already merged"
 	echo ${STORAGE_PATH}/${MERGED_REMOTE_DIR}/${MERGEDFILE}
+	eos ls `echo ${STORAGE_PATH}/${MERGED_REMOTE_DIR}/${MERGEDFILE} | sed 's|root://eoscms/||'` || exit 1
     exit 0
 fi
 
@@ -135,7 +138,7 @@ if [ ! -d "/tmp/$USER" ];then
 fi
 
 #if [ -z "$JSON" ];then
-#    JSON=`echo ${USER_REMOTE_DIR} | sed "s|.*${RUNRANGE}/||;s|/unmerged.*||"`
+#    JSON=`echo ${USER_REMOTE_DIR} | sed "s|.*${runrange}/||;s|/unmerged.*||"`
 
 
 # eos.select ls $eosFile && {
