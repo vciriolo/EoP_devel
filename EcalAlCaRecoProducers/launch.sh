@@ -15,11 +15,16 @@ CHECK=--check
 #where=remoteGlidein
 scheduler=caf
 tag_Prompt=config/reRecoTags/92X_dataRun2_Prompt_v4.py
-tag_Rereco=config/reRecoTags/80X_dataRun2_2016SeptRepro_v7.py
+tag_Rereco=config/reRecoTags/80X_dataRun2_2016LegacyRepro_v3.py
+tag_Moriond=config/reRecoTags/80X_dataRun2_2016SeptRepro_v7.py
+tag_PromptH=config/reRecoTags/80X_dataRun2_Prompt_v16.py
 tag_MC=config/reRecoTags/80X_mcRun2_asymptotic_2016_TrancheIV_v7.py
+
 fileList=alcareco_datasets.dat
 PERIOD=RUN2017
 PERIOD=LEGACY2016
+#PERIOD=MORIOND2017
+#PERIOD=MORIOND17 # MC
 
 IFS=$'\n'
 datasetsData=(`./scripts/parseDatasetFile.sh $fileList | grep VALID | sed 's|$|,|' | grep "${PERIOD}," | grep -v SIM`)
@@ -27,26 +32,38 @@ datasetsMC=(`./scripts/parseDatasetFile.sh $fileList | grep VALID | sed 's|$|,|'
 # set IFS to newline in order to divide using new line the datasets
 
 
-
+extraName=19Jul2017
 for dataset in ${datasetsMC[@]} ${datasetsData[@]} #
 do
 	datasetName=`echo $dataset | awk '{print $6}'`
 #	echo $datasetName
 #	echo $dataset
-
+#	continue
 	case $datasetName in
-		*03Feb*)
-			json=$jsonDCS
-			jsonName=$jsonNamePrompt
-			#extraName=regressionMoriond17v2
-			./scripts/prodNtuples.sh --type=MINIAOD -t ${tag_Prompt} -s noSkim --scheduler=${scheduler}   --json=$json --json_name=$jsonName ${CHECK} $dataset
-			;;
-		*18Apr*)
+		
+		*H-03Feb*)
 			json=$jsonRereco
 			jsonName=$jsonNameRereco
-			./scripts/prodNtuples.sh --type=MINIAOD -t ${tag_Rereco} -s noSkim --scheduler=${scheduler}   --json=$json --json_name=$jsonName ${CHECK} $dataset
+			#extraName=regressionMoriond17v2
+			./scripts/prodNtuples.sh --type=MINIAOD -t ${tag_PromptH} -s noSkim --scheduler=${scheduler}   --json=$json --json_name=$jsonName  --extraName=${extraName} ${CHECK} $dataset
+			;;
+		
+		*03Feb*)
+			json=$jsonRereco
+			jsonName=$jsonNameRereco
+			#extraName=regressionMoriond17v2
+			./scripts/prodNtuples.sh --type=MINIAOD -t ${tag_Moriond} -s noSkim --scheduler=${scheduler}   --json=$json --json_name=$jsonName  --extraName=${extraName} ${CHECK} $dataset
+			;;
+		*18Apr2017*)
+			json=$jsonRereco
+			jsonName=$jsonNameRereco
+			./scripts/prodNtuples.sh --type=MINIAOD -t ${tag_Rereco} -s noSkim --scheduler=${scheduler}   --json=$json --json_name=$jsonName --extraName=${extraName} ${CHECK} $dataset
+			;;
+		*miniAODv2) #MC
+			./scripts/prodNtuples.sh --type=MINIAOD --isMC -t ${tag_MC} -s noSkim --scheduler=${scheduler}    --extraName=${extraName} ${CHECK} $dataset
 			;;
 	esac
+
 done
 exit 0
 for dataset in ${datasetsData[@]}
