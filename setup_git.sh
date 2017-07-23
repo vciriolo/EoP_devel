@@ -84,6 +84,7 @@ if [ ! -d "$myDir" ]; then
 			git clone  --single-branch https://shervin@gitlab.cern.ch/shervin/ECALELF.git $myDir >> setup.log || exit 1 # read-only mode
 			cd $myDir/EcalAlCaRecoProducers/
 			git clone  --single-branch https://github.com/ECALELFS/Utilities.git bin
+			cd -
 			;;
     esac
 	
