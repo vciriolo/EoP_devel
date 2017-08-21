@@ -349,7 +349,13 @@ allRange	/ZToEE_NNPDF30_13TeV-powheg_M_50_120/RunIISummer16MiniAODv2-PUMoriond17
 296168-296174	/DoubleEG/Run2017A-PromptReco-v2/MINIAOD	DoubleEG-Run2017A-noSkim-Prompt-v2-miniAOD	caf	database	VALID	RUN2017A,RUN2017
 296880-297004	/DoubleEG/Run2017A-PromptReco-v3/MINIAOD	DoubleEG-Run2017A-noSkim-Prompt-v3-miniAOD	caf	database	VALID	RUN2017A,RUN2017
 297046-297723	/DoubleEG/Run2017B-PromptReco-v1/MINIAOD	DoubleEG-Run2017B-noSkim-Prompt-v1-miniAOD	caf	database	VALID	RUN2017B,RUN2017
+299368-299649	/DoubleEG/Run2017C-PromptReco-v1/MINIAOD	DoubleEG-Run2017C-noSkim-Prompt-v1-miniAOD	caf	database	VALID	RUN2017C,RUN2017
+299929-300676	/DoubleEG/Run2017C-PromptReco-v2/MINIAOD	DoubleEG-Run2017C-noSkim-Prompt-v2-miniAOD	caf	database	VALID	RUN2017C,RUN2017
+300742-301399	/DoubleEG/Run2017C-PromptReco-v3/MINIAOD	DoubleEG-Run2017C-noSkim-Prompt-v3-miniAOD	caf	database	VALID	RUN2017C,RUN2017
 #
 296168-296174	/SingleElectron/Run2017A-PromptReco-v2/MINIAOD	SingleElectron-Run2017A-noSkim-Prompt-v2-miniAOD	caf	database	VALID	RUN2017A,RUN2017
 296880-297004	/SingleElectron/Run2017A-PromptReco-v3/MINIAOD	SingleElectron-Run2017A-noSkim-Prompt-v3-miniAOD	caf	database	VALID	RUN2017A,RUN2017
 297046-297723	/SingleElectron/Run2017B-PromptReco-v1/MINIAOD	SingleElectron-Run2017B-noSkim-Prompt-v1-miniAOD	caf	database	VALID	RUN2017B,RUN2017
+299368-299649	/SingleElectron/Run2017C-PromptReco-v1/MINIAOD	SingleElectron-Run2017C-noSkim-Prompt-v1-miniAOD	caf	database	VALID	RUN2017C,RUN2017
+299929-300676	/SingleElectron/Run2017C-PromptReco-v2/MINIAOD	SingleElectron-Run2017C-noSkim-Prompt-v2-miniAOD	caf	database	VALID	RUN2017C,RUN2017
+300742-301399	/SingleElectron/Run2017C-PromptReco-v3/MINIAOD	SingleElectron-Run2017C-noSkim-Prompt-v3-miniAOD	caf	database	VALID	RUN2017C,RUN2017
