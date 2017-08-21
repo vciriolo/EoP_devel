@@ -38,7 +38,7 @@ extraName=1d296a55622a0222533deaa7b763d6d834e1bcec
 for dataset in ${datasetsMC[@]} ${datasetsData[@]} #
 do
 	datasetName=`echo $dataset | awk '{print $6}'`
-	echo $datasetName
+#	echo $datasetName
 #	echo $dataset
 
 	case $datasetName in
