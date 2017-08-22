@@ -1,5 +1,7 @@
 #!/bin/bash
 jsonDCS=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions17/13TeV/DCSOnly/json_DCSONLY.txt
+jsonDCS=/eos/project/c/cms-ecal-calibration/data/json/300576-301532_DCSonly.json
+
 #json=$jsonDCS
 jsonRereco=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/ReReco/Final/Cert_271036-284044_13TeV_23Sep2016ReReco_Collisions16_JSON.txt
 #Cert_271036-275125_13TeV_PromptReco_Collisions16_JSON.txt
@@ -7,9 +9,9 @@ jsonPrompt=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions17/13Te
 
 jsonNamePrompt=294927-300575_Prompt_v1
 jsonNameRereco=271036-284044_23Sep2016_v1
+jsonNameDCS=300576-301532_DCSonly
 
-
-#CHECK=--check
+CHECK=--check
 #CHECK=--createOnly
 #CHECK=--submitOnly
 
@@ -68,6 +70,11 @@ do
 			json=$jsonPrompt
 			jsonName=$jsonNamePrompt
 			./scripts/prodNtuples.sh --type=MINIAOD -t ${tag_Prompt} -s noSkim --scheduler=${scheduler}   --json=$json --json_name=$jsonName --extraName=${extraName} ${CHECK} $dataset
+			case $datasetName in 
+				*Run2017C-noSkim-Prompt-v2*|*Run2017C-noSkim-Prompt-v3*)
+					./scripts/prodNtuples.sh --type=MINIAOD -t ${tag_Prompt} -s noSkim --scheduler=${scheduler}   --json=$jsonDCS --json_name=$jsonNameDCS --extraName=${extraName} ${CHECK} $dataset
+					;;
+			esac
 			;;
 	esac
 
