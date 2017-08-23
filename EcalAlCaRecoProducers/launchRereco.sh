@@ -14,12 +14,16 @@ jsonName=271036_284044-23Sep2016
 
 json25ns=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions17/13TeV/PromptReco/Cert_294927-299042_13TeV_PromptReco_Collisions17_JSON.txt
 jsonName=294927_299042-Prompt
+
+json25ns=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions17/13TeV/PromptReco/Cert_294927-300575_13TeV_PromptReco_Collisions17_JSON.txt
+jsonName=294927-300575_Prompt_v1
+
 ##
 PERIOD=LEGACY2016
 PERIOD=RUN2017
 #
 #tags=( config/reRecoTags/Cal_Mar2017_ICcomb_v5.py)
-tags=( config/reRecoTags/92X_dataRun2_Prompt_v5.py config/reRecoTags/Cal_Jul2017_ESMIP_v1.py )
+tags=( config/reRecoTags/Cal_Aug2017_ref.py config/reRecoTags/Cal_Aug2017_Ped_v1.py config/reRecoTags/Cal_Aug2017_Ped_v2.py )
 for tagfile in ${tags[@]}
 do
 	echo
@@ -42,7 +46,6 @@ do
 				;;
 		esac
 	done
-continue
 	for CHECK in --check
 	do
 		case $tagfile in 
