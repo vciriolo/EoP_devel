@@ -1,21 +1,18 @@
 #!/bin/bash
-jsonDCS=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions17/13TeV/DCSOnly/json_DCSONLY.txt
-jsonDCS=/eos/project/c/cms-ecal-calibration/data/json/300576-301532_DCSonly.json
 
-#json=$jsonDCS
-jsonRereco=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/ReReco/Final/Cert_271036-284044_13TeV_23Sep2016ReReco_Collisions16_JSON.txt
-#Cert_271036-275125_13TeV_PromptReco_Collisions16_JSON.txt
-jsonPrompt=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions17/13TeV/PromptReco/Cert_294927-300575_13TeV_PromptReco_Collisions17_JSON.txt
-
-jsonNamePrompt=294927-300575_Prompt_v1
-jsonNameRereco=271036-284044_23Sep2016_v1
-jsonNameDCS=300576-301532_DCSonly
-
-CHECK=--check
+#CHECK=--check
 #CHECK=--createOnly
 #CHECK=--submitOnly
 
-#where=remoteGlidein
+jsonDCS=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions17/13TeV/DCSOnly/json_DCSONLY.txt
+jsonNameDCS=DCSonly
+
+jsonRereco=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/ReReco/Final/Cert_271036-284044_13TeV_23Sep2016ReReco_Collisions16_JSON.txt
+jsonNameRereco=271036-284044_23Sep2016_v1
+
+jsonPrompt=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions17/13TeV/PromptReco/Cert_294927-301141_13TeV_PromptReco_Collisions17_JSON.txt
+jsonNamePrompt=294927-301141_Prompt_v1
+
 scheduler=caf
 tag_Prompt=config/reRecoTags/92X_dataRun2_Prompt_v8.py
 tag_Rereco=config/reRecoTags/80X_dataRun2_2016LegacyRepro_v3.py
@@ -29,20 +26,30 @@ PERIOD=RUN2017
 #PERIOD=MORIOND2017
 #PERIOD=MORIOND17 # MC
 
+
+if  git diff-index --quiet HEAD; then
+	GITCOMMIT=`git rev-parse HEAD`
+	if [ "`git rev-parse HEAD`" != "`git rev-parse origin/master`" ];then
+		echo "[ERROR] You are not allowed to make any production if all commits are propagated to the master branch of the repository" >> /dev/stderr
+		exit 2
+	fi
+else
+	echo "You have uncommitted changes, please commit everything before making a production" 
+	exit 1
+fi
+
+extraName=$GITCOMMIT
+
+# set IFS to newline in order to divide using new line the datasets
 IFS=$'\n'
 datasetsData=(`./scripts/parseDatasetFile.sh $fileList | grep VALID | sed 's|$|,|' | grep "${PERIOD}," | grep -v SIM`)
 datasetsMC=(`./scripts/parseDatasetFile.sh $fileList | grep VALID | sed 's|$|,|' | grep "${PERIOD}," | grep SIM`)
-# set IFS to newline in order to divide using new line the datasets
 
-
-extraName=19Jul2017
-extraName=1d296a55622a0222533deaa7b763d6d834e1bcec
 for dataset in ${datasetsMC[@]} ${datasetsData[@]} #
 do
 	datasetName=`echo $dataset | awk '{print $6}'`
 #	echo $datasetName
 #	echo $dataset
-
 	case $datasetName in
 		
 		*H-03Feb*)
@@ -67,14 +74,17 @@ do
 			./scripts/prodNtuples.sh --type=MINIAOD --isMC -t ${tag_MC} -s noSkim --scheduler=${scheduler}    --extraName=${extraName} ${CHECK} $dataset
 			;;
 		*miniAOD) #data prompt 2017
-			json=$jsonPrompt
-			jsonName=$jsonNamePrompt
-			./scripts/prodNtuples.sh --type=MINIAOD -t ${tag_Prompt} -s noSkim --scheduler=${scheduler}   --json=$json --json_name=$jsonName --extraName=${extraName} ${CHECK} $dataset
-			case $datasetName in 
-				*Run2017C-noSkim-Prompt-v2*|*Run2017C-noSkim-Prompt-v3*)
-					./scripts/prodNtuples.sh --type=MINIAOD -t ${tag_Prompt} -s noSkim --scheduler=${scheduler}   --json=$jsonDCS --json_name=$jsonNameDCS --extraName=${extraName} ${CHECK} $dataset
+			case $PERIOD in
+				*_DCS)
+					json=$jsonDCS
+					jsonName=$jsonNameDCS
+					;;
+				*)
+					json=$jsonPrompt
+					jsonName=$jsonNamePrompt
 					;;
 			esac
+			./scripts/prodNtuples.sh --type=MINIAOD -t ${tag_Prompt} -s noSkim --scheduler=${scheduler}   --json=$json --json_name=$jsonName --extraName=${extraName} ${CHECK} $dataset
 			;;
 	esac
 

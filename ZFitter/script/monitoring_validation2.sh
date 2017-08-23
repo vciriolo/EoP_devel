@@ -6,10 +6,11 @@ selection=loose25nsRun22016Moriond
 invMass_var=invMass_ECAL_ele
 invMass_min=65
 invMass_max=115
-configFile=data/validation/monitoring_2016.dat
-runRangesFile=data/runRanges/monitoringRun2016-v2.dat
+configFile=data/validation/monitoring_2017_Z_dcs.dat
+runRangesFile=data/runRanges/monitoring_2017.dat
 baseDir=testNew
-extraOptions="--anyVarBranches=S4 --anyVarBranches=etaWidth --anyVarBranches=sigmaIEtaIEtaSCEle --anyVarBranches=R9Ele"
+#extraOptions="--anyVarBranches=S4 --anyVarBranches=etaWidth --anyVarBranches=sigmaIEtaIEtaSCEle --anyVarBranches=R9Ele"
+extraOptions=" --anyVarBranches=R9Ele"
 updateOnly="--updateOnly" 
 # VALIDATION=y
 # STABILITY=y
@@ -193,7 +194,9 @@ if [ -n "$VALIDATION" ];then
 
     ./script/makeTable2.sh --regionsFile ${regionFile}  --commonCut=${commonCut} \
 	 	--fitResFile=${outDirData}/fitres/${invMass_var}.dat \
+		--fitResFileMC=${outDirMC}/fitres/${invMass_var}.dat \
 	 	>  ${outDirTable}/$PERIOD/monitoring_summary-${invMass_var}-${selection}-${commonCut}.dat || exit 1
+	
 fi
 
 ##################################################
@@ -214,10 +217,11 @@ if [ -n "$STABILITY" ];then
 				> ${outDirData}/log/monitoring_stability.log || exit 1
 
 		fi
-
-		./script/makeTable2.sh --regionsFile ${regionFile} --runRangesFile ${runRangesFile} --commonCut=${commonCut} \
-	 		--fitResFile=${outDirData}/fitres/${invMass_var}.dat \
-			>  ${outDirTable}/monitoring_stability-${invMass_var}-${selection}.tex || exit 1
+		# not needed anymore
+		# ./script/makeTable2.sh --regionsFile ${regionFile} --runRangesFile ${runRangesFile} --commonCut=${commonCut} \
+	 	# 	--fitResFile=${outDirData}/fitres/${invMass_var}.dat \
+		# 	--fitResFileMC=${outDirMC}/fitres/${invMass_var}.dat \
+		# 	>  ${outDirTable}/monitoring_stability-${invMass_var}-${selection}.tex || exit 1
     fi
 
 	###################### Make stability plots
@@ -226,8 +230,12 @@ if [ -n "$STABILITY" ];then
 		mkdir -p ${imgDir}
     fi
 
-    ./script/stability2.sh -t  ${outDirData}/fitres/${invMass_var}.dat \
-		--outDirImgData ${imgDir} -x $xVar -y peak $xMin $xMax || exit 1
+    ./script/stability2.sh -t  ${outDirData}/fitres/${invMass_var}.dat -l data \
+		 -x $xVar -y peak $xMin $xMax || exit 1
+	./script/stability2.sh -t  ${outDirMC}/fitres/${invMass_var}.dat -l MC \
+		-x $xVar -y peak $xMin $xMax || exit 1
+
+
 fi
 
 ##################################################
@@ -259,7 +267,7 @@ if [ -n "$ALPHA" ];then
 		mkdir -p ${imgDir}
     fi
 
-    ./script/stability2.sh -t  ${outDirData}/fitres/${invMass_var}.dat \
+    ./script/stability2.sh -t  ${outDirData}/fitres/${invMass_var}.dat -l data \
 		--outDirImgData ${imgDir} -x $xVar -y peak $xMin $xMax || exit 1
 fi
 
@@ -284,7 +292,7 @@ if [ -n "$ETA" ];then
 		mkdir -p ${imgDir}
     fi
 	
-    ./script/stability2.sh -t  ${outDirData}/fitres/${invMass_var}.dat --outDirImgData=$imgDir -x $xVar
+#    ./script/stability2.sh -t  ${outDirData}/fitres/${invMass_var}.dat --outDirImgData=$imgDir -x $xVar
     
 fi    
 
@@ -515,6 +523,7 @@ if [ -n "$SYSTEMATICSD" ];then
 
 fi    
 
+exit 0
 if [ -n "$SLIDES" ];then
     echo "[STATUS] Making slides"
     dirData=`dirname $outDirData` # remove the invariant mass subdir

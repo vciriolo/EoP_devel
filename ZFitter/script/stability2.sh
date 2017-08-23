@@ -25,7 +25,7 @@ do
     case $1 in
 	-h|--help) usage; exit 0;;
 	-t) TABLEFILES="${TABLEFILES} $2"; shift;;
-	-l) LEGENDS[${index}]="$2";  echo $index; echo ${LEGENDS[$index]}; let index=$index+1; shift;;
+	-l) LEGENDS[${index}]="$2"; let index=$index+1; shift;;
 	-x|--xVar) xVar=$2; shift;;
 	-y|--yVar) yVar=$2; shift;;
 	-m|--isMC) isMC="y";;
@@ -63,10 +63,10 @@ case $xVar in
 	runNumber)
 		IFS='\n'
 		# read all the run ranges and associated timestamps to create a sed script that adds the time ranges to the table file
-		for line in `cat data/runRanges/*.dat | grep -v '#' | awk '(NF==3){print $0}' | sort | uniq`
+		for line in `cat data/runRanges/*.dat | grep -v '#' | awk '(NF==3){print $1,$3}' | sort | uniq`
 		do
 			# sort with reverse ordering to remove duplicated lines containing 0 for the timestamp
-			echo $line | awk '{print $1,"\t",$0}' |tr '-' ' '| sed 's|^|s/runNumber_|;s| \t\ |/|;s|\t[0-9]*\t|\t|;s| |_|;s|$|/|' | sort -r | uniq > sed/run2time.sed 
+			echo $line | awk '{print $1,"\t",$0}' |tr '-' ' ' | sed 's|^|s/runNumber_|;s| \t\ |/|;s|\t[0-9]*\t|\t|;s| |_|;s|$|/|' | sort -r | uniq > sed/run2time.sed 
 			echo "s/runNumber_0_999999/0 999999 0 1577275793/" >> sed/run2time.sed
 		done
 
@@ -97,20 +97,35 @@ case $xVar in
 esac
 
 
-# if [ -z "$index" ]; then
-# 	cp $tmpFile $outDirImgData/
-# 	gnuplot -c 'macro/stability.gpl' 'tmp/tmpFile.dat'
-# 	if [ -n "${outDirImgData}" ];then
-# 		mv stability.pdf $outDirImgData/stability-${xVar}.pdf
-# 	fi
-# else
-# 	for legend in ${LEGENDS[@]}
-# 	do
-# 		file="tmp/tmpFile_$legend.dat $legend"
-# 		echo $file
-# 		files=(${files[@]} $file)
-# 	done
-# 	echo ${files[@]}
-# 	gnuplot -c macro/stability.gpl ${files[@]} 
-# fi
+GPLversion=`gnuplot --version`
+if [ -z "$index" ]; then
+	cp $tmpFile $outDirImgData/
+	case $GPLversion in 
+		"gnuplot 5*" )
+			gnuplot -c 'macro/stability.gpl' 'tmp/tmpFile.dat'
+			if [ -n "${outDirImgData}" ];then
+				mv stability.pdf $outDirImgData/stability-${xVar}.pdf
+			fi
+			;;
+	esac
+else
+	for index in ${#LEGENDS[@]}
+	do
+		let index=$index-1
+		legend=${LEGENDS[$index]}
+		tablefile=${TABLEFILES[$index]}
+		file="tmp/tmpFile_$legend.dat $legend"
+		cp tmp/tmpFile_$legend.dat `dirname $tablefile`/`basename $tablefile .dat`-stability_${xVar}.dat
+#		echo "C" $index tmp/tmpFile_$legend.dat $tablefile
+		files=(${files[@]} $file)
+	done
+#	echo ${files[@]}
+	case $GPLversion in 
+		"gnuplot 5*" )
+			gnuplot -c macro/stability.gpl ${files[@]} 
+			;;
+	esac
+
+
+fi
 
