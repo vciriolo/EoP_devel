@@ -1,23 +1,24 @@
 #!/bin/bash
 
-configfiles="data/validation/rereco/Moriond2017.dat data/validation/rereco/Cal_Mar2017/Cal_Mar2017_Legacy.dat"
-# for file in $configfiles
-# do
-# 	./script/GenRootChains.sh -f $file
-# done
+configfiles=(data/validation/rereco/Cal_Aug2017/Cal_Aug2017_*.dat )
+for file in ${configfiles[@]}
+do
+	#./script/GenRootChains.sh -f $file
+	echo $file
+done
 
-# categories="EB EE EB-gold EB-bad EE-gold EE-bad"
-# for category in $categories
-# do
-# 	python macro/standardDataMC.py  -s tmp/Cal_Mar2017_Legacy//s_chain.root,MC -d tmp/Cal_Mar2017_Legacy//d_chain.root,Legacy16 -d tmp/Moriond2017/d_chain.root,Moriond17 --plotdir=tmp/ --noPU "$category" "(80,80,100)" invMass_ECAL_ele  -x "M_{ee} must SC [GeV]" -n "invMass_ECAL_ele-$category"
-# done
+categories="EB EE EB-gold EB-bad EE-gold EE-bad"
+for category in $categories
+do
+	python macro/standardDataMC.py  \
+		-d tmp/Cal_Aug2017_ref/d_chain.root,ref \
+		-d tmp/Cal_Aug2017_Ped_v1/d_chain.root,Ped_v1 \
+		-d tmp/Cal_Aug2017_Ped_v2/d_chain.root,Ped_v2 \
+		--plotdir=tmp/Cal/ --noPU --no-ratio --noEleIDSF --noScales --noSmearings \
+		"$category" "(80,80,100)" invMass_ECAL_ele  -x "M_{ee} must SC [GeV]" -n "invMass_ECAL_ele-$category"
+done
 
-./script/stability2.sh -x runNumber -y peak \
-	-t testNew/dato/Cal_Mar2017_Legacy/loose25nsRun22016Moriond/invMass_ECAL_ele/anyVar/fitres/invMass_ECAL_ele.dat  -l Legacy \ 
-    -t testNew/dato/Moriond2017/loose25nsRun22016Moriond/invMass_ECAL_ele/anyVar/fitres/invMass_ECAL_ele.dat -l Moriond17 \
-    -t testNew/MC/selected_s1_newNtuples_allRange_DYJets_madgraph-RunIISpring16-withES_./loose25nsRun22016Moriond/invMass_ECAL_ele/anyVar/fitres/invMass_ECAL_ele.dat  -l MC
-
-gnuplot -c macro/stability.gpl "tmp/tmpFile_Legacy.dat" Legacy tmp/tmpFile_Moriond17.dat Moriond17
+#gnuplot -c macro/stability.gpl "tmp/tmpFile_Legacy.dat" Legacy tmp/tmpFile_Moriond17.dat Moriond17
 
 
 
@@ -26,6 +27,7 @@ gnuplot -c macro/stability.gpl "tmp/tmpFile_Legacy.dat" Legacy tmp/tmpFile_Morio
 
 
 exit 0
+gnuplot -c ECALELF/ZFitter/macro/stability.gpl rereco/Cal_Aug2017/Cal_Aug2017_ref/loose25nsRun22016Moriond/invMass_ECAL_ele/anyVar/fitres/R9Ele-stability_runNumber.dat 'REF' rereco/Cal_Aug2017/Cal_Aug2017_Ped_v1/loose25nsRun22016Moriond/invMass_ECAL_ele/anyVar/fitres/R9Ele-stability_runNumber.dat 'Ped v1' rereco/Cal_Aug2017/Cal_Aug2017_Ped_v2/loose25nsRun22016Moriond/invMass_ECAL_ele/anyVar/fitres/R9Ele-stability_runNumber.dat 'Ped v2' 
 
 OUTDIR=comparison
 

@@ -3,6 +3,7 @@
 # for the resolution estimator and returns a .dat and a .tex files
 commonCut=isEle-Et_25
 column_peak=6 #median
+column_peak=4 #mean
 column_resolution=11
 var=invMass_ECAL_ele
 usage(){
@@ -105,7 +106,7 @@ fi
 	do
 		grep $category $fitResFile
 	done
-} | cut -f $columns| sed 's|[\t ]| \& |g;s|$| \\\\|' |sed -r "s|-$commonCut[-]?||" | sed -f sed/tex.sed
+} | cut -f $columns | awk '(/catName/){print $0};(! /catName/){printf("%s\t%ld\t%.2f\t%.2f\n", $1, $2, $3, $4*100)}'  | sed 's|[\t ]| \& |g;s|$| \\\\|' |sed -r "s|-$commonCut[-]?||" | sed -f sed/tex.sed
 
 
 

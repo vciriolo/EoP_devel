@@ -54,7 +54,7 @@ desc(){
 
 
 # options may be followed by one colon to indicate they have a required argument
-if ! options=$(getopt -u -o hf: -l help,runRangesFile:,selection:,invMass_var:,puName:,baseDir:,validation,stability,alphaStudies,etaScale,systematics:,slides,onlyTable,test,commonCut:,period:,cruijff,refreg,R9Ele,noPU -- "$@")
+if ! options=$(getopt -u -o hf: -l help,runRangesFile:,selection:,invMass_var:,puName:,baseDir:,validation,stability,alphaStudies,etaScale,systematics:,slides,onlyTable,test,commonCut:,period:,cruijff,refreg,R9Ele,noPU,plots -- "$@")
 then
     # something went wrong, getopt will put out an error message for us
     exit 1
@@ -81,6 +81,7 @@ do
 	--refreg)      REFREG=y;;
 	--systematics) SYSTEMATICS=$2; shift;;
 	--slides)      SLIDES=y;;
+	--plots)       PLOTS=y;;
 	--onlyTable)   ONLYTABLE=y;;
 	--test)        TEST=y;;
 	--selection)   selection=$2; echo "[OPTION] Selection=${selection}"; shift;;
@@ -111,12 +112,12 @@ do
     shift
 done
 
-if [ -z "${VALIDATION}" -a -z "${STABILITY}" -a -z "${SLIDES}" -a -z "${SYSTEMATICS}" -a -z "${ETA}" -a -z "${REFREG}" -a -z "${R9ELE}" -a -z "${ALPHA}" ];then
+if [ -z "${VALIDATION}" -a -z "${STABILITY}" -a -z "${SLIDES}" -a -z "${SYSTEMATICS}" -a -z "${ETA}" -a -z "${REFREG}" -a -z "${R9ELE}" -a -z "${ALPHA}" -a -z "${PLOTS}" ];then
     # if no option selected, run all the sequence
     VALIDATION=y
     STABILITY=y
     ETA=y
-    SLIDES=y
+#    SLIDES=y
 fi
 
 if [ -n "${TEST}" ];then
@@ -156,12 +157,13 @@ echo "mcName: ${mcName}"
 
 #################### NAMING OUTPUT FOLDERS
 
-if [ "`grep -c rereco ${configFile}`" != "0" ];then
+if grep -q rereco ${configFile}; then
+    outDirData=$baseDir/dato/`basename ${configFile} .dat`/${selection}/${invMass_var}
+else
     TAG=`basename ${configFile} .dat`
+	echo $TAG
 	rereco=`echo $configFile | sed 's|.*rereco/||;s|/.*.dat||'`
     outDirData=$baseDir/dato/rereco/${rereco}/`basename ${configFile} .dat`/${selection}/${invMass_var}
-else
-    outDirData=$baseDir/dato/`basename ${configFile} .dat`/${selection}/${invMass_var}
 fi
 
 outDirMC=$baseDir/MC/${mcName}/${puName}/${selection}/${invMass_var}
@@ -195,7 +197,14 @@ if [ -n "$VALIDATION" ];then
     ./script/makeTable2.sh --regionsFile ${regionFile}  --commonCut=${commonCut} \
 	 	--fitResFile=${outDirData}/fitres/${invMass_var}.dat \
 		--fitResFileMC=${outDirMC}/fitres/${invMass_var}.dat \
+		--peakVar=10 --resolutionVar=11 \
 	 	>  ${outDirTable}/$PERIOD/monitoring_summary-${invMass_var}-${selection}-${commonCut}.dat || exit 1
+
+    ./script/makeTable2.sh --regionsFile ${regionFile}  --commonCut=${commonCut} \
+	 	--fitResFile=${outDirData}/fitres/R9Ele.dat \
+		--fitResFileMC=${outDirMC}/fitres/R9Ele.dat \
+		--peakVar=10 --resolutionVar=11 \
+	 	>  ${outDirTable}/$PERIOD/R9_summary-${invMass_var}-${selection}-${commonCut}.dat || exit 1
 	
 fi
 
@@ -234,6 +243,8 @@ if [ -n "$STABILITY" ];then
 		 -x $xVar -y peak $xMin $xMax || exit 1
 	./script/stability2.sh -t  ${outDirMC}/fitres/${invMass_var}.dat -l MC \
 		-x $xVar -y peak $xMin $xMax || exit 1
+    ./script/stability2.sh -t  ${outDirData}/fitres/R9Ele.dat -l data \
+		 -x $xVar -y peak $xMin $xMax || exit 1
 
 
 fi
@@ -523,7 +534,22 @@ if [ -n "$SYSTEMATICSD" ];then
 
 fi    
 
-exit 0
+##################################################
+if [ -n "$PLOTS" ];then
+	./script/GenRootChains.sh -f ${configFile}
+	categories="EB EE EB-gold EB-bad EE-gold EE-bad"
+	for category in $categories
+	do
+		python macro/standardDataMC.py  \
+			-d tmp/`basename ${configFile} .dat`/d_chain.root,data \
+			-s tmp/`basename ${configFile} .dat`/d_chain.root,data \
+			--plotdir=${outDirData}/img/ --noPU --no-ratio --noEleIDSF --noScales --noSmearings \
+			"$category" "(80,80,100)" invMass_ECAL_ele  -x "M_{ee} must SC [GeV]" -n "invMass_ECAL_ele-$category"
+	done
+
+fi
+
+##################################################
 if [ -n "$SLIDES" ];then
     echo "[STATUS] Making slides"
     dirData=`dirname $outDirData` # remove the invariant mass subdir

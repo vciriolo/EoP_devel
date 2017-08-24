@@ -129,6 +129,7 @@ for file in $@
   tagName=`dirname $tagName`
   tagName=`dirname $tagName`
   tagName=`dirname $tagName`
+  tagName=`dirname $tagName`
   tagName=`basename $tagName`
   echo ${columnName} > tmp/$index-data.tex
   echo "${tagName}" >> tmp/${index}-data.tex
