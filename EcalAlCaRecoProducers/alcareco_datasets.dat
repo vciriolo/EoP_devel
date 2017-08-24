@@ -363,3 +363,5 @@ allRange	/ZToEE_NNPDF30_13TeV-powheg_M_50_120/RunIISummer16MiniAODv2-PUMoriond17
 299929-300676	/SingleElectron/Run2017C-PromptReco-v2/MINIAOD	SingleElectron-Run2017C-noSkim-Prompt-v2-miniAOD	caf	database	VALID	RUN2017C,RUN2017
 300742-301141	/SingleElectron/Run2017C-PromptReco-v3/MINIAOD	SingleElectron-Run2017C-noSkim-Prompt-v3-miniAOD	caf	database	VALID	RUN2017C,RUN2017
 301141-301544	/SingleElectron/Run2017C-PromptReco-v3/MINIAOD	SingleElectron-Run2017C-noSkim-Prompt-v3-miniAOD	caf	database	VALID	RUN2017C,RUN2017_DCS
+#
+allRange	/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/PhaseISpring17MiniAOD-FlatPU28to62_902_90X_upgrade2017_realistic_v20_ext1-v1/MINIAODSIM DYJets_madgraph-PhaseISpring17-miniAODv2	caf	database	VALID	RUN2017,RUN2017MC

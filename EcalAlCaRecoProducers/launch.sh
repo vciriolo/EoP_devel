@@ -18,20 +18,21 @@ tag_Prompt=config/reRecoTags/92X_dataRun2_Prompt_v8.py
 tag_Rereco=config/reRecoTags/80X_dataRun2_2016LegacyRepro_v3.py
 tag_Moriond=config/reRecoTags/80X_dataRun2_2016SeptRepro_v7.py
 tag_PromptH=config/reRecoTags/80X_dataRun2_Prompt_v16.py
-tag_MC=config/reRecoTags/80X_mcRun2_asymptotic_2016_TrancheIV_v7.py
+#tag_MC=config/reRecoTags/80X_mcRun2_asymptotic_2016_TrancheIV_v7.py
+tag_MC=config/reRecoTags/90X_upgrade2017_realistic_v20.py
 
 fileList=alcareco_datasets.dat
-PERIOD=RUN2017_DCS
+PERIOD=RUN2017MC
 #PERIOD=LEGACY2016
 #PERIOD=MORIOND2017
 #PERIOD=MORIOND17 # MC
 
 
-if  git status --porcelain -uno | grep -v launch | grep -q -v _datasets  ; then
+if  git status --porcelain -uno | grep -v launch | grep -v ZFitter/ | grep -q -v _datasets  ; then
 	echo "You have uncommitted changes, please commit everything before making a production" 
 	exit 1
 else
-	GITCOMMIT=`git rev-parse HEAD~1`
+	GITCOMMIT=`git rev-parse HEAD`
 	if [ "`git rev-parse HEAD`" != "`git rev-parse origin/master`" ];then
 		echo "[ERROR] You are not allowed to make any production if all commits are propagated to the master branch of the repository" >> /dev/stderr
 		exit 2
