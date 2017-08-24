@@ -137,9 +137,11 @@ void anyVar_class::ImportTree(TChain *chain, TCut& commonCut, std::set<TString>&
 #ifdef DEBUG
 	elist->Print();
 #endif
-	TECALChain *chain_ecal = (TECALChain*)chain;
-	chain_ecal->TECALChain::SetEntryList(elist);
-
+//	TECALChain *chain_ecal = (TECALChain*)chain;
+//	chain_ecal->TECALChain::SetEntryList(elist);
+	TChain *chain_ecal = (TChain*)chain;
+	chain_ecal->SetEntryList(elist);
+	assert(chain_ecal->GetEntryList()!=NULL);
 	std::cout << "[INFO] Selected events: " <<  chain_ecal->GetEntryList()->GetN() << std::endl;
 	assert(chain_ecal->GetEntryList()->GetN() > 0);
 	//chain = dynamic_cast<TChain*>(chain_ecal);

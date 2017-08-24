@@ -1294,7 +1294,7 @@ int main(int argc, char **argv)
 			system(("mkdir -p " + outDirFitResMC).c_str());
 			anyVar_class anyVarMC(mc, branchListAny, cutter, invMass_var, outDirFitResMC + "/", dirMC, true); // vm.count("updateOnly"));
 			anyVarMC._exclusiveCategories = false;
-			anyVarMC.Import(commonCut, eleID, activeBranchList, modulo); //activeBranchList is the list of branches for category selections
+//			anyVarMC.Import(commonCut, eleID, activeBranchList, modulo); //activeBranchList is the list of branches for category selections
 
 			///\todo allocating both takes too much memory
 			if(vm.count("runToy") && modulo > 0) {
@@ -1332,14 +1332,15 @@ int main(int argc, char **argv)
 				//anyVar._exclusiveCategories = true;
 				for(auto& region : regions) { //categories
 					anyVar.ChangeModulo(0);
-					anyVarMC.ChangeModulo(0);
+//					anyVarMC.ChangeModulo(0);
 					if(runRanges.size() > 0) {
 						anyVar.TreeAnalyzeShervin(region.Data(), cutter.GetCut(region, false, 1), cutter.GetCut(region, false, 2), runRanges, commonCut);
 					} else {
 						TString category = region;
 						TString c = category + "-" + commonCut.c_str();
+						//std::cout << c << std::endl;
 						anyVar.TreeAnalyzeShervin(c.Data(),  cutter.GetCut(category, false, 1), cutter.GetCut(category, false, 2));
-						anyVarMC.TreeAnalyzeShervin(c.Data(),  cutter.GetCut(category, false, 1), cutter.GetCut(category, false, 2));
+//						anyVarMC.TreeAnalyzeShervin(c.Data(),  cutter.GetCut(category, false, 1), cutter.GetCut(category, false, 2));
 					}
 //				anyVarMC.TreeAnalyzeShervin(region.Data(), cutter.GetCut(region, true, 1), cutter.GetCut(region, true, 2), scale);
 				}
