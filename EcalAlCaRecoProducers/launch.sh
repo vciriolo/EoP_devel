@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#CHECK=--check
+CHECK=--check
 #CHECK=--createOnly
 #CHECK=--submitOnly
 
@@ -21,21 +21,21 @@ tag_PromptH=config/reRecoTags/80X_dataRun2_Prompt_v16.py
 tag_MC=config/reRecoTags/80X_mcRun2_asymptotic_2016_TrancheIV_v7.py
 
 fileList=alcareco_datasets.dat
-PERIOD=RUN2017
+PERIOD=RUN2017_DCS
 #PERIOD=LEGACY2016
 #PERIOD=MORIOND2017
 #PERIOD=MORIOND17 # MC
 
 
-if  git diff-index --quiet HEAD; then
-	GITCOMMIT=`git rev-parse HEAD`
+if  git status --porcelain -uno | grep -v launch | grep -q -v _datasets  ; then
+	echo "You have uncommitted changes, please commit everything before making a production" 
+	exit 1
+else
+	GITCOMMIT=`git rev-parse HEAD~1`
 	if [ "`git rev-parse HEAD`" != "`git rev-parse origin/master`" ];then
 		echo "[ERROR] You are not allowed to make any production if all commits are propagated to the master branch of the repository" >> /dev/stderr
 		exit 2
 	fi
-else
-	echo "You have uncommitted changes, please commit everything before making a production" 
-	exit 1
 fi
 
 extraName=$GITCOMMIT

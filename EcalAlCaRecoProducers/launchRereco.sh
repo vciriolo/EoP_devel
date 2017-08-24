@@ -21,15 +21,15 @@ PERIOD=RUN2017
 tags=( config/reRecoTags/Cal_Aug2017_ref.py config/reRecoTags/Cal_Aug2017_Ped_v1.py config/reRecoTags/Cal_Aug2017_Ped_v2.py )
 
 
-if  git diff-index --quiet HEAD; then
+if  git status --porcelain -uno | grep -v launch | grep -q -v _datasets  ; then
+	echo "You have uncommitted changes, please commit everything before making a production" 
+	exit 1
+else
 	GITCOMMIT=`git rev-parse HEAD`
 	if [ "`git rev-parse HEAD`" != "`git rev-parse origin/master`" ];then
 		echo "[ERROR] You are not allowed to make any production if all commits are propagated to the master branch of the repository" >> /dev/stderr
 		exit 2
 	fi
-else
-	echo "You have uncommitted changes, please commit everything before making a production" 
-	exit 1
 fi
 
 
@@ -40,7 +40,7 @@ do
 #	./scripts/removeRereco.sh -t $tagfile -f ntuple_datasets.dat --json_name=$jsonName
 #	continue
 
-	for CHECK in ''  --check
+	for CHECK in  --check
 	do
 		case $tagfile in 
 			*/Cal_*_ref*.py)
@@ -56,7 +56,7 @@ do
 		esac
 	done
 
-	for CHECK in '' --check
+	for CHECK in  --check
 	do
 		case $tagfile in 
 			*/Cal_*_ref*.py)
