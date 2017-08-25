@@ -19,6 +19,7 @@ PERIOD=RUN2017
 #
 #tags=( config/reRecoTags/Cal_Mar2017_ICcomb_v5.py)
 tags=( config/reRecoTags/Cal_Aug2017_ref.py config/reRecoTags/Cal_Aug2017_Ped_v1.py config/reRecoTags/Cal_Aug2017_Ped_v2.py )
+tags=( config/reRecoTags/Cal_Aug2017_{Ped_,}PS_v1.py )
 
 
 if  git status --porcelain -uno | grep -v launch | grep -q -v _datasets  ; then
@@ -40,7 +41,7 @@ do
 #	./scripts/removeRereco.sh -t $tagfile -f ntuple_datasets.dat --json_name=$jsonName
 #	continue
 
-	for CHECK in  --check
+	for CHECK in '' --check
 	do
 		case $tagfile in 
 			*/Cal_*_ref*.py)
@@ -55,8 +56,8 @@ do
 				;;
 		esac
 	done
-
-	for CHECK in  --check
+continue
+	for CHECK in '' --check
 	do
 		case $tagfile in 
 			*/Cal_*_ref*.py)

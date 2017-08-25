@@ -32,7 +32,7 @@ if  git status --porcelain -uno | grep -v launch | grep -v ZFitter/ | grep -q -v
 	echo "You have uncommitted changes, please commit everything before making a production" 
 	exit 1
 else
-	GITCOMMIT=`git rev-parse HEAD`
+	GITCOMMIT=`git rev-parse HEAD~3`
 	if [ "`git rev-parse HEAD`" != "`git rev-parse origin/master`" ];then
 		echo "[ERROR] You are not allowed to make any production if all commits are propagated to the master branch of the repository" >> /dev/stderr
 		exit 2
