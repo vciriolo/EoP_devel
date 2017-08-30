@@ -62,6 +62,7 @@
 #include "DataFormats/EgammaCandidates/interface/GsfElectron.h"
 #include "DataFormats/GsfTrackReco/interface/GsfTrackFwd.h"
 #include "DataFormats/EgammaCandidates/interface/Photon.h"
+#include "DataFormats/HepMCCandidate/interface/GenParticle.h"
 
 //#include "Calibration/ZNtupleDumper/interface/puWeights_class.hh"
 
@@ -176,6 +177,7 @@ private:
 	edm::Handle<std::vector<pat::Electron> > electronsHandle;
 	edm::Handle<std::vector<pat::Muon> > muonsHandle;
 	edm::Handle<std::vector<pat::Photon> > photonsHandle;
+	edm::Handle<std::vector< reco::GenParticle> > genParticlesHandle;
 	edm::Handle<std::vector<reco::SuperCluster>> EESuperClustersHandle; //used only for high-eta
 	edm::Handle<reco::VertexCollection> primaryVertexHandle; // for nPV
 	edm::Handle<double> rhoHandle;
@@ -204,6 +206,7 @@ private:
 	edm::EDGetTokenT<pat::ElectronCollection> electronsToken_;
 	edm::EDGetTokenT<pat::MuonCollection>     muonsToken_;
 	edm::EDGetTokenT<pat::PhotonCollection>     photonsToken_;
+	edm::EDGetTokenT<std::vector<reco::GenParticle> >     genParticlesToken_;
 
 	edm::EDGetTokenT<EcalRecHitCollection> recHitCollectionEBToken_;
 	edm::EDGetTokenT<EcalRecHitCollection> recHitCollectionEEToken_;
@@ -322,6 +325,7 @@ private:
 	Float_t   etaMCEle[NELE]  = initFloat, phiMCEle[NELE] = initFloat;
 	Float_t energyMCEle[NELE] = initFloat;		///< Electron MC true energy
 	Float_t		invMass_MC;
+	Bool_t		ZEvent = false;
 
 
 	//============================== ExtraCalibTree (for E/p)
@@ -484,6 +488,7 @@ ZNtupleDumper::ZNtupleDumper(const edm::ParameterSet& iConfig):
 	electronsToken_(consumes<pat::ElectronCollection>(iConfig.getParameter<edm::InputTag>("electronCollection"))),
 	muonsToken_(consumes<pat::MuonCollection>(iConfig.getParameter<edm::InputTag>("muonCollection"))),
 	photonsToken_(consumes<pat::PhotonCollection>(iConfig.getParameter<edm::InputTag>("photonCollection"))),
+	genParticlesToken_(consumes<std::vector<reco::GenParticle> >(iConfig.getParameter<edm::InputTag>("genParticleCollection"))),
 	recHitCollectionEBToken_(consumes<EcalRecHitCollection>(iConfig.getParameter<edm::InputTag>( "recHitCollectionEB" ))),
 	recHitCollectionEEToken_(consumes<EcalRecHitCollection>(iConfig.getParameter<edm::InputTag>( "recHitCollectionEE" ))),
 	recHitCollectionESToken_(consumes<EcalRecHitCollection>(iConfig.getParameter<edm::InputTag>("recHitCollectionES"))),
@@ -630,6 +635,17 @@ void ZNtupleDumper::analyze(const edm::Event& iEvent, const edm::EventSetup& iSe
 		isMC = true;
 	} else isMC = false;
 
+	if(isMC) {
+		// Gen Particles
+		iEvent.getByToken(genParticlesToken_, genParticlesHandle);
+		ZEvent = false;
+		for (auto& p : *genParticlesHandle) {
+			if(p.pdgId() == 23) {
+				ZEvent = true;
+				break;
+			}
+		}
+	}
 
 	//------------------------------ HLT
 	/// \todo check why
@@ -703,7 +719,6 @@ void ZNtupleDumper::analyze(const edm::Event& iEvent, const edm::EventSetup& iSe
 			if(skipEvent) return; // event not coming from any skim or paths
 		}
 	}
-
 	//------------------------------ CONVERSIONS
 	iEvent.getByToken(conversionsProducerToken_, conversionsHandle);
 
@@ -1197,6 +1212,8 @@ void ZNtupleDumper::InitNewTree()
 	tree->Branch("etaMCEle",      etaMCEle,       "etaMCEle[3]/F");	//[nEle]
 	tree->Branch("phiMCEle",      phiMCEle,       "phiMCEle[3]/F");	//[nEle]
 	tree->Branch("invMass_MC", &invMass_MC, "invMass_MC/F");
+
+	tree->Branch("ZEvent",      &ZEvent,       "ZEvent/O");	//[nEle]
 
 	// invariant mass
 	tree->Branch("invMass",    &invMass,      "invMass/F");
