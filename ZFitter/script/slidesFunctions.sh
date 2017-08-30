@@ -72,7 +72,9 @@ validationTableSlides(){
     tmpFile=${dirSlides}/validation-${invMass_var}-${selection}-table_slide.tex 
     cat tex/tableSlides.tex > $tmpFile
 
-    grep -v "#" $dirData/${selection}/${invMass_var}/table/$PERIOD/monitoring_summary-${invMass_var}-${selection}.tex | cut -d '&' -f 1-2,8-10 | awk -F '[&]' -f awk/format.awk | sed -f sed/tex.sed | sed 's|\(.*eta.*R9\)|%\1|;/^EE[ ]*&/ i \\\hline' > tmp/file.tex
+#	cut -d '&' -f 2-5 $dirMC/${selection}/${invMass_var}/table/$PERIOD/monitoring_summary-${invMass_var}-${selection}.tex > tmp/fileMC.tex
+	cat  $dirData/${selection}/${invMass_var}/table/$PERIOD/monitoring_summary-${invMass_var}-${selection}.tex  > tmp/file.tex
+
     sed -i "/_TABLESIGMANEW_/ r tmp/file.tex" $tmpFile
     sed -i '/_TABLESIGMANEW_/ d' $tmpFile
 
