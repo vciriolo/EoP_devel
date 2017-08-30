@@ -117,7 +117,11 @@ if [ -z "${VALIDATION}" -a -z "${STABILITY}" -a -z "${SLIDES}" -a -z "${SYSTEMAT
     VALIDATION=y
     STABILITY=y
     ETA=y
+	PLOTS=y
 #    SLIDES=y
+	if [ -n "$ONLYTABLE" ];then
+		unset PLOTS
+	fi
 fi
 
 if [ -n "${TEST}" ];then
@@ -156,14 +160,13 @@ mcName ${configFile}
 echo "mcName: ${mcName}"
 
 #################### NAMING OUTPUT FOLDERS
-
-if grep -q rereco ${configFile}; then
-    outDirData=$baseDir/dato/`basename ${configFile} .dat`/${selection}/${invMass_var}
-else
+if echo $configFile | grep -q rereco; then
     TAG=`basename ${configFile} .dat`
 	echo $TAG
 	rereco=`echo $configFile | sed 's|.*rereco/||;s|/.*.dat||'`
     outDirData=$baseDir/dato/rereco/${rereco}/`basename ${configFile} .dat`/${selection}/${invMass_var}
+else
+    outDirData=$baseDir/dato/`basename ${configFile} .dat`/${selection}/${invMass_var}
 fi
 
 outDirMC=$baseDir/MC/${mcName}/${puName}/${selection}/${invMass_var}
@@ -198,13 +201,13 @@ if [ -n "$VALIDATION" ];then
 	 	--fitResFile=${outDirData}/fitres/${invMass_var}.dat \
 		--fitResFileMC=${outDirMC}/fitres/${invMass_var}.dat \
 		--peakVar=10 --resolutionVar=11 \
-	 	>  ${outDirTable}/$PERIOD/monitoring_summary-${invMass_var}-${selection}-${commonCut}.dat || exit 1
+	 	>  ${outDirTable}/$PERIOD/monitoring_summary-${invMass_var}-${selection}-${commonCut}.tex || exit 1
 
     ./script/makeTable2.sh --regionsFile ${regionFile}  --commonCut=${commonCut} \
 	 	--fitResFile=${outDirData}/fitres/R9Ele.dat \
 		--fitResFileMC=${outDirMC}/fitres/R9Ele.dat \
 		--peakVar=10 --resolutionVar=11 \
-	 	>  ${outDirTable}/$PERIOD/R9_summary-${invMass_var}-${selection}-${commonCut}.dat || exit 1
+	 	>  ${outDirTable}/$PERIOD/R9_summary-${invMass_var}-${selection}-${commonCut}.tex || exit 1
 	
 fi
 
@@ -542,7 +545,7 @@ if [ -n "$PLOTS" ];then
 	do
 		python macro/standardDataMC.py  \
 			-d tmp/`basename ${configFile} .dat`/d_chain.root,data \
-			-s tmp/`basename ${configFile} .dat`/d_chain.root,data \
+			-s tmp/`basename ${configFile} .dat`/s_chain.root,MC \
 			--plotdir=${outDirData}/img/ --noPU --no-ratio --noEleIDSF --noScales --noSmearings \
 			"$category" "(80,80,100)" invMass_ECAL_ele  -x "M_{ee} must SC [GeV]" -n "invMass_ECAL_ele-$category"
 	done

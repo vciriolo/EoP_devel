@@ -1,6 +1,9 @@
 #!/bin/bash
 # this script selects the one column for the peak estimator and one
 # for the resolution estimator and returns a .dat and a .tex files
+ID=`uuidgen -r | cut -d '-' -f 2`
+mkdir tmp/$ID/ 
+
 commonCut=isEle-Et_25
 column_peak=6 #median
 column_peak=4 #mean
@@ -106,7 +109,38 @@ fi
 	do
 		grep $category $fitResFile
 	done
-} | cut -f $columns | awk '(/catName/){print $0};(! /catName/){printf("%s\t%ld\t%.2f\t%.2f\n", $1, $2, $3, $4*100)}'  | sed 's|[\t ]| \& |g;s|$| \\\\|' |sed -r "s|-$commonCut[-]?||" | sed -f sed/tex.sed
+} | cut -f $columns | awk '(/catName/){print $0};(! /catName/){printf("%s\t%ld\t%.2f\t%.2f\n", $1, $2, $3, $4*100)}'  | sed 's|[\t ]| \& |g;s|$| \\\\|' |sed -r "s|-$commonCut[-]?||" | sed -f sed/tex.sed | uniq > tmp/$ID/data.tex
+
+{
+	# get header
+	head -1 $fitResFileMC
+	# get results
+	for category in $categories
+	do
+		grep $category $fitResFileMC
+	done
+} | cut -f $columns | awk '(/catName/){print $0};(! /catName/){printf("%s\t%ld\t%.2f\t%.2f\n", $1, $2, $3, $4*100)}'  | sed 's|[\t ]| \& |g;s|$| \\\\|' |sed -r "s|-$commonCut[-]?||" | sed -f sed/tex.sed | uniq > tmp/$ID/MC.tex
+
+cat > tmp/$ID/format.awk <<EOF
+(NR==1){
+	print "%" \$1, \$2, \$6, "Ndata/Nmc", \$3, \$7, "\\$\\\\Delta P\\$", \$4, \$8, "\\$\\\\Delta \\\\sigma\\$" " \\\\\\\\"
+}
+
+(NR!=1){
+	deltaP = ((\$3/\$7)-1)*100.
+	deltaSigma = \$4>\$8 ? sqrt((\$4*\$4-\$8*\$8)) : "-"
+
+	print \$1, \$2, \$6, \$2/\$6, \$3, \$7, deltaP , \$4, \$8, deltaSigma " \\\\\\\\"
+}
+
+
+EOF
+paste tmp/$ID/data.tex tmp/$ID/MC.tex | sed 's|\\\\|\&|;s|\\\\||g' | \
+	awk  -F '&' -v OFS='\&' -v OFMT=' %.2f ' -v CONVFMT=" %.2f "  -f tmp/$ID/format.awk
+
+rm tmp/$ID/ -Rf
+
+
 
 
 
