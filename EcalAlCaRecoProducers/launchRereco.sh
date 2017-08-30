@@ -22,7 +22,7 @@ tags=( config/reRecoTags/Cal_Aug2017_ref.py config/reRecoTags/Cal_Aug2017_Ped_v1
 tags=( config/reRecoTags/Cal_Aug2017_{Ped_,}PS_v1.py )
 
 
-if  git status --porcelain -uno | grep -v launch | grep -q -v _datasets  ; then
+if  git status --porcelain -uno | grep -v launch | grep -v ZFitter | grep -q -v _datasets  ; then
 	echo "You have uncommitted changes, please commit everything before making a production" 
 	exit 1
 else
