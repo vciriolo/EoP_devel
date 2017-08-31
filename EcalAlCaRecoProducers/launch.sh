@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#CHECK=--check
+CHECK=--check
 #CHECK=--createOnly
 #CHECK=--submitOnly
 
@@ -25,7 +25,7 @@ tag_PromptH=config/reRecoTags/80X_dataRun2_Prompt_v16.py
 tag_MC=config/reRecoTags/90X_upgrade2017_realistic_v20.py
 
 fileList=alcareco_datasets.dat
-PERIOD=RUN2017NEW
+PERIOD=RUN2017NEW_DCS
 #PERIOD=LEGACY2016
 #PERIOD=MORIOND2017
 #PERIOD=MORIOND17 # MC
@@ -36,7 +36,7 @@ if  git status --porcelain -uno | grep -v launch | grep -v ZFitter/ | grep -q -v
 	exit 1
 else
 	GITCOMMIT=`git rev-parse HEAD`
-	if [ "`git rev-parse HEAD`" != "`git rev-parse origin/master`" ];then
+	if [ "`git rev-parse HEAD~1`" != "`git rev-parse origin/master`" ];then
 		echo "[ERROR] You are not allowed to make any production if all commits are propagated to the master branch of the repository" >> /dev/stderr
 		exit 2
 	fi
@@ -75,7 +75,7 @@ do
 ##			./scripts/prodNtuples.sh --type=MINIAOD -t ${tag_Rereco} -s noSkim --scheduler=${scheduler}   --json=$json --json_name=$jsonName --extraName=${extraName} ${CHECK} $dataset
 			;;
 		*miniAODv2) #MC
-			./scripts/prodNtuples.sh --type=MINIAOD --isMC -t ${tag_MC} -s noSkim --scheduler=${scheduler}    --extraName=${extraName} ${CHECK} $dataset
+			./scripts/prodNtuples.sh --type=MINIAOD --isMC -t ${tag_MC} -s noSkim --scheduler=${scheduler}  ${CHECK} $dataset
 			;;
 		*miniAOD) #data prompt 2017
 			case $PERIOD in
@@ -88,7 +88,7 @@ do
 					jsonName=$jsonNamePrompt
 					;;
 			esac
-			./scripts/prodNtuples.sh --type=MINIAOD -t ${tag_Prompt} -s noSkim --scheduler=${scheduler}   --json=$json --json_name=$jsonName --extraName=${extraName} ${CHECK} $dataset
+			./scripts/prodNtuples.sh --type=MINIAOD -t ${tag_Prompt} -s noSkim --scheduler=${scheduler}   --json=$json --json_name=$jsonName  ${CHECK} $dataset
 			;;
 	esac
 

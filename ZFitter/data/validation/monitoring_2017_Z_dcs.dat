@@ -1,4 +1,3 @@
 s1  selected    root://eoscms//eos/cms/store/group/dpg_ecal/alca_ecalcalib/ecalelf/ntuples/13TeV/MINIAODNTUPLE/90X_upgrade2017_realistic_v20/DYJets_madgraph-PhaseISpring17-miniAODv2/allRange/0bf7e83e1cd31d611f7cf8bd9705c7747759615a/DYJets_madgraph-PhaseISpring17-miniAODv2-allRange.root
 
-d11	selected	root://eoscms//eos/cms/store/group/dpg_ecal/alca_ecalcalib/ecalelf/ntuples/13TeV/MINIAODNTUPLE/92X_dataRun2_Prompt_v8/DoubleEG-Run2017C-noSkim-Prompt-v3-miniAOD/301142-301544/DCSonly/50df02a28fa53bdb49a4e887a8c8815e18b922c2/DoubleEG-Run2017C-noSkim-Prompt-v3-miniAOD-301142-301544.root
-
+d11	selected	root://eoscms//eos/cms/store/group/dpg_ecal/alca_ecalcalib/ecalelf/ntuples/13TeV/MINIAODNTUPLE/92X_dataRun2_Prompt_v8/DoubleEG-Run2017C-noSkim-Prompt-v3-miniAOD/301568-301941/DCSonly/DoubleEG-Run2017C-noSkim-Prompt-v3-miniAOD-301568-301941.root
