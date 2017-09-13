@@ -13,3 +13,10 @@ d8 	selected	root://eoscms//eos/cms/store/group/dpg_ecal/alca_ecalcalib/ecalelf/
 d9 	selected	root://eoscms//eos/cms/store/group/dpg_ecal/alca_ecalcalib/ecalelf/ntuples/13TeV/MINIAODNTUPLE/92X_dataRun2_Prompt_v8/SingleElectron-Run2017C-noSkim-Prompt-v2-miniAOD/299929-300676/294927-301141_Prompt_v1/80f5186aafa70d59e8b0d52160574d0c67647534/SingleElectron-Run2017C-noSkim-Prompt-v2-miniAOD-299929-300676.root
 d10 selected	root://eoscms//eos/cms/store/group/dpg_ecal/alca_ecalcalib/ecalelf/ntuples/13TeV/MINIAODNTUPLE/92X_dataRun2_Prompt_v8/SingleElectron-Run2017C-noSkim-Prompt-v3-miniAOD/300742-301141/294927-301141_Prompt_v1/80f5186aafa70d59e8b0d52160574d0c67647534/SingleElectron-Run2017C-noSkim-Prompt-v3-miniAOD-300742-301141.root
 d11	selected	root://eoscms//eos/cms/store/group/dpg_ecal/alca_ecalcalib/ecalelf/ntuples/13TeV/MINIAODNTUPLE/92X_dataRun2_Prompt_v8/SingleElectron-Run2017C-noSkim-Prompt-v3-miniAOD/301141-301567/294927-301567_Prompt_v1/SingleElectron-Run2017C-noSkim-Prompt-v3-miniAOD-301141-301567.root
+
+d16	selected	root://eoscms//eos/cms/store/group/dpg_ecal/alca_ecalcalib/ecalelf/ntuples/13TeV/MINIAODNTUPLE/92X_dataRun2_Prompt_v8/DoubleEG-Run2017C-noSkim-Prompt-v3-miniAOD/301568-301941/294927-301997_Prompt_v1/DoubleEG-Run2017C-noSkim-Prompt-v3-miniAOD-301568-301941.root
+d17	selected	root://eoscms//eos/cms/store/group/dpg_ecal/alca_ecalcalib/ecalelf/ntuples/13TeV/MINIAODNTUPLE/92X_dataRun2_Prompt_v8/DoubleEG-Run2017C-noSkim-Prompt-v3-miniAOD/301942-301997/294927-301997_Prompt_v1/DoubleEG-Run2017C-noSkim-Prompt-v3-miniAOD-301942-301997.root
+
+d18	selected	root://eoscms//eos/cms/store/group/dpg_ecal/alca_ecalcalib/ecalelf/ntuples/13TeV/MINIAODNTUPLE/92X_dataRun2_Prompt_v8/SingleElectron-Run2017C-noSkim-Prompt-v3-miniAOD/301568-301941/294927-301997_Prompt_v1/SingleElectron-Run2017C-noSkim-Prompt-v3-miniAOD-301568-301941.root
+d19	selected	root://eoscms//eos/cms/store/group/dpg_ecal/alca_ecalcalib/ecalelf/ntuples/13TeV/MINIAODNTUPLE/92X_dataRun2_Prompt_v8/SingleElectron-Run2017C-noSkim-Prompt-v3-miniAOD/301942-301997/294927-301997_Prompt_v1/SingleElectron-Run2017C-noSkim-Prompt-v3-miniAOD-301942-301997.root
+

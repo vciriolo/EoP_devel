@@ -1,5 +1,7 @@
 s1  selected    root://eoscms//eos/cms/store/group/dpg_ecal/alca_ecalcalib/ecalelf/ntuples/13TeV/MINIAODNTUPLE/90X_upgrade2017_realistic_v20/DYJets_madgraph-PhaseISpring17-miniAODv2/allRange/0bf7e83e1cd31d611f7cf8bd9705c7747759615a/DYJets_madgraph-PhaseISpring17-miniAODv2-allRange.root
 
-d11	selected	root://eoscms//eos/cms/store/group/dpg_ecal/alca_ecalcalib/ecalelf/ntuples/13TeV/MINIAODNTUPLE/92X_dataRun2_Prompt_v8/DoubleEG-Run2017C-noSkim-Prompt-v3-miniAOD/301568-301941/DCSonly/DoubleEG-Run2017C-noSkim-Prompt-v3-miniAOD-301568-301941.root
+d1	selected	root://eoscms//eos/cms/store/group/dpg_ecal/alca_ecalcalib/ecalelf/ntuples/13TeV/MINIAODNTUPLE/92X_dataRun2_Prompt_v8/DoubleEG-Run2017C-noSkim-Prompt-v3-miniAOD/301998-302029/DCSonly/DoubleEG-Run2017C-noSkim-Prompt-v3-miniAOD-301998-302029.root
+d2	selected	root://eoscms//eos/cms/store/group/dpg_ecal/alca_ecalcalib/ecalelf/ntuples/13TeV/MINIAODNTUPLE/92X_dataRun2_Prompt_v8/DoubleEG-Run2017D-noSkim-Prompt-v-miniAOD/302030-302526/DCSonly/DoubleEG-Run2017D-noSkim-Prompt-v-miniAOD-302030-302526.root
 
-d12	selected	root://eoscms//eos/cms/store/group/dpg_ecal/alca_ecalcalib/ecalelf/ntuples/13TeV/MINIAODNTUPLE/92X_dataRun2_Prompt_v8/SingleElectron-Run2017C-noSkim-Prompt-v3-miniAOD/301568-301941/DCSonly/SingleElectron-Run2017C-noSkim-Prompt-v3-miniAOD-301568-301941.root
+d3	selected	root://eoscms//eos/cms/store/group/dpg_ecal/alca_ecalcalib/ecalelf/ntuples/13TeV/MINIAODNTUPLE/92X_dataRun2_Prompt_v8/SingleElectron-Run2017C-noSkim-Prompt-v3-miniAOD/301998-302029/DCSonly/SingleElectron-Run2017C-noSkim-Prompt-v3-miniAOD-301998-302029.root
+d4	selected	root://eoscms//eos/cms/store/group/dpg_ecal/alca_ecalcalib/ecalelf/ntuples/13TeV/MINIAODNTUPLE/92X_dataRun2_Prompt_v8/SingleElectron-Run2017D-noSkim-Prompt-v-miniAOD/302030-302526/DCSonly/SingleElectron-Run2017D-noSkim-Prompt-v-miniAOD-302030-302526.root

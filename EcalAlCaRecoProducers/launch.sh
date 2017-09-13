@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#CHECK=--check
+CHECK=--check
 #CHECK=--createOnly
 #CHECK=--submitOnly
 
@@ -25,6 +25,7 @@ tag_PromptH=config/reRecoTags/80X_dataRun2_Prompt_v16.py
 tag_MC=config/reRecoTags/90X_upgrade2017_realistic_v20.py
 
 fileList=alcareco_datasets.dat
+PERIOD=RUN2017NEW_DCS
 PERIOD=RUN2017NEW
 #PERIOD=LEGACY2016
 #PERIOD=MORIOND2017
