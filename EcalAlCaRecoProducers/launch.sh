@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#CHECK=--check
+CHECK=--check
 #CHECK=--createOnly
 #CHECK=--submitOnly
 
@@ -27,7 +27,7 @@ tag_MC=config/reRecoTags/90X_upgrade2017_realistic_v20.py
 fileList=alcareco_datasets.dat
 #PERIOD=RUN2017NEW_DCS
 #PERIOD=RUN2017NEW
-PERIOD=RUN2017
+PERIOD=RUN2017MC
 #PERIOD=LEGACY2016
 #PERIOD=MORIOND2017
 #PERIOD=MORIOND17 # MC
@@ -35,7 +35,7 @@ PERIOD=RUN2017
 
 if  git status --porcelain -uno | grep -v launch | grep -v ZFitter/ | grep -q -v _datasets  ; then
 	echo "You have uncommitted changes, please commit everything before making a production" 
-	exit 1
+#	exit 1
 else
 	GITCOMMIT=`git rev-parse HEAD`
 	if [ "`git rev-parse HEAD`" != "`git rev-parse origin/master`" ];then

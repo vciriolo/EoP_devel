@@ -22,6 +22,10 @@ SUBMIT=y
 
 SKIM=""
 OUTFILES="ntuple.root"
+if [ "$DOELEIDTREE" != "0" ]; then
+	OUTFILES="${OUTFILES},eleIDTree.root"
+fi
+
 CRABVERSION=2
 crab2File=tmp/ntuple.cfg
 crab3File=tmp/ntuple.py
@@ -607,13 +611,13 @@ if [ -n "${CHECK}" ];then
 			#( mergeOutput.sh -u ${UI_WORKING_DIR} -g $file --noRemove ) &
 			case $file in
 				*ntuple*)
-					time mergeOutput.sh -u ${UI_WORKING_DIR} -g $file --noRemove || exit 1
+					time mergeOutput.sh -u ${UI_WORKING_DIR} -g $file  || exit 1
 					;;
 				*eleIDTree*)
-					time mergeOutput.sh -u ${UI_WORKING_DIR} -g $file --noRemove || exit 1
+					time mergeOutput.sh -u ${UI_WORKING_DIR} -g $file  || exit 1
 					;;
 				*extraCalibTree*)
-					time mergeOutput.sh -u ${UI_WORKING_DIR} -g $file --noRemove || exit 1
+					time mergeOutput.sh -u ${UI_WORKING_DIR} -g $file  || exit 1
 					;;
 				*)
 #					time mergeOutput.sh -u ${UI_WORKING_DIR} -g $file --noRemove || exit 1
