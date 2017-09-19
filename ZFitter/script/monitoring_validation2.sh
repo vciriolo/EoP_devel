@@ -9,8 +9,8 @@ invMass_max=115
 configFile=data/validation/monitoring_2017_Z_dcs.dat
 runRangesFile=data/runRanges/monitoring_2017.dat
 baseDir=testNew
-#extraOptions="--anyVarBranches=S4 --anyVarBranches=etaWidth --anyVarBranches=sigmaIEtaIEtaSCEle --anyVarBranches=R9Ele"
-extraOptions=" --anyVarBranches=R9Ele"
+extraOptions="--anyVarBranches=S4 --anyVarBranches=etaWidth --anyVarBranches=sigmaIEtaIEtaSCEle --anyVarBranches=R9Ele"
+#extraOptions=" --anyVarBranches=R9Ele"
 updateOnly="--updateOnly" 
 # VALIDATION=y
 # STABILITY=y
