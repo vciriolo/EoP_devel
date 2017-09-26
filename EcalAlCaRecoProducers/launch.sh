@@ -44,7 +44,7 @@ else
 	fi
 fi
 
-#extraName=$GITCOMMIT
+extraName=$GITCOMMIT
 
 # set IFS to newline in order to divide using new line the datasets
 IFS=$'\n'
@@ -77,7 +77,7 @@ do
 ##			./scripts/prodNtuples.sh --type=MINIAOD -t ${tag_Rereco} -s noSkim --scheduler=${scheduler}   --json=$json --json_name=$jsonName --extraName=${extraName} ${CHECK} $dataset
 			;;
 		*miniAODv2) #MC
-			./scripts/prodNtuples.sh --type=MINIAOD --isMC -t ${tag_MC} -s noSkim --scheduler=${scheduler}  ${CHECK} $dataset
+			./scripts/prodNtuples.sh --type=MINIAOD --isMC -t ${tag_MC} -s noSkim --scheduler=${scheduler} --extraName=${extraName} ${CHECK} $dataset
 			;;
 		*miniAOD) #data prompt 2017
 			case $PERIOD in
