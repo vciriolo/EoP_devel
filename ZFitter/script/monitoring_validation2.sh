@@ -9,7 +9,8 @@ invMass_max=115
 configFile=data/validation/monitoring_2017_Z_dcs.dat
 runRangesFile=data/runRanges/monitoring_2017.dat
 baseDir=testNew
-extraOptions="--anyVarBranches=S4 --anyVarBranches=etaWidth --anyVarBranches=sigmaIEtaIEtaSCEle --anyVarBranches=R9Ele"
+#extraOptions="--anyVarBranches=S4 --anyVarBranches=etaWidth --anyVarBranches=sigmaIEtaIEtaSCEle --anyVarBranches=R9Ele --anyVarBranches=esEnergySCEle --anyVarBranches=rawESEnergyPlane1SCEle --anyVarBranches=rawESEnergyPlane2SCEle --anyVarBranches=timeSeedSC"
+extraOptions="--anyVarBranches=nPV"
 #extraOptions=" --anyVarBranches=R9Ele"
 updateOnly="--updateOnly" 
 # VALIDATION=y
@@ -208,6 +209,7 @@ if [ -n "$VALIDATION" ];then
 		--fitResFileMC=${outDirMC}/fitres/R9Ele.dat \
 		--peakVar=10 --resolutionVar=11 \
 	 	>  ${outDirTable}/$PERIOD/R9_summary-${invMass_var}-${selection}-${commonCut}.tex || exit 1
+
 	
 fi
 
@@ -248,7 +250,18 @@ if [ -n "$STABILITY" ];then
 		-x $xVar -y peak $xMin $xMax || exit 1
     ./script/stability2.sh -t  ${outDirData}/fitres/R9Ele.dat -l data \
 		 -x $xVar -y peak $xMin $xMax || exit 1
-
+    ./script/stability2.sh -t  ${outDirData}/fitres/S4.dat -l data \
+		 -x $xVar -y peak $xMin $xMax || exit 1
+    ./script/stability2.sh -t  ${outDirData}/fitres/sigmaIEtaIEtaSCEle.dat -l data \
+		 -x $xVar -y peak $xMin $xMax || exit 1
+    ./script/stability2.sh -t  ${outDirData}/fitres/esEnergySCEle.dat -l data \
+		 -x $xVar -y peak $xMin $xMax || exit 1
+    ./script/stability2.sh -t  ${outDirData}/fitres/rawESEnergyPlane1SCEle.dat -l data \
+		 -x $xVar -y peak $xMin $xMax || exit 1
+    ./script/stability2.sh -t  ${outDirData}/fitres/rawESEnergyPlane2SCEle.dat -l data \
+		 -x $xVar -y peak $xMin $xMax || exit 1
+    ./script/stability2.sh -t  ${outDirData}/fitres/timeSeedSC.dat -l data \
+		 -x $xVar -y peak $xMin $xMax || exit 1
 
 fi
 

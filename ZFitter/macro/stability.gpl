@@ -58,11 +58,11 @@ set y2label resolutionLabel textcolor 'blue'
 
 set auto fix
 set offsets graph 0.05, graph 0.05, graph 0.05, graph 0.05
-set y2range [0.01:0.012]
-set yrange  [88:92]
+set y2range [0.010:0.014]
+set yrange  [89:92]
 
 set key outside above
-set grid y2
+set grid y
 
 #set bmargin 5
 set tmargin 6

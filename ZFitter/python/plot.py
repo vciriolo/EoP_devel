@@ -93,10 +93,10 @@ def GetSelectionWeights(chain, category, isMC, smear, scale, useR9Weight, usePU,
 	if(category):
 		try:
 			cat1, cat2, common  = category
-			selection = cutter.GetCut(cat1 + '-' + common, False, 1 , scale) + cutter.GetCut(cat2 + '-' + common, False, 2 , scale)
+			selection = cutter.GetCut(cat1 + '-' + common, isMC, 1 , scale) + cutter.GetCut(cat2 + '-' + common, isMC, 2 , scale)
 			category = common
 		except (TypeError, ValueError):
-			selection = cutter.GetCut(category, False, 0 , scale and not isMC)
+			selection = cutter.GetCut(category, isMC, 0 , scale and not isMC)
 
 	weights = ROOT.TCut("")
 	if(noWeights): return selection, weights
