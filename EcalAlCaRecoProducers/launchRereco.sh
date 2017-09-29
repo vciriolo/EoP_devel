@@ -13,8 +13,8 @@ jsonName=271036_284044-23Sep2016
 json=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions17/13TeV/PromptReco/Cert_294927-301141_13TeV_PromptReco_Collisions17_JSON.txt
 jsonName=294927-301141_Prompt_v1
 
-jsonPrompt=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions17/13TeV/PromptReco/Cert_294927-302654_13TeV_PromptReco_Collisions17_JSON.txt
-jsonNamePrompt=294927-302654_Prompt_v1
+json=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions17/13TeV/PromptReco/Cert_294927-302654_13TeV_PromptReco_Collisions17_JSON.txt
+jsonName=294927-302654_Prompt_v1
 
 ##
 PERIOD=LEGACY2016
@@ -43,7 +43,7 @@ do
 #	./scripts/removeRereco.sh -t $tagfile -f ntuple_datasets.dat --json_name=$jsonName
 #	continue
 
-	for CHECK in '' --check
+	for CHECK in   --check
 	do
 		case $tagfile in 
 			*/Cal_*_ref*.py)
@@ -54,22 +54,22 @@ do
 				;;
 			*)
 				echo 
-				./scripts/RerecoQuick.sh -p ${PERIOD} -t $tagfile  --json=$json --json_name=$jsonName ${CHECK} --alcarerecoOnly
+				./scripts/RerecoQuick.sh -p ${PERIOD} -t $tagfile  --json=$json --json_name=$jsonName ${CHECK} --alcarerecoOnly --singleEle
 				;;
 		esac
 	done
-continue
-	for CHECK in '' --check
+
+	for CHECK in   --check
 	do
 		case $tagfile in 
 			*/Cal_*_ref*.py)
 #				./scripts/RerecoQuick.sh -p ${PERIOD} -t $tagfile --json=$json --json_name=$jsonName --ntupleOnly  $CHECK --singleEle --weightsReco
-		#		./scripts/RerecoQuick.sh -p ${PERIOD} -t $tagfile --json=$json --json_name=$jsonName --ntupleOnly  $CHECK --singleEle
-				./scripts/RerecoQuick.sh -p ${PERIOD} -t $tagfile --json=$json --json_name=$jsonName --ntupleOnly  $CHECK 
+				./scripts/RerecoQuick.sh -p ${PERIOD} -t $tagfile --json=$json --json_name=$jsonName --ntupleOnly --singleEle $CHECK 
+#				./scripts/RerecoQuick.sh -p ${PERIOD} -t $tagfile --json=$json --json_name=$jsonName --ntupleOnly  $CHECK 
 #				./scripts/RerecoQuick.sh -p ${PERIOD} -t $tagfile --json=$json --json_name=$jsonName --ntupleOnly  $CHECK --weightsReco #| grep 'root;//' |sort |uniq > tmp/`basename $tagfile .py`.dat
 				;;
 			*)
-				./scripts/RerecoQuick.sh -p ${PERIOD} -t $tagfile --json=$json --json_name=$jsonName --ntupleOnly  $CHECK #| grep 'root;//' |sort |uniq > tmp/`basename $tagfile .py`.dat
+				./scripts/RerecoQuick.sh -p ${PERIOD} -t $tagfile --json=$json --json_name=$jsonName --ntupleOnly  $CHECK --singleEle #| grep 'root;//' |sort |uniq > tmp/`basename $tagfile .py`.dat
 				;;
 		esac
 	done
