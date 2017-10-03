@@ -40,3 +40,11 @@
 299368-299649	/SingleElectron/Run2017C-EcalUncalWElectron-PromptReco-v1/ALCARECO	SingleElectron-Run2017C-WSkim-Prompt-v1	caf.cern.ch	group/dpg_ecal/alca_ecalcalib/ecalelf/alcarereco	92X_dataRun2_Prompt_v9
 298678-299329	/SingleElectron/Run2017B-EcalUncalWElectron-PromptReco-v2/ALCARECO	SingleElectron-Run2017B-WSkim-Prompt-v2	caf.cern.ch	group/dpg_ecal/alca_ecalcalib/ecalelf/alcarereco	92X_dataRun2_Prompt_v9
 299929-300676	/SingleElectron/Run2017C-EcalUncalWElectron-PromptReco-v2/ALCARECO	SingleElectron-Run2017C-WSkim-Prompt-v2	caf.cern.ch	group/dpg_ecal/alca_ecalcalib/ecalelf/alcarereco	92X_dataRun2_Prompt_v9
+300742-302029	/DoubleEG/Run2017C-EcalUncalZElectron-PromptReco-v3/ALCARECO	DoubleEG-Run2017C-ZSkim-Prompt-v3	caf.cern.ch	group/dpg_ecal/alca_ecalcalib/ecalelf/alcarereco	Cal_Sep2017_ref
+300742-302029	/DoubleEG/Run2017C-EcalUncalZElectron-PromptReco-v3/ALCARECO	DoubleEG-Run2017C-ZSkim-Prompt-v3	caf.cern.ch	group/dpg_ecal/alca_ecalcalib/ecalelf/alcarereco	92X_dataRun2_Prompt_v9
+302030-302663	/DoubleEG/Run2017D-EcalUncalZElectron-PromptReco-v1/ALCARECO	DoubleEG-Run2017D-ZSkim-Prompt-v1-miniAOD	caf.cern.ch	group/dpg_ecal/alca_ecalcalib/ecalelf/alcarereco	92X_dataRun2_Prompt_v9
+300742-302029	/SingleElectron/Run2017C-EcalUncalWElectron-PromptReco-v3/ALCARECO	SingleElectron-Run2017C-WSkim-Prompt-v3	caf.cern.ch	group/dpg_ecal/alca_ecalcalib/ecalelf/alcarereco	92X_dataRun2_Prompt_v9
+302030-302663	/DoubleEG/Run2017D-EcalUncalZElectron-PromptReco-v1/ALCARECO	DoubleEG-Run2017D-ZSkim-Prompt-v1-miniAOD	caf.cern.ch	group/dpg_ecal/alca_ecalcalib/ecalelf/alcarereco	Cal_Sep2017_ref
+300742-302029	/SingleElectron/Run2017C-EcalUncalWElectron-PromptReco-v3/ALCARECO	SingleElectron-Run2017C-WSkim-Prompt-v3	caf.cern.ch	group/dpg_ecal/alca_ecalcalib/ecalelf/alcarereco	Cal_Sep2017_ref
+302030-302663	/SingleElectron/Run2017D-EcalUncalWElectron-PromptReco-v1/ALCARECO	SingleElectron-Run2017D-WSkim-Prompt-v1	caf.cern.ch	group/dpg_ecal/alca_ecalcalib/ecalelf/alcarereco	Cal_Sep2017_ref
+302030-302663	/SingleElectron/Run2017D-EcalUncalWElectron-PromptReco-v1/ALCARECO	SingleElectron-Run2017D-WSkim-Prompt-v1	caf.cern.ch	group/dpg_ecal/alca_ecalcalib/ecalelf/alcarereco	92X_dataRun2_Prompt_v9
