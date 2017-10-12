@@ -31,7 +31,7 @@ from the Calibration/ directory and you can navigate instructions and code local
 \verbatim
 wget -q --no-check-certificate -O setup_git.sh https://gitlab.cern.ch/shervin/ECALELF/raw/master/setup_git.sh
 chmod +x setup_git.sh
-CMSSW_VERSION=CMSSW_9_2_10
+CMSSW_VERSION=CMSSW_9_2_12
 ./setup_git.sh $CMSSW_VERSION
 cd $CMSSW_VERSION/src/
 cmsenv
