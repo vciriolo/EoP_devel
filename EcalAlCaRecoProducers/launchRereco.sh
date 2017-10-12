@@ -13,8 +13,8 @@ jsonName=271036_284044-23Sep2016
 json=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions17/13TeV/PromptReco/Cert_294927-301141_13TeV_PromptReco_Collisions17_JSON.txt
 jsonName=294927-301141_Prompt_v1
 
-json=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions17/13TeV/PromptReco/Cert_294927-302654_13TeV_PromptReco_Collisions17_JSON.txt
-jsonName=294927-302654_Prompt_v1
+json=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions17/13TeV/PromptReco/Cert_294927-304120_13TeV_PromptReco_Collisions17_JSON.txt
+jsonName=294927-304120_Prompt_v1
 
 ##
 PERIOD=LEGACY2016
@@ -57,8 +57,8 @@ do
 				;;
 		esac
 	done
-continue
-	for CHECK in   --check
+	continue
+	for CHECK in ''  --check
 	do
 		case $tagfile in 
 			*/Cal_*_ref*.py)

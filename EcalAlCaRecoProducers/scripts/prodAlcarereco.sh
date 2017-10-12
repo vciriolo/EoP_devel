@@ -306,7 +306,7 @@ if [ -n "${CREATE}" ];then
 	cat > $crabFile <<EOF
 UI_WORKING_DIR=$UI_WORKING_DIR
 pset=python/alcaSkimming.py
-psetparams="type=ALCARERECO tagFile=${TAGFILE} doTree=${DOTREE} doTreeOnly=0 jsonFile=${JSONFILE}  isCrab=1 bunchSpacing=${BUNCHSPACING}"
+psetparams="type=ALCARERECO tagFile=${TAGFILE} doTree=${DOTREE} doTreeOnly=0   isCrab=1 bunchSpacing=${BUNCHSPACING}"
 
 outFiles=${OUTFILES}
 use_parent=${USEPARENT}
