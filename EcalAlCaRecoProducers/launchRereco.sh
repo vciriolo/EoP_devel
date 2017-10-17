@@ -18,10 +18,10 @@ jsonName=294927-304120_Prompt_v1
 
 ##
 PERIOD=LEGACY2016
-PERIOD=RUN2017E
+PERIOD=RUN2017
 #
 #tags=( config/reRecoTags/Cal_Sep2017_ref.py config/reRecoTags/92X_dataRun2_Prompt_v9.py )
-tags=( config/reRecoTags/Cal_Sep2017_noPed_v1.py config/reRecoTags/Cal_Sep2017_PedPCL_v1.py )
+tags=( config/reRecoTags/Cal_Oct2017_ref.py )
 
 if  git status --porcelain -uno | grep -v launch | grep -v ZFitter | grep -q -v _datasets  ; then
 	echo "You have uncommitted changes, please commit everything before making a production" 
@@ -57,7 +57,7 @@ do
 				;;
 		esac
 	done
-	continue
+
 	for CHECK in ''  --check
 	do
 		case $tagfile in 
