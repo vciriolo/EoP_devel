@@ -3,7 +3,7 @@
 source /cvmfs/cms.cern.ch/crab3/crab.sh
 case $USER in
     *)
-		voms-proxy-init -voms cms -out $HOME/gpi.out
+		voms-proxy-init -voms cms -valid 24:00 #-out $HOME/gpi.out
 		;;
 esac
 
