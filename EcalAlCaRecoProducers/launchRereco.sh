@@ -22,7 +22,7 @@ PERIOD=RUN2017
 #
 #tags=( config/reRecoTags/Cal_Sep2017_ref.py config/reRecoTags/92X_dataRun2_Prompt_v9.py )
 #tags=( config/reRecoTags/Cal_Oct2017_ref.py config/reRecoTags/Cal_Oct2017_Ped_v1.py config/reRecoTags/Cal_Oct2017_Ped_v2.py config/reRecoTags/Cal_Oct2017_Ped_v3.py )
-tags=(  config/reRecoTags/Cal_Oct2017_Ped_v1.py config/reRecoTags/Cal_Oct2017_Ped_v2.py config/reRecoTags/Cal_Oct2017_Ped_v3.py )
+tags=(  config/reRecoTags/Cal_Oct2017_ES_v1.py)
 
 if  git status --porcelain -uno | grep -v launch | grep -v ZFitter | grep -q -v _datasets  ; then
 	echo "You have uncommitted changes, please commit everything before making a production" 
