@@ -17,7 +17,7 @@ import sys,os
 allRecHits=False
 eventListPrint=False
 lumi=-1
-eventNumbers=[]
+eventNumbers=[14060994]
 eventMin=-1
 
 # for now look for events in two files with a given lumi section
@@ -26,18 +26,19 @@ event_counter=0
 
 
 file='EcalRecalElectron.root'
-
+file='root://eoscms.cern.ch//eos/cms/store/group/dpg_ecal/alca_ecalcalib/ecalelf/alcarereco/13TeV/Cal_Oct2017_ref/DoubleEG-Run2017C-ZSkim-Prompt-v2/299929-300676/EcalRecalElectron-28-1-d5db.root'
 print file
 events = Events (file)
 
 handleElectrons = Handle('std::vector<reco::GsfElectron>')
-handleRecHitsEB = Handle('edm::SortedCollection<EcalRecHit,edm::StrictWeakOrdering<EcalRecHit> >')
-handleRecHitsEE = Handle('edm::SortedCollection<EcalRecHit,edm::StrictWeakOrdering<EcalRecHit> >')
+#handleRecHitsEB = Handle('edm::SortedCollection<EcalRecHit,edm::StrictWeakOrdering<EcalRecHit> >')
+handleRecHitsEB = Handle('edm::SortedCollection<EcalUncalibratedRecHit,edm::StrictWeakOrdering<EcalUncalibratedRecHit> >')
+handleRecHitsEE = Handle('edm::SortedCollection<EcalUncalibratedRecHit,edm::StrictWeakOrdering<EcalUncalibratedRecHit> >')
 handleRecHitsES = Handle('edm::SortedCollection<EcalRecHit,edm::StrictWeakOrdering<EcalRecHit> >')
 handleRhoFastJet = Handle('double')
 
 electronTAG = 'gedGsfElectrons'
-#electronTAG = 'electronRecalibSCAssociator'
+electronTAG = 'electronRecalibSCAssociator'
 
 
 EErecHitmap_ele1 = TH2F("EErecHitmap_ele1", "EErecHitmap_ele1",
@@ -76,6 +77,7 @@ for event in events:
 
     if(len(eventNumbers)>0 and not (event.eventAuxiliary().event() in eventNumbers)):
        continue
+    print event.eventAuxiliary().run(), event.eventAuxiliary().luminosityBlock(), event.eventAuxiliary().event()
 
 
         #    event.getByLabel(electronTAG, "", processName, handleElectrons)
@@ -84,8 +86,9 @@ for event in events:
     electrons = handleElectrons.product()
 
 
-#        event.getByLabel("reducedEcalRecHitsEB", "", processName, handleRecHitsEB)
-#        event.getByLabel("reducedEcalRecHitsEE", "", processName, handleRecHitsEE)
+    event.getByLabel("alCaIsolatedElectrons",     "alcaBarrelUncalibHits", "", handleRecHitsEB)
+                         #"reducedEcalRecHitsEB", "", processName, handleRecHitsEB)
+    event.getByLabel("alCaIsolatedElectrons", "alcaEndcapUncalibHits", "", handleRecHitsEE)
 #        event.getByLabel("reducedEcalRecHitsES", "", processName, handleRecHitsES)
 #        print "##############", 
         #        rhoTAG=edm.InputTag()
@@ -94,14 +97,12 @@ for event in events:
 
     
     print "Num of electrons: ",len(electrons)
-    if(len(electrons)>=2):
+    if(len(electrons)>=1):
      ele_counter=0
      for electron in electrons:
         if(not electron.ecalDrivenSeed()): 
             print "trackerDriven",
 #            sys.exit(0)
-        electron.superCluster().energy()
-
          
         #        ESrecHits = handleRecHitsES.product()
         #        if(abs(electron.eta()) > 1.566):
@@ -115,6 +116,19 @@ for event in events:
         else:
             recHits = handleRecHitsEE.product()
         nRecHits=0
+        for hitfrac in electron.superCluster().hitsAndFractions():
+            hit = hitfrac.first
+            if(hit.rawId()==872421926):
+                print "hit found"
+            if(recHits.find(hit)==recHits.end()):
+                print "ERROR"
+
+        print event.eventAuxiliary().run(), event.eventAuxiliary().luminosityBlock(), event.eventAuxiliary().event(),
+        print "isEB=",electron.isEB(),
+        print '{0:7.3f} {1:7.3f} {2:7.3f} {3:7.3f} {4:7.3f}'.format(electron.energy(), electron.superCluster().energy(), electron.superCluster().rawEnergy(), electron.e5x5(), electron.superCluster().preshowerEnergy()),
+        print '{0:6.3f} {1:6.3f} {2:6.3f} {3:6.3f}'.format(electron.eta(), electron.phi(), electron.superCluster().eta(), electron.superCluster().phi()),
+        print electron.superCluster().clustersSize(), electron.superCluster().hitsAndFractions().size() #, nRecHits, nRecHitsSC
+        continue
         for recHit in recHits:
              nRecHits=nRecHits+1
              if(len(eventNumbers)==1):
