@@ -65,6 +65,24 @@ cd $CMSSW_BASE/src
 #########################################################################################
 git cms-init
 
+#Other package to download:
+# - Last stable pattuple code:
+case $CMSSW_VERSION in
+    CMSSW_8_0_*)
+#		git cms-merge-topic 16790  || exit 1
+#		git cms-merge-topic ikrav:egm_id_80X_v1 || exit 1
+#		git cms-merge-topic shervin86:slewrate || exit 1
+		# git remote add -t ecalSaturationFix_PR20060 shervin86 https://github.com/shervin86/cmssw || exit 1
+		# git fetch shervin86 || exit 1
+		# git cherry-pick 0f4f36f6ebce5485f264265e3c814d2903ee9850 || exit 1
+		;;
+    CMSSW_9_2_*)
+	        echo "[STATUS] cms-merge-topics"
+			git cms-merge-topic shervin86:ecalSaturationFix_PR20060 || exit 1
+		;;
+esac
+
+
 #########################################################################################
 echo "[STATUS] Download ECALELF directory"
 myDir=Calibration
@@ -92,19 +110,6 @@ if [ ! -d "$myDir" ]; then
 fi
 
 cd $CMSSW_BASE/src
-
-#Other package to download:
-# - Last stable pattuple code:
-case $CMSSW_VERSION in
-    CMSSW_8_0_*)
-#		git cms-merge-topic 16790  || exit 1
-#		git cms-merge-topic ikrav:egm_id_80X_v1 || exit 1
-#		git cms-merge-topic shervin86:slewrate || exit 1
-		;;
-    CMSSW_9_2_*)
-	        echo "[STATUS] cms-merge-topics"
-		;;
-esac
 
 # compile
 echo "[INFO] Starting to compile"
