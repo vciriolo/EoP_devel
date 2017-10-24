@@ -59,6 +59,10 @@ void runDivide_class::ReadRunRangeLimits(std::string fileName)
 #endif
 
 		limits.insert(limit_value);
+		auto keyVal = key(limit_value, 0); 
+		auto itr = _runMap.find(keyVal);
+		if( itr == _runMap.end()) itr = _runMap.insert(itr, std::make_pair(keyVal, line()));
+		itr->second._limit=true;
 	}
 
 	return;
@@ -66,22 +70,25 @@ void runDivide_class::ReadRunRangeLimits(std::string fileName)
 
 
 /** this method reads the ntuple and saves the number of events per run in a map */
-void runDivide_class::LoadRunEventNumbers(TChain *tree, std::string runNumber_branchName, std::string runTime_branchName)
+void runDivide_class::LoadRunEventNumbers(TChain *tree, std::string runNumber_branchName, std::string lumiBlock_branchName, std::string runTime_branchName)
 {
 #ifdef DEBUG
 	TStopwatch w;
 	w.Start();
 #endif
-	run_t runNumber;
-	time_t runTime;
+	run_t		runNumber;
+	lumiBlock_t lumiBlock;
+	time_t		runTime;
 
 	tree->SetBranchStatus("*", 0);
 	tree->GetBranch(runNumber_branchName.c_str())->ResetBit(kDoNotProcess);
+	tree->GetBranch(lumiBlock_branchName.c_str())->ResetBit(kDoNotProcess);
 	tree->GetBranch(runTime_branchName.c_str())->ResetBit(kDoNotProcess);
 //	tree->SetBranchStatus(runNumber_branchName, 1);
 //	tree->SetBranchStatus(runTime_branchName, 1);
 
 	tree->SetBranchAddress(runNumber_branchName.c_str(), &runNumber);
+	tree->SetBranchAddress(lumiBlock_branchName.c_str(), &lumiBlock);
 	tree->SetBranchAddress(runTime_branchName.c_str(), &runTime);
 
 	//loop over tree and count the events per run
@@ -105,9 +112,10 @@ void runDivide_class::LoadRunEventNumbers(TChain *tree, std::string runNumber_br
 			selector->UpdateFormulaLeaves();
 		}
 		if(selector != NULL && selector->EvalInstance() == true) {
-			auto itr = _runMap.find(runNumber);
+			auto keyVal = key(runNumber, lumiBlock);
+			auto itr = _runMap.find(keyVal);
 			if( itr == _runMap.end()) {
-				_runMap.insert(itr, std::make_pair(runNumber, line(runTime, runNumber)));
+				_runMap.insert(itr, std::make_pair(keyVal, line(runTime, runNumber, lumiBlock)));
 			} else {
 				itr->second.update(runTime);
 			}
@@ -124,74 +132,67 @@ void runDivide_class::LoadRunEventNumbers(TChain *tree, std::string runNumber_br
 
 
 
-// loop over the map containing the number of events per run and divide the runs
+// loop over the map containing the number of events per run-lumi and divide it into bins
 void runDivide_class::FillRunLimits(unsigned int nEvents_min, float nEventsFrac_min)
 {
-
 
 #ifdef DEBUG
 	std::cout << "[DEBUG] nEvents_min: " << nEvents_min << std::endl;
 #endif
-
-	// initialize limits, first limit >= first run
-	auto  limit_itr = limits.begin(); //
-
-	_runRangeMap.insert(_runMap.begin(), ++_runMap.begin()); //insert the first
-	while(_runMap.begin()->first >= *limit_itr  && limit_itr != limits.end()) { // find the first limit
-		limit_itr++;
+	
+	// look over the map and start merging only LSs in the same run
+    // start from the second, since the first has already been added
+	// the current implementation is not optimal: the last LS can have  twice the required events
+	
+	auto key_itr = _runMap.begin(); 
+	while(key_itr != _runMap.end()) { 
+		auto key_next_itr = key_itr;
+		key_next_itr++;
+	
+		if( // do not add events if already reached the thresold
+			(key_itr->second._nEvents < nEvents_min) &&
+			run(key_next_itr->first) == run(key_itr->first) && // do not merge with following run
+            //add events if with the new LS the total number of events is closer to the threshold
+			abs(key_next_itr->second._nEvents + key_itr->second._nEvents - nEvents_min) < abs(key_next_itr->second._nEvents  - nEvents_min)
+			)
+		{
+			key_itr->second.add(key_next_itr->second); // add to the last
+			_runMap.erase(key_next_itr);
+		} else key_itr++;
 	}
 
-	for(auto runM = ++_runMap.begin(); runM != _runMap.end(); runM++) {
-#ifdef DEBUG
-		std::cout << "[RUN]" << runM->first << "\t" << runM->second._nEvents << "\t" << *limit_itr << std::endl;
-#endif
-		// if passed a run limit, then force a new run
-		if(runM->first >= *limit_itr  && limit_itr != limits.end()) { // force a new run
-			while(runM->first >= *limit_itr  && limit_itr != limits.end()) { // find the next limit
-				limit_itr++;
-			}
-			auto runN = runM;
-			runN++;
-			_runRangeMap.insert(runM, runN);
-#ifdef DEBUG
-			std::cout << "[AFTER RUN LIMIT]" << runM->first << "\t" << runM->second._nEvents << "\t" << *limit_itr << std::endl;
-#endif
-		} else {
-			if(_runRangeMap.rbegin()->second._nEvents < nEvents_min && ( abs(_runRangeMap.rbegin()->second._nEvents + runM->second._nEvents - nEvents_min) < abs(_runRangeMap.rbegin()->second._nEvents  - nEvents_min))) {
-				_runRangeMap.rbegin()->second.add(runM->second); // add to the last
-#ifdef DEBUG
-				std::cout << "[NOT ENOUGH EVENTS]" << runM->first << "\t" << runM->second._nEvents << "\t" << *limit_itr << std::endl;
-#endif
-			} else {
-#ifdef DEBUG
-				std::cout << "[ENOUGH EVENTS]" << runM->first << "\t" << runM->second._nEvents << "\t" << *limit_itr << std::endl;
-#endif
-				auto runN = runM;
-				runN++;
-				_runRangeMap.insert(runM, runN);
-			}
-		}
+	key_itr = _runMap.begin();
+	while(key_itr != _runMap.end()) { 
+		auto key_next_itr = key_itr;
+		key_next_itr++;
+		
+		if( 
+			! key_next_itr->second._limit && 
+            // do not add events if already reached the thresold
+			(key_itr->second._nEvents < nEvents_min) 		    
+			&& 
+            // do not add events from runs with time gap > 1h
+			key_next_itr->second._timeMin -  key_itr->second._timeMax < 3600
+			&& 
+            //add events if with the new LS the total number of events is closer to the threshold
+			abs(key_next_itr->second._nEvents + key_itr->second._nEvents - nEvents_min) < abs(key_next_itr->second._nEvents  - nEvents_min)
+			)
+		{
+			key_itr->second.add(key_next_itr->second); // add to the last
+			_runMap.erase(key_next_itr);
+		}else key_itr++;
 	}
 
-
-	// second round to agregate the run ranges with few events
-	auto limitB_itr = limits.rbegin(); //
-	for(auto runM = _runRangeMap.rbegin(); runM != _runRangeMap.rend(); ++runM) {
-		auto runN = runM;
-		runN++;
-
-		while(runM->first < *limitB_itr && limitB_itr != limits.rend()) { //find the limit following the current run
-			limitB_itr++;
-		}
-		if(limitB_itr != limits.rend() && runN->first < *limitB_itr) continue;
-		if(runM->second._nEvents < nEvents_min * nEventsFrac_min) {
-#ifdef DEBUG
-			std::cout << "Erase: " << runM->first << "\t" << runM->second._nEvents << "\t" << runN->first << "\t" << runN->second._nEvents << "\t" << _runRangeMap.size() << std::endl;
-#endif
-			runN->second.add(runM->second);
-			_runRangeMap.erase((runN).base());
-		}
+	//now remove empty runs
+	key_itr = _runMap.begin();
+	while(key_itr != _runMap.end()) { 
+		if(key_itr->second._nEvents==0){
+			key_itr = _runMap.erase(key_itr);
+		}else key_itr++;
 	}
+
+	
+
 
 	return;
 }
@@ -202,17 +203,19 @@ void runDivide_class::FillRunLimits(unsigned int nEvents_min, float nEventsFrac_
 void runDivide_class::Divide(TChain *tree, std::string fileName,
                              unsigned int nEvents_min,
                              std::string runNumber_branchName,
+							 std::string lumiBlock_branchName,
                              std::string time_branchName)
 {
+#ifdef DEBUG
+	std::cout << "[DEBUG] Loading events per run from tree" << std::endl;
+#endif
+	LoadRunEventNumbers(tree, runNumber_branchName, lumiBlock_branchName, time_branchName);
+
 #ifdef DEBUG
 	std::cout << "[DEBUG] Reading run range limits from file: " << fileName << std::endl;
 #endif
 	ReadRunRangeLimits(fileName);
 
-#ifdef DEBUG
-	std::cout << "[DEBUG] Loading events per run from tree" << std::endl;
-#endif
-	LoadRunEventNumbers(tree, runNumber_branchName, time_branchName);
 
 #ifdef DEBUG
 	std::cout << "[DEBUG] Filling run limits" << std::endl;
@@ -223,14 +226,29 @@ void runDivide_class::Divide(TChain *tree, std::string fileName,
 }
 
 
+
 std::ostream& operator<<(std::ostream& os, runDivide_class& r)
 {
-	for(auto runM = r._runRangeMap.begin(); runM != r._runRangeMap.end(); runM++) {
+	for(auto runM = r._runMap.begin(); runM != r._runMap.end(); runM++) {
 		auto runN = runM;
 		runN++;
-		if(runN != r._runRangeMap.end()) {
+
+		if(runN != r._runMap.end()) {
 			char range[60];
-			sprintf(range, "%u-%u\t%llu\t%u-%u", runM->first, (runN->first) - 1, runM->second._nEvents, runM->second._timeMin, runM->second._timeMax);
+			sprintf(range, "%u-%u\t%llu\t%u-%u\t%u-%u", 
+					r.run(runM->first), 
+					r.run(runM->second._keyMax), //r.run(runN->first) - 1, 
+					runM->second._nEvents, 
+					runM->second._timeMin, runM->second._timeMax, 
+					r.lumi(runM->first), r.lumi(runM->second._keyMax));
+			os << range << std::endl;
+		}else{
+			char range[60];
+			sprintf(range, "%u-%u\t%llu\t%u-%u\t%u-%u", 
+					r.run(runM->first), r.run(runM->second._keyMax), 
+					runM->second._nEvents, 
+					runM->second._timeMin, runM->second._timeMax, 
+					r.lumi(runM->first), r.lumi(runM->second._keyMax));
 			os << range << std::endl;
 		}
 	}
