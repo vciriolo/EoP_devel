@@ -75,7 +75,7 @@ set y2range [0.01:0.02]
 # # sigmaIetaIeta EE
 # set yrange [0.024:0.025]
 # esEnergy
-set yrange [7:10]
+#set yrange [7:10]
 
 set key outside above
 set grid y

@@ -1,0 +1,12 @@
+
+# Settings that maybe want to change
+set style line 1 pt 2 lc 1
+set style line 2 pt 2 lc 7
+set style line 3 pt 2 lc 3
+set style line 4 pt 2 lc 4
+set style line 5 pt 2 lc 0
+set style line 6 pt 2 lc 1
+set style line 7 pt 2 lc 2
+set style line 8 pt 2 lc 3
+set style line 9 pt 2 lc 4
+set style line 10 pt 2 lc 5

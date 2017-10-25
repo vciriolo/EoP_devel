@@ -39,8 +39,8 @@ set autoscale y2
 #set x2label 'Run range [..., ...)' offset 0, -1.75
 set xlabel 'Time (day/month)' offset 0, -.5
 
-#set ylabel peakLabel
-#set y2label resolutionLabel textcolor 'blue'
+set ylabel peakLabel
+set y2label resolutionLabel textcolor 'blue'
 
 set auto fix
 set offsets graph 0.05, graph 0.05, graph 0.05, graph 0.05
@@ -85,11 +85,25 @@ if(ARGC==1){
 #    print titles
 #	print categories
 	unset y2tics
-#  unset y2label
+  unset y2label
   unset x2tics
-#  set ylabel peakLabel
+  set ylabel peakLabel
   set grid y
 	do for [category in categories]{
+	  print category[11:14] 
+	  if(category[11:14] eq "_1_1"){
+	    set yrange [0.75:0.8]
+      }else{ 
+	    if ( category[11:14] eq "_1.5"){
+          set yrange [0.875:0.925]		
+        }else{
+          if(category[11:14] eq "Et_2"){
+	         set yrange [0.88:0.93]
+          }else{
+             set yrange [0.88:0.93]		
+          }
+        }
+      }
 	  	set label 1 "Category: ".category noenhanced at screen 0.5, screen 0.82 center
 	 	yVar="median"
 		set ylabel VARIABLE.' '.peakLabel.' : '.yVar.' '.peakLabelUnit

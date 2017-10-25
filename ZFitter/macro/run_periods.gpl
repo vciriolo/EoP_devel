@@ -1,0 +1,15 @@
+set arrow 2 from 1466739151,graph 0 to 1466739151, graph 1 nohead dt 2 # run2016C
+set arrow 3 from 1467631160,graph 0 to 1467631160, graph 1 nohead dt 2 # run2016D
+set arrow 4 from 1468568895,graph 0 to 1468568895, graph 1 nohead dt 2 # run2016F
+set arrow 5 from 1470052448,graph 0 to 1470052448, graph 1 nohead dt 2 # run2016F
+set arrow 6 from 1471172473,graph 0 to 1471172473, graph 1 nohead dt 2 # run2016G
+set arrow 7 from 1474783497,graph 0 to 1474783497, graph 1 nohead dt 2 # run2016H
+
+#set arrow 8 from 1494104838,graph 0 to 1494104838,graph 1 nohead dt 2 # RUN2017A  296168
+#set arrow 9 from 1497482967,graph 0 to 1497482967,graph 1 nohead dt 2 # RUN2017A  296880
+set arrow 10 from 1497640602,graph 0 to 1497640602,graph 1 nohead dt 2 # # ##----- RUN2017B # 297046
+set arrow 11 from 1500393256,graph 0 to 1500393256,graph 1 nohead dt 2 # ##----- RUN2017C v1 # 299368
+set arrow 12 from 1501098589,graph 0 to 1501098589,graph 1 nohead dt 2 # ##----- RUN2017C v2 # 299929
+set arrow 13 from 1502210788,graph 0 to 1502210788,graph 1 nohead dt 2 # ##----- RUN2017C v3 # 300742
+set arrow 14 from 1504080149,graph 0 to 1504080149,graph 1 nohead dt 2 # ##----- RUN2017D # 302030
+set arrow 15 from 1506009092,graph 0 to 1506009092,graph 1 nohead dt 2 # ##----- RUN2017E# 303574
