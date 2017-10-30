@@ -109,8 +109,14 @@ void anyVar_class::ImportTree(TChain *chain, TCut& commonCut, std::set<TString>&
 	}
 
 	// abilitare la lista dei friend branch
-	if(chain->GetBranch("scaleEle"))  chain->SetBranchStatus("scaleEle", 1);
-	if(chain->GetBranch("smearEle")) chain->SetBranchStatus("smearEle", 1);
+	if(chain->GetBranch("scaleEle")){
+		chain->SetBranchStatus("scaleEle", 1);
+		branchList.insert("scaleEle");
+	}
+	if(chain->GetBranch("smearEle")){
+		chain->SetBranchStatus("smearEle", 1);
+		branchList.insert("smearEle");
+	}
 	if(chain->GetBranch("puWeight")) chain->SetBranchStatus("puWeight", 1);
 	if(chain->GetBranch("r9Weight")) chain->SetBranchStatus("r9Weight", 1);
 
@@ -265,22 +271,17 @@ void anyVar_class::TreeToTree(TChain *chain, std::set<TString>& branchList, unsi
  *         The name of the output file is the same as the branch used to collect the stat.
  *         Refer to stats to see what is the print format
  */
-void anyVar_class::TreeAnalyzeShervin(std::string region, TCut cut_ele1, TCut cut_ele2, std::vector<TString> runRanges, std::string commonCut, float scale, float smearing)
+void anyVar_class::TreeAnalyzeShervin(std::string region, TCut cut_ele1, TCut cut_ele2, runDivide_class &runDiv, std::string commonCut, float scale, float smearing)
 {
 	_stats_vec.reset();
 	//vector of stats vect, one for each run
-	std::map<UInt_t, statsCollection> stats_run_map;
-	stats_run_map.insert(std::pair<UInt_t, statsCollection>(0, _stats_vec));
+	std::map<runDivide_class::key_t, statsCollection> stats_run_map;
+	stats_run_map.insert(std::pair<runDivide_class::key_t, statsCollection>(0, _stats_vec));
 
-	for(auto& runRange : runRanges) {
-		TString runMin, runMax;
-		TObjArray *tx = runRange.Tokenize("-");
-		runMin = ((TObjString *)(tx->At(0)))->String();
-#ifdef DEBUG
-		std::cout << "[anyVar_class:DEBUG] " << "runMin = " << runMin << std::endl;
-#endif
-		stats_run_map.insert(std::pair<UInt_t, statsCollection>(runMin.Atoll(), _stats_vec));
-		std::cout << runMin << "\t" << stats_run_map.size() << std::endl;
+	for(auto key_itr : runDiv._runMap) {
+		auto key = key_itr.first;
+		stats_run_map.insert(std::pair<runDivide_class::key_t, statsCollection>(key, _stats_vec));
+		std::cout << runDivide_class::run(key) << "-" << runDivide_class::lumi(key) << "\t" << stats_run_map.size() << std::endl;
 	}
 	if(reduced_data == NULL) {
 		std::cerr << "[ERROR] reduced_data is NULL. Maybe you have to call the Import() method" << std::endl;
@@ -322,7 +323,10 @@ void anyVar_class::TreeAnalyzeShervin(std::string region, TCut cut_ele1, TCut cu
 	Float_t corrEle_[2] = {1, 1}; //corrEle_[0]=1; corrEle_[1]=1;
 	Float_t smearEle_[2] = {1, 1}; //corrEle_[0]=1; corrEle_[1]=1;
 	UInt_t  runNumber = 0;
+	UShort_t lumiBlock = 5000;
 	if(reduced_data->GetBranch("runNumber") != NULL) reduced_data->SetBranchAddress("runNumber", &runNumber);
+	if(reduced_data->GetBranch("lumiBlock") != NULL) reduced_data->SetBranchAddress("lumiBlock", &lumiBlock);
+	
 
 	if(reduced_data->GetBranch("puWeight") != NULL) {
 		std::cout << "[anyVar_class][STATUS] Adding pileup weight branch from friend" << std::endl;
@@ -357,7 +361,6 @@ void anyVar_class::TreeAnalyzeShervin(std::string region, TCut cut_ele1, TCut cu
 	std::cout << "[anyVar_class][STATUS] anyVar processing: category " << region
 	          << "\t" << "with " << entries << " entries" << std::endl;
 //	std::cerr << "[ 00%]";
-
 
 	Long64_t count = 0;
 	//for(Long64_t jentry = 0; jentry < entries; ++jentry) {
@@ -396,7 +399,7 @@ void anyVar_class::TreeAnalyzeShervin(std::string region, TCut cut_ele1, TCut cu
 		// smearMass->setVal(mll * sqrt(corrEle_[0] * corrEle_[1] * (smearEle_[0]) * (smearEle_[1])));
 
 		bool bothPassing = true;
-		auto ptr = (stats_run_map.upper_bound(runNumber));
+		auto ptr = (stats_run_map.upper_bound(runDivide_class::key(runNumber,lumiBlock)));
 		if(ptr != stats_run_map.begin()) ptr--;
 		auto &sv = ptr->second;
 		//std::cout << ptr->first << "\t" << runNumber << std::endl;
@@ -416,7 +419,7 @@ void anyVar_class::TreeAnalyzeShervin(std::string region, TCut cut_ele1, TCut cu
 		}
 
 		//double mllNew = mll * scale;
-		*mll *= scale;
+		*mll *= scale * sqrt(corrEle_[0] * corrEle_[1] * (smearEle_[0]) * (smearEle_[1]));
 		if(bothPassing && *mll > 60. && *mll < 120) 	sv[indexMassBranch].add(*mll);
 		if(_exclusiveCategories && bothPassing) goodEntries.erase(jentry);
 	}
@@ -434,11 +437,12 @@ void anyVar_class::TreeAnalyzeShervin(std::string region, TCut cut_ele1, TCut cu
 		std::cout << "Reduced number of events: " << entries << " -> " <<  goodEntries.size() << std::endl;
 	}
 
-
 	// auto &sv = stats_run_map.begin()->second;
 	// sv[indexMassBranch].sort();
 	// std::cout << region << "\t" << stats_run_map.begin()->first << "\t" << sv[indexMassBranch] << std::endl;
-	if(runRanges.size() == 0) {
+	std::vector<std::string> runRangesSelectionString =  runDiv.GetRunRangesSelectionString(true);
+	if(runDiv._runMap.size() == 0) {
+//		if(runRangesSelectionString.size() > 0) {
 		auto &sv = stats_run_map.begin()->second;
 		for(size_t i = 0; i < sv.size(); ++i) {
 			auto& s = sv[i];
@@ -446,14 +450,12 @@ void anyVar_class::TreeAnalyzeShervin(std::string region, TCut cut_ele1, TCut cu
 			*(_statfiles[i]) << region + "-" + commonCut << "\t" << s << std::endl;
 		}
 	} else {
-		for(auto& runRange : runRanges) {
-			TString runMin, runMax;
-			TObjArray *tx = runRange.Tokenize("-");
-			runMin = ((TObjString *)(tx->At(0)))->String();
-			runMax = ((TObjString *)(tx->At(1)))->String();
-			std::string category = region + "-runNumber_" + runMin.Data() + "_" + runMax.Data() + "-" + commonCut;
-
-			auto ptr = (stats_run_map.upper_bound(runMin.Atoll()));
+		assert(runRangesSelectionString.size()==runDiv._runMap.size());
+		for(unsigned int iRun = 0; iRun<runDiv._runMap.size(); ++iRun){
+			std::string category = region  + "-" + (runRangesSelectionString[iRun])  + "-" + commonCut;
+			auto run_itr = runDiv._runMap.begin();
+			std::advance(run_itr, iRun);
+			auto ptr = (stats_run_map.upper_bound(run_itr->first));
 			if(ptr != stats_run_map.begin()) ptr--;
 			auto &sv = ptr->second;
 			for(size_t i = 0; i < sv.size(); ++i) {

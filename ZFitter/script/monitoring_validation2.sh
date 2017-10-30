@@ -1,7 +1,7 @@
 #!/bin/bash
 source script/functions.sh
 #tag_name=""
-commonCut=isEle-Et_25
+commonCut=isEle-Et_25-nPV_35_40
 selection=loose25nsRun22016Moriond
 invMass_var=invMass_ECAL_ele
 invMass_min=65
@@ -260,6 +260,8 @@ if [ -n "$STABILITY" ];then
     ./script/stability2.sh -t  ${outDirData}/fitres/rawESEnergyPlane2SCEle.dat -l data \
 		 -x $xVar -y peak $xMin $xMax || exit 1
     ./script/stability2.sh -t  ${outDirData}/fitres/timeSeedSC.dat -l data \
+		 -x $xVar -y peak $xMin $xMax || exit 1
+    ./script/stability2.sh -t  ${outDirData}/fitres/nPV.dat -l data \
 		 -x $xVar -y peak $xMin $xMax || exit 1
 
 fi

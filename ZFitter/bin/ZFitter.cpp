@@ -131,6 +131,7 @@ std::vector<TString> ReadRegionsFromFile(TString fileName)
 	return regions;
 }
 
+
 //------------------------------------------------------------
 /**
  * This function reassociates the chains as friends of the "selected" tree.
@@ -240,6 +241,7 @@ int main(int argc, char **argv)
 	using namespace boost;
 	namespace po = boost::program_options;
 	unsigned int nEvents_runDivide = 100000;
+
 	std::string chainFileListName;
 	std::string regionsFileName;
 	std::string runRangesFileName;
@@ -336,6 +338,7 @@ int main(int argc, char **argv)
 
 	("runDivide", "execute the run division")
 	("nEvents_runDivide", po::value<unsigned int>(&nEvents_runDivide)->default_value(100000), "Minimum number of events in a run range")
+	("splitByLS_runDivide", "make categorization by runs or by LS")
 
 	//
 	("noPU", "")
@@ -524,10 +527,6 @@ int main(int argc, char **argv)
 		return 1;
 	}
 
-	if(vm.count("useZPtweight") && !vm.count("pdfSystWeightIndex")) {
-		std::cerr << "[ERROR] Asked for ZPt weights but no pdfSystWeightIndex indicated" << std::endl;
-		exit(1);
-	}
 
 	TString energyBranchName = energyBranchNameFromInvMassName(invMass_var).c_str();
 
@@ -680,25 +679,32 @@ int main(int argc, char **argv)
 	r.ReplaceAll(".dat", "");
 
 	std::vector<TString> regions = ReadRegionsFromFile(regionsFileName);
-	std::vector<TString> runRanges = ReadRegionsFromFile(runRangesFileName);
+
+	ElectronCategory_class cutter;
+	cutter.invMassBranchName = invMass_var;
+	cutter.energyBranchName = energyBranchName;
+
+	///------------------------------ to obtain run ranges
+	runDivide_class runDivider(cutter.GetCut(commonCut + "-eleID_" + selection, false, 0), 
+							   cutter.GetBranchNameNtuple(commonCut + "-eleID_" + selection));
+	std::vector<TString> runRanges;
+	std::vector<std::string> runRangesSelectionString;
+	if(runRangesFileName.size()>0 and vm.count("runDivide")==0){
+		runDivider.FillRunLimits(runRangesFileName);
+		runRanges = runDivider.GetRunRanges();
+		runRangesSelectionString = runDivider.GetRunRangesSelectionString(vm.count("splitByLS_runDivide"));
+	}
+	 
 	std::vector<TString> categories;
 
 	for(std::vector<TString>::const_iterator region_itr = regions.begin();
 	        region_itr != regions.end();
 	        region_itr++) {
-		if(runRanges.size() > 0) {
-			for(std::vector<TString>::const_iterator runRange_itr = runRanges.begin();
-			        runRange_itr != runRanges.end();
+		if(runRangesSelectionString.size() > 0) {
+			for(auto runRange_itr = runRangesSelectionString.begin();
+			        runRange_itr != runRangesSelectionString.end();
 			        runRange_itr++) {
-				TString token1, token2;
-				//Ssiz_t ss=0;
-				//runRange_itr->Tokenize(token1,ss,"-");
-				//ss=runRange_itr->First('-');
-				//runRange_itr->Tokenize(token2,ss,"-");
-				TObjArray *tx = runRange_itr->Tokenize("-");
-				token1 = ((TObjString *)(tx->At(0)))->String();
-				token2 = ((TObjString *)(tx->At(1)))->String();
-				categories.push_back((*region_itr) + "-runNumber_" + token1 + "_" + token2 + "-" + commonCut.c_str());
+				categories.push_back((*region_itr) + "-" + TString(*runRange_itr) + "-" + commonCut.c_str());
 			}
 		} else categories.push_back((*region_itr) + "-" + commonCut.c_str());
 	}
@@ -1015,13 +1021,8 @@ int main(int argc, char **argv)
 		MergeSamples(tagChainMap, regionsFileNameTag, "d");
 	}
 
-	ElectronCategory_class cutter;
-	cutter.invMassBranchName = invMass_var;
-	cutter.energyBranchName = energyBranchName;
-
-	///------------------------------ to obtain run ranges
+	
 	if(vm.count("runDivide")) {
-		runDivide_class runDivider(cutter.GetCut(commonCut + "-eleID_" + selection, false, 0), cutter.GetBranchNameNtuple(commonCut + "-eleID_" + selection));
 		runDivider.Divide((tagChainMap["d"])["selected"].get(), "data/runRanges/runRangeLimits.dat", nEvents_runDivide);
 		runDivider.PrintRunRangeEvents();
 		// std::vector<TString> runRanges;
@@ -1032,6 +1033,7 @@ int main(int argc, char **argv)
 		// 	std::cout << *itr << "\t" << "-1" << "\t" << runDivider.GetRunRangeTime(*itr) << std::endl;
 		// }
 
+		return 0;
 	}
 
 
@@ -1294,7 +1296,7 @@ int main(int argc, char **argv)
 			system(("mkdir -p " + outDirFitResMC).c_str());
 			anyVar_class anyVarMC(mc, branchListAny, cutter, invMass_var, outDirFitResMC + "/", dirMC, true); // vm.count("updateOnly"));
 			anyVarMC._exclusiveCategories = false;
-			anyVarMC.Import(commonCut, eleID, activeBranchList, modulo); //activeBranchList is the list of branches for category selections
+//			anyVarMC.Import(commonCut, eleID, activeBranchList, modulo); //activeBranchList is the list of branches for category selections
 
 			///\todo allocating both takes too much memory
 			if(vm.count("runToy") && modulo > 0) {
@@ -1316,7 +1318,7 @@ int main(int argc, char **argv)
 					for(auto& region : categories) {
 						std::cout << "------------------------------------------------------------" << std::endl;
 						std::cout << "[DEBUG ZFitter] category is: " << region << std::endl;
-						anyVar.TreeAnalyzeShervin(region.Data(), cutter.GetCut(region, false, 1), cutter.GetCut(region, false, 2), std::vector<TString>(), "", scale);
+						anyVar.TreeAnalyzeShervin(region.Data(), cutter.GetCut(region, false, 1), cutter.GetCut(region, false, 2), runDivider, "", scale);
 					}
 					break;
 #else
@@ -1334,13 +1336,13 @@ int main(int argc, char **argv)
 					anyVar.ChangeModulo(0);
 //					anyVarMC.ChangeModulo(0);
 					if(runRanges.size() > 0) {
-						anyVar.TreeAnalyzeShervin(region.Data(), cutter.GetCut(region, false, 1), cutter.GetCut(region, false, 2), runRanges, commonCut);
+						anyVar.TreeAnalyzeShervin(region.Data(), cutter.GetCut(region, false, 1), cutter.GetCut(region, false, 2), runDivider, commonCut);
 					} else {
 						TString category = region;
 						TString c = category + "-" + commonCut.c_str();
 						//std::cout << c << std::endl;
-						anyVar.TreeAnalyzeShervin(c.Data(),  cutter.GetCut(category, false, 1), cutter.GetCut(category, false, 2));
-						anyVarMC.TreeAnalyzeShervin(c.Data(),  cutter.GetCut(category, false, 1), cutter.GetCut(category, false, 2));
+						anyVar.TreeAnalyzeShervin(c.Data(),  cutter.GetCut(category, false, 1), cutter.GetCut(category, false, 2), runDivider);
+//						anyVarMC.TreeAnalyzeShervin(c.Data(),  cutter.GetCut(category, false, 1), cutter.GetCut(category, false, 2), runDivider);
 					}
 //				anyVarMC.TreeAnalyzeShervin(region.Data(), cutter.GetCut(region, true, 1), cutter.GetCut(region, true, 2), scale);
 				}
