@@ -27,10 +27,10 @@ tag_MC=config/reRecoTags/90X_upgrade2017_realistic_v20.py
 fileList=alcareco_datasets.dat
 #PERIOD=RUN2017NEW_DCS
 #PERIOD=RUN2017NEW
-PERIOD=RUN2017MC
+#PERIOD=RUN2017MC
 #PERIOD=LEGACY2016
 #PERIOD=MORIOND2017
-#PERIOD=MORIOND17 # MC
+PERIOD=MORIOND17 # MC
 
 
 if  git status --porcelain -uno | grep -v launch | grep -v ZFitter/ | grep -q -v _datasets  ; then

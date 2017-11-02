@@ -22,11 +22,11 @@ PERIOD=RUN2017
 #
 #tags=( config/reRecoTags/Cal_Sep2017_ref.py config/reRecoTags/92X_dataRun2_Prompt_v9.py )
 tags=( config/reRecoTags/Cal_Oct2017_ref.py config/reRecoTags/Cal_Oct2017_Ped_v1.py config/reRecoTags/Cal_Oct2017_Ped_v2.py ) #config/reRecoTags/Cal_Oct2017_Ped_v3.py )
-tags=(  config/reRecoTags/Cal_Oct2017_ES_v2.py)
+tags=(  config/reRecoTags/Cal_Oct2017_PS_v1.py config/reRecoTags/Cal_Oct2017_PS_EoP_v1.py )
 
 if  git status --porcelain -uno | grep -v launch | grep -v ZFitter | grep -q -v _datasets  ; then
 	echo "You have uncommitted changes, please commit everything before making a production" 
-	exit 1
+#	exit 1
 else
 	GITCOMMIT=`git rev-parse HEAD`
 	if [ "`git rev-parse HEAD`" != "`git rev-parse origin/master`" ];then
@@ -59,7 +59,7 @@ do
 		esac
 	done
 
-	for CHECK in '' --check
+	for CHECK in  --check
 	do
 		case $tagfile in 
 			*/Cal_*_ref*.py)
