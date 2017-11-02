@@ -6,6 +6,7 @@ stages:
 
 variables:
   GIT_STRATEGY: none
+  CMSSW_VERSION: CMSSW_9_2_14
 
 setup:
   stage: releaseSetup 

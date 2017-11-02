@@ -13,11 +13,11 @@ jsonNameRereco=271036-284044_23Sep2016_v1
 jsonPrompt=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions17/13TeV/PromptReco/Cert_294927-301141_13TeV_PromptReco_Collisions17_JSON.txt
 jsonNamePrompt=294927-301141_Prompt_v1
 
-jsonPrompt=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions17/13TeV/PromptReco/Cert_294927-302343_13TeV_PromptReco_Collisions17_JSON.txt
-jsonNamePrompt=294927-302343_Prompt_v1
+jsonPrompt=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions17/13TeV/PromptReco/Cert_294927-305364_13TeV_PromptReco_Collisions17_JSON.txt
+jsonNamePrompt=294927-305364_Prompt_v1
 
 scheduler=caf
-tag_Prompt=config/reRecoTags/92X_dataRun2_Prompt_v8.py
+tag_Prompt=config/reRecoTags/92X_dataRun2_Prompt_v11.py
 tag_Rereco=config/reRecoTags/80X_dataRun2_2016LegacyRepro_v3.py
 tag_Moriond=config/reRecoTags/80X_dataRun2_2016SeptRepro_v7.py
 tag_PromptH=config/reRecoTags/80X_dataRun2_Prompt_v16.py
@@ -26,11 +26,11 @@ tag_MC=config/reRecoTags/90X_upgrade2017_realistic_v20.py
 
 fileList=alcareco_datasets.dat
 #PERIOD=RUN2017NEW_DCS
-#PERIOD=RUN2017NEW
+PERIOD=RUN2017
 #PERIOD=RUN2017MC
 #PERIOD=LEGACY2016
 #PERIOD=MORIOND2017
-PERIOD=MORIOND17 # MC
+#PERIOD=MORIOND17 # MC
 
 
 if  git status --porcelain -uno | grep -v launch | grep -v ZFitter/ | grep -q -v _datasets  ; then
