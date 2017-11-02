@@ -332,6 +332,7 @@ private:
 	Float_t _invMass_ECAL_pho;   ///< invariant mass using ECAL energy, this is mustache pho-tuned regression if rereco, and correctedEcalEnergy if official reco
 	//   Float_t invMass_e3x3;
 	Float_t _invMass_5x5SC;
+	Float_t _invMass_highEta;   ///< invariant mass using same energy as invMass_ECAL_ele for the first electron and the e5x5 for the electron in the high eta region (|eta|>2.5)
 
 	Float_t _invMass_mumu;
 
@@ -1281,6 +1282,7 @@ void ZNtupleDumper::InitNewTree()
 	//_tree->Branch("invMass_efull5x5",    &invMass_efull5x5,      "invMass_efull5x5/F");
 	_tree->Branch("invMass_rawSC", &_invMass_rawSC,   "invMass_rawSC/F");
 	_tree->Branch("invMass_rawSC_esSC", &_invMass_rawSC_esSC,   "invMass_rawSC_esSC/F");
+	_tree->Branch("invMass_highEta", &_invMass_highEta,   "invMass_highEta/F");
 
 	return;
 }
@@ -1351,6 +1353,7 @@ void ZNtupleDumper::ResetMainTreeVar()
 	_invMass_ECAL_ele = initSingleFloat;
 	_invMass_ECAL_pho = initSingleFloat;
 	_invMass_5x5SC = initSingleFloat;
+	_invMass_highEta = initSingleFloat;
 	_invMass_mumu = initSingleFloat;
 	_invMass_MC = initSingleFloat;
 }
@@ -1669,6 +1672,12 @@ void ZNtupleDumper::TreeSetSingleSCVar(const reco::SuperCluster& sc, int index)
 	_rawESEnergyPlane1SCEle[index] = GetESPlaneRawEnergy(sc, 1);
 	_rawESEnergyPlane2SCEle[index] = GetESPlaneRawEnergy(sc, 2);
 
+	// change in an electron properties please, EleNewEnergyProducer
+	_energy_3x3SC[index] = _clustertools->e3x3(*sc.seed());
+	_energy_5x5SC[index] = _clustertools->e5x5(*sc.seed());
+
+	_R9Ele[index] = _energy_3x3SC[index] / _rawEnergySCEle[index]; //already commented
+
 	DetId seedDetId = sc.seed()->seed();
 	if(seedDetId.subdetId() == EcalBarrel) {
 		EBDetId seedDetIdEcal(seedDetId);
@@ -1789,7 +1798,7 @@ void ZNtupleDumper::TreeSetSingleElectronVar(const reco::SuperCluster& electron1
 	_pAtVtxGsfEle[index] = -1;
 
 
-	// temporary ignor the id and classification
+	// temporary ignore the id and classification
 	_eleID[index] = -100;
 
 	TreeSetSingleSCVar(electron1, index);
@@ -1919,6 +1928,7 @@ void ZNtupleDumper:: TreeSetDiElectronVar(const pat::Electron& electron1, const 
 
 	_invMass		= sqrt(2 * _energyEle[0] * _energyEle[1] * angle);
 	_invMass_5x5SC = sqrt(2 * _energy_5x5SC[0] * _energy_5x5SC[1] * angle);
+	_invMass_highEta = sqrt(2 * _energy_ECAL_ele[0] * _energy_5x5SC[1] * angle);
 
 	_invMass_ECAL_ele = sqrt(2 * _energy_ECAL_ele[0] * _energy_ECAL_ele[1] * angle);
 	_invMass_ECAL_pho = sqrt(2 * _energy_ECAL_pho[0] * _energy_ECAL_pho[1] * angle);
@@ -1963,6 +1973,8 @@ void ZNtupleDumper::TreeSetDiElectronVar(const pat::Electron& electron1, const r
 	_invMass = sqrt(2 * electron1.energy() * electron2.energy() * angle);
 	_invMass_5x5SC   = sqrt(2 * _energy_5x5SC[0] * _energy_5x5SC[1] * /// full 5x5
 	                        angle);
+	_invMass_highEta   = sqrt(2 * _energy_ECAL_ele[0] * _energy_5x5SC[1] * /// full 5x5
+							  angle);
 
 	_invMass_ECAL_ele = sqrt(2 * _energy_ECAL_ele[0] * _energy_ECAL_ele[1] * angle);
 	_invMass_ECAL_pho = sqrt(2 * _energy_ECAL_pho[0] * _energy_ECAL_pho[1] * angle);
