@@ -31,7 +31,7 @@ else
 	GITCOMMIT=`git rev-parse HEAD`
 	if [ "`git rev-parse HEAD`" != "`git rev-parse origin/master`" ];then
 		echo "[ERROR] You are not allowed to make any production if all commits are propagated to the master branch of the repository" >> /dev/stderr
-		exit 2
+#		exit 2
 	fi
 fi
 
@@ -58,7 +58,7 @@ do
 				;;
 		esac
 	done
-continue
+
 	for CHECK in  --check
 	do
 		case $tagfile in 

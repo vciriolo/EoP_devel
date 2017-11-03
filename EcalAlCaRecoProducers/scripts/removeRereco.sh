@@ -17,7 +17,7 @@ usage(){
     echo "    -t tagFile"
 #    echo "    -p period"
     echo "    -l: list available rerecoes on EOS"
-	echo "    --dry-run"
+	echo "    --dryRun"
 }
 
 
@@ -130,7 +130,7 @@ for dataset in $datasets
   fi
   USER_REMOTE_DIR=/eos/cms/store/${USER_REMOTE_DIR}
   echo "Removing ${USER_REMOTE_DIR}"
-  eos.select ls -s ${USER_REMOTE_DIR} &> /dev/null || {
+  eos ls -s ${USER_REMOTE_DIR} &> /dev/null || {
       echo "${USER_REMOTE_DIR} not found" 
       if [ -z "${DRYRUN}" ];then sed  -i "\%$RUNRANGE.*$DATASETPATH.*$DATASETNAME.*$TAG.*$JSONNAME% d" $fileList; fi
       continue
@@ -138,12 +138,12 @@ for dataset in $datasets
 
   if [ -z "${DRYRUN}" ];then
 	echo ${USER_REMOTE_DIR}
-    eos.select rm -r ${USER_REMOTE_DIR}  || exit 1
+    eos rm -r ${USER_REMOTE_DIR}  || exit 1
 
     sed  -i "\%$RUNRANGE.*$DATASETPATH.*$DATASETNAME.*$TAG.*$JSONNAME% d" $fileList
   else
 	  echo "[DRYRUN] $USER_REMOTE_DIR"
-	  eos.select ls ${USER_REMOTE_DIR}
+	  eos ls ${USER_REMOTE_DIR}
   fi
 done
 
