@@ -8,8 +8,8 @@ json=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert
 jsonName=271036_279588-Prompt
 
 
-json=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions17/13TeV/PromptReco/Cert_294927-304120_13TeV_PromptReco_Collisions17_JSON.txt
-jsonName=294927-304120_Prompt_v1
+json=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions17/13TeV/PromptReco/Cert_294927-305364_13TeV_PromptReco_Collisions17_JSON.txt
+jsonName=294927-305364_Prompt_v1
 
 json=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/ReReco/Final/Cert_271036-284044_13TeV_23Sep2016ReReco_Collisions16_JSON.txt
 jsonName=271036_284044-23Sep2016
@@ -41,7 +41,7 @@ do
 #	./scripts/removeRereco.sh -t $tagfile -f ntuple_datasets.dat --json_name=$jsonName
 #	continue
 
-	for CHECK in --check
+	for CHECK in '' --check
 	do
 		case $tagfile in 
 			*/Cal_*_ref*.py | */Cal_*_cand*.py)
@@ -57,7 +57,7 @@ do
 		esac
 	done
 
-	for CHECK in  --check
+	for CHECK in '' --check
 	do
 		case $tagfile in 
 			*/Cal_*_ref*.py)

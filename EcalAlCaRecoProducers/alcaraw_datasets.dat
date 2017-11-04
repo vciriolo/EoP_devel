@@ -177,6 +177,7 @@
 300742-302029	/DoubleEG/Run2017C-EcalUncalZElectron-PromptReco-v3/ALCARECO	DoubleEG-Run2017C-ZSkim-Prompt-v3	caf	database	VALID	RUN2017C,RUN2017
 302030-302663	/DoubleEG/Run2017D-EcalUncalZElectron-PromptReco-v1/ALCARECO	DoubleEG-Run2017D-ZSkim-Prompt-v1	caf	database	VALID	RUN2017D,RUN2017
 303574-304797	/DoubleEG/Run2017E-EcalUncalZElectron-PromptReco-v1/ALCARECO	DoubleEG-Run2017E-ZSkim-Prompt-v1	caf	database	VALID	RUN2017E,RUN2017
+305040-305364   /DoubleEG/Run2017F-EcalUncalZElectron-PromptReco-v1/ALCARECO	DoubleEG-Run2017F-ZSkim-Prompt-v1	caf	database	VALID	RUN2017F,RUN2017
 #
 296168-296174	/SingleElectron/Run2017A-EcalUncalWElectron-PromptReco-v2/ALCARECO	SingleElectron-Run2017A-WSkim-Prompt-v2	caf	database	VALID	RUN2017A
 296880-297004	/SingleElectron/Run2017A-EcalUncalWElectron-PromptReco-v3/ALCARECO	SingleElectron-Run2017A-WSkim-Prompt-v3	caf	database	VALID	RUN2017A
@@ -188,3 +189,4 @@
 300742-302029	/SingleElectron/Run2017C-EcalUncalWElectron-PromptReco-v3/ALCARECO	SingleElectron-Run2017C-WSkim-Prompt-v3	caf	database	VALID	RUN2017C,RUN2017
 302030-302663	/SingleElectron/Run2017D-EcalUncalWElectron-PromptReco-v1/ALCARECO	SingleElectron-Run2017D-WSkim-Prompt-v1	caf	database	VALID	RUN2017D,RUN2017
 303574-304797	/SingleElectron/Run2017E-EcalUncalWElectron-PromptReco-v1/ALCARECO	SingleElectron-Run2017E-WSkim-Prompt-v1	caf	database	VALID	RUN2017E,RUN2017
+305040-305364   /SingleElectron/Run2017F-EcalUncalWElectron-PromptReco-v1/ALCARECO	SingleElectron-Run2017F-WSkim-Prompt-v1	caf	database	VALID	RUN2017F,RUN2017
