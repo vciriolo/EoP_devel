@@ -3,7 +3,6 @@ source $CMSSW_BASE/src/Calibration/EcalAlCaRecoProducers/scripts/prodFunctions.s
 
 ############################### OPTIONS
 #------------------------------ default
-USESERVER=0
 SCHEDULER=caf
 QUEUE=cmscaf1nd
 STORAGE_ELEMENT=caf
@@ -76,6 +75,7 @@ usage(){
     echo "    --submitOnly"
     echo "    --check"
     echo "    --isPrivate: it is a privately produced dataset (not central or prompt)"
+	echo "    --useParent" 
 
     echo "----------"
     echo "    --tutorial: tutorial mode, produces only one sample in you user area"
@@ -99,7 +99,7 @@ expertUsage(){
 #------------------------------ parsing
 
 # options may be followed by one colon to indicate they have a required argument
-if ! options=$(getopt -u -o hHd:n:s:r:t:f: -l help,expertHelp,datasetpath:,datasetname:,skim:,runrange:,store:,remote_dir:,scheduler:,isMC,isParticleGun,ntuple_remote_dir:,json:,tag:,type:,json_name:,ui_working_dir:,extraName:,doExtraCalibTree,doExtraStudyTree,doEleIDTree,noStandardTree,createOnly,submitOnly,check,isPrivate,file_per_job:,develRelease,weightsReco -- "$@")
+if ! options=$(getopt -u -o hHd:n:s:r:t:f: -l help,expertHelp,datasetpath:,datasetname:,skim:,runrange:,store:,remote_dir:,scheduler:,isMC,isParticleGun,ntuple_remote_dir:,json:,tag:,type:,json_name:,ui_working_dir:,extraName:,doExtraCalibTree,doExtraStudyTree,doEleIDTree,noStandardTree,createOnly,submitOnly,check,isPrivate,file_per_job:,develRelease,weightsReco,useParent -- "$@")
 then
     # something went wrong, getopt will put out an error message for us
     exit 1
@@ -213,7 +213,7 @@ do
 			#echo "[OPTION] checking jobs"; 
 			CHECK=y; EXTRAOPTION="--check"; unset CREATE; unset SUBMIT;;
 	--isPrivate)      echo "[OPTION] private dataset"; ISPRIVATE=1;;
-
+	--useParent) USEPARENT=y ;;
  	--file_per_job)
 			#echo "[OPTION] file per job: $2"; 
 			FILE_PER_JOB=$2; shift ;;

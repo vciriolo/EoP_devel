@@ -589,8 +589,7 @@ if (options.skim=="ZmmgSkim"):
                                * process.ntupleSeq)
 else:
     process.NtuplePath = cms.Path(process.filterSeq * process.preFilterSeq *  process.NtupleFilterSeq 
-                                  #                              * process.pfIsoEgamma 
-                                  #                              * process.ALCARECOEcalCalElectronSeq 
+                                  # * process.ecalMultiFitUncalibRecHit
                                * process.ntupleSeq)
 process.NtupleEndPath = cms.EndPath( process.zNtupleDumper)
 if options.outputAll:
@@ -770,6 +769,10 @@ else:
     rechitsEB = cms.InputTag("reducedEgamma", "reducedEBRecHits")
     rechitsEE = cms.InputTag("reducedEgamma", "reducedEERecHits")
     rechitsES = cms.InputTag("reducedEgamma", "reducedESRecHits")
+    
+    process.ecalMultiFitUncalibRecHit.EBdigiCollection = cms.InputTag("selectDigi","selectedEcalEBDigiCollection")
+    process.ecalMultiFitUncalibRecHit.EEdigiCollection = cms.InputTag("selectDigi","selectedEcalEEDigiCollection")
+
     #configure everything for MINIAOD
     process.egmGsfElectronIDs.physicsObjectSrc = cms.InputTag('slimmedElectrons')
 
@@ -801,6 +804,9 @@ else:
     process.zNtupleDumper.recHitCollectionEB = rechitsEB
     process.zNtupleDumper.recHitCollectionEE = rechitsEE
     process.zNtupleDumper.recHitCollectionES = rechitsES
+#    process.zNtupleDumper.uncalibRecHitCollectionEB = process.ecalRecHit.EBuncalibRecHitCollection
+#    process.zNtupleDumper.uncalibRecHitCollectionEE = process.ecalRecHit.EEuncalibRecHitCollection
+
     process.zNtupleDumper.rhoFastJet = cms.InputTag("fixedGridRhoFastjetAll")
     process.zNtupleDumper.pileupInfo = cms.InputTag("slimmedAddPileupInfo")
     process.zNtupleDumper.vertexCollection = cms.InputTag('offlineSlimmedPrimaryVertices')

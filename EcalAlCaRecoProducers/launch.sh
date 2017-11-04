@@ -29,7 +29,7 @@ fileList=alcareco_datasets.dat
 PERIOD=RUN2017
 #PERIOD=RUN2017MC
 #PERIOD=LEGACY2016
-#PERIOD=MORIOND2017
+PERIOD=MORIOND2017A
 #PERIOD=MORIOND17 # MC
 
 
@@ -51,8 +51,8 @@ IFS=$'\n'
 datasetsData=(`./scripts/parseDatasetFile.sh $fileList | grep VALID | sed 's|$|,|' | grep "${PERIOD}," | grep -v SIM`)
 datasetsMC=(`./scripts/parseDatasetFile.sh $fileList | grep VALID | sed 's|$|,|' | grep "${PERIOD}," | grep SIM`)
 
-extraName="trackLength"
-for dataset in ${datasetsMC[@]} ${datasetsData[@]} #
+extraName="trackLength_no"
+for dataset in ${datasetsMC[@]} #${datasetsData[@]} #
 do
 	datasetName=`echo $dataset | awk '{print $6}'`
 #	echo $datasetName
@@ -78,7 +78,7 @@ do
 ##			./scripts/prodNtuples.sh --type=MINIAOD -t ${tag_Rereco} -s noSkim --scheduler=${scheduler}   --json=$json --json_name=$jsonName --extraName=${extraName} ${CHECK} $dataset
 			;;
 		*miniAODv2) #MC
-			./scripts/prodNtuples.sh --type=MINIAOD --isMC -t ${tag_MC} -s noSkim --scheduler=${scheduler} --extraName=${extraName} ${CHECK} $dataset
+			./scripts/prodNtuples.sh --type=MINIAOD --isMC -t ${tag_MC} -s noSkim --scheduler=${scheduler} --extraName=${extraName}  ${CHECK} $dataset
 			;;
 		*miniAOD) #data prompt 2017
 			case $PERIOD in
@@ -91,7 +91,7 @@ do
 					jsonName=$jsonNamePrompt
 					;;
 			esac
-			./scripts/prodNtuples.sh --type=MINIAOD -t ${tag_Prompt} -s noSkim --scheduler=${scheduler}   --json=$json --json_name=$jsonName  ${CHECK} $dataset
+			./scripts/prodNtuples.sh --type=MINIAOD -t ${tag_Prompt} -s noSkim --scheduler=${scheduler}   --json=$json --json_name=$jsonName --useParent  ${CHECK} $dataset
 			;;
 	esac
 
