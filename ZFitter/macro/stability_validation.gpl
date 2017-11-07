@@ -5,24 +5,9 @@ reset
 files=""
 titles=""
 
-# Settings that maybe want to change
-set style line 1 pt 2 lc 1
-set style line 2 pt 2 lc 7
-set style line 3 pt 2 lc 3
-set style line 4 pt 2 lc 4
-set style line 5 pt 2 lc 0
-set style line 6 pt 2 lc 1
-set style line 7 pt 2 lc 2
-set style line 8 pt 2 lc 3
-set style line 9 pt 2 lc 4
-set style line 10 pt 2 lc 5
+load 'macro/style.gpl' 
+load 'macro/run_periods.gpl'
 
-set arrow 2 from 1466739151,graph 0 to 1466739151, graph 1 nohead dt 2 # run2016C
-set arrow 3 from 1467631160,graph 0 to 1467631160, graph 1 nohead dt 2 # run2016D
-set arrow 4 from 1468568895,graph 0 to 1468568895, graph 1 nohead dt 2 # run2016F
-set arrow 5 from 1470052448,graph 0 to 1470052448, graph 1 nohead dt 2 # run2016F
-set arrow 6 from 1471172473,graph 0 to 1471172473, graph 1 nohead dt 2 # run2016G
-set arrow 7 from 1474783497,graph 0 to 1474783497, graph 1 nohead dt 2 # run2016H
 
 set terminal pdfcairo enhanced color font "Helvetica,16" size 5,5
 set output 'stability.pdf'
@@ -62,7 +47,7 @@ set offsets graph 0.05, graph 0.05, graph 0.2, graph 0.2
 #set xrange  [1461521421:*]
 
 # invMass
-set yrange  [87:91]
+set yrange  [88:92]
 set y2range [0.01:0.02]
 # # R9
 # peakLabel="peak estimator (".yVar.")"
@@ -108,16 +93,19 @@ if (ARGC>1){
   }
 }else{
     set ylabel peakLabel
-    p for [category in "[EB-isEle-Et_25] [EE-isEle-Et_25]" ] \
+    p for [category in "[EB-isEle-Et_25] [EB-isEle-Et_25-nPV_35_40]" ] \
     file  u @xVar:yVar:@xVarDelta:(column("stdDev")/sqrt(0.68*column("nEvents"))) i category w xyerr pt 5 ps 0.6 title category noenhance
 
-	unset ylabel
-  set y2label resolutionLabel
-  unset ytics
-  set y2tics
-  set grid y2
-  p for [category in "[EB-isEle-Et_25] [EE-isEle-Et_25]" ] file \
-  u @xVar:@yRes:@xVarDelta i category w xerr pt 6 ps 0.6  axes x1y2 title category noenhance
+    p for [category in "[EB-absEta_1_1.4442-isEle-Et_25] [EB-absEta_1_1.4442-isEle-Et_25-nPV_35_40]" ] \
+    file  u @xVar:yVar:@xVarDelta:(column("stdDev")/sqrt(0.68*column("nEvents"))) i category w xyerr pt 5 ps 0.6 title category noenhance
+
+  # 	unset ylabel
+  # set y2label resolutionLabel
+  # unset ytics
+  # set y2tics
+  # set grid y2
+  # p for [category in "[EB-isEle-Et_25] [EE-isEle-Et_25]" ] file \
+  # u @xVar:@yRes:@xVarDelta i category w xerr pt 6 ps 0.6  axes x1y2 title category noenhance
 
 
   }

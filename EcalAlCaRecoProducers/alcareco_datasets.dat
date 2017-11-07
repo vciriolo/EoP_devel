@@ -350,20 +350,25 @@ allRange	/ZToEE_NNPDF30_13TeV-powheg_M_50_120/RunIISummer16MiniAODv2-PUMoriond17
 #
 allRange	/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/PhaseISpring17MiniAOD-FlatPU28to62_902_90X_upgrade2017_realistic_v20_ext1-v1/MINIAODSIM DYJets_madgraph-PhaseISpring17-miniAODv2	caf	database	VALID	RUN2017,RUN2017MC
 #
+allRange	/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6_ext2-v1/MINIAODSIM	DYJets_amcatnlo-RunIISummer16-miniAODv2	caf	database	VALID MORIOND2017A -
+#
+allRange	/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISummer17MiniAOD-92X_upgrade2017_realistic_v10_ext1-v2/MINIAODSIM DYJets_madgraph-RunIISummer17-miniAODv2	caf	database	VALID	RUN2017,RUN2017MC
+#
 296168-296174	/DoubleEG/Run2017A-PromptReco-v2/MINIAOD	DoubleEG-Run2017A-noSkim-Prompt-v2-miniAOD	caf	database	VALID	RUN2017A
 296880-297004	/DoubleEG/Run2017A-PromptReco-v3/MINIAOD	DoubleEG-Run2017A-noSkim-Prompt-v3-miniAOD	caf	database	VALID	RUN2017A
 297046-297723	/DoubleEG/Run2017B-PromptReco-v1/MINIAOD	DoubleEG-Run2017B-noSkim-Prompt-v1-miniAOD	caf	database	VALID	RUN2017B,RUN2017
 298678-299329	/DoubleEG/Run2017B-PromptReco-v2/MINIAOD	DoubleEG-Run2017B-noSkim-Prompt-v2-miniAOD	caf	database	VALID	RUN2017B,RUN2017
 299368-299649	/DoubleEG/Run2017C-PromptReco-v1/MINIAOD	DoubleEG-Run2017C-noSkim-Prompt-v1-miniAOD	caf	database	VALID	RUN2017C,RUN2017
 299929-300676	/DoubleEG/Run2017C-PromptReco-v2/MINIAOD	DoubleEG-Run2017C-noSkim-Prompt-v2-miniAOD	caf	database	VALID	RUN2017C,RUN2017
-300742-301141	/DoubleEG/Run2017C-PromptReco-v3/MINIAOD	DoubleEG-Run2017C-noSkim-Prompt-v3-miniAOD	caf	database	VALID	RUN2017C,RUN2017
+300742-301141	/DoubleEG/Run2017C-PromptReco-v3/MINIAOD	DoubleEG-Run2017C-noSkim-Prompt-v3-miniAOD	caf	database	INVALID	RUN2017C,RUN2017
 301142-301544	/DoubleEG/Run2017C-PromptReco-v3/MINIAOD	DoubleEG-Run2017C-noSkim-Prompt-v3-miniAOD	caf	database	INVALID	RUN2017C,RUN2017_DCS
-301142-301567	/DoubleEG/Run2017C-PromptReco-v3/MINIAOD	DoubleEG-Run2017C-noSkim-Prompt-v3-miniAOD	caf	database	VALID	RUN2017C,RUN2017
-301568-301941	/DoubleEG/Run2017C-PromptReco-v3/MINIAOD	DoubleEG-Run2017C-noSkim-Prompt-v3-miniAOD	caf	database	VALID	RUN2017C,RUN2017
-301942-301997	/DoubleEG/Run2017C-PromptReco-v3/MINIAOD	DoubleEG-Run2017C-noSkim-Prompt-v3-miniAOD	caf	database	VALID	RUN2017C,RUN2017
-301998-302029	/DoubleEG/Run2017C-PromptReco-v3/MINIAOD	DoubleEG-Run2017C-noSkim-Prompt-v3-miniAOD	caf	database	VALID	RUN2017C,RUN2017
-302030-302526	/DoubleEG/Run2017D-PromptReco-v1/MINIAOD	DoubleEG-Run2017D-noSkim-Prompt-v-miniAOD	caf	database	VALID	RUN2017D,RUN2017_DCS,RUN2017NEW_DCS
-303574-304797	/DoubleEG/Run2017E-PromptReco-v1/ALCARECO	DoubleEG-Run2017E-noSkim-Prompt-v1-miniAOD	caf	database	VALID	RUN2017E,RUN2017
+301142-301567	/DoubleEG/Run2017C-PromptReco-v3/MINIAOD	DoubleEG-Run2017C-noSkim-Prompt-v3-miniAOD	caf	database	INVALID	RUN2017C,RUN2017
+301568-301941	/DoubleEG/Run2017C-PromptReco-v3/MINIAOD	DoubleEG-Run2017C-noSkim-Prompt-v3-miniAOD	caf	database	INVALID	RUN2017C,RUN2017
+301942-301997	/DoubleEG/Run2017C-PromptReco-v3/MINIAOD	DoubleEG-Run2017C-noSkim-Prompt-v3-miniAOD	caf	database	INVALID	RUN2017C,RUN2017
+301998-302029	/DoubleEG/Run2017C-PromptReco-v3/MINIAOD	DoubleEG-Run2017C-noSkim-Prompt-v3-miniAOD	caf	database	INVALID	RUN2017C,RUN2017
+300742-302029	/DoubleEG/Run2017C-PromptReco-v3/MINIAOD	DoubleEG-Run2017C-noSkim-Prompt-v3-miniAOD	caf	database	VALID	RUN2017C,RUN2017
+302030-302663	/DoubleEG/Run2017D-PromptReco-v1/MINIAOD	DoubleEG-Run2017D-noSkim-Prompt-v1-miniAOD	caf	database	VALID	RUN2017D,RUN2017
+303574-304797	/DoubleEG/Run2017E-PromptReco-v1/MINIAOD	DoubleEG-Run2017E-noSkim-Prompt-v1-miniAOD	caf	database	VALID	RUN2017E,RUN2017
 305040-305364   /DoubleEG/Run2017F-PromptReco-v1/MINIAOD	DoubleEG-Run2017F-noSkim-Prompt-v1-miniAOD	caf	database	VALID	RUN2017F,RUN2017
 #
 296168-296174	/SingleElectron/Run2017A-PromptReco-v2/MINIAOD	SingleElectron-Run2017A-noSkim-Prompt-v2-miniAOD	caf	database	VALID	RUN2017A
@@ -374,14 +379,11 @@ allRange	/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/PhaseISpring17M
 299929-300676	/SingleElectron/Run2017C-PromptReco-v2/MINIAOD	SingleElectron-Run2017C-noSkim-Prompt-v2-miniAOD	caf	database	VALID	RUN2017C,RUN2017
 300742-301141	/SingleElectron/Run2017C-PromptReco-v3/MINIAOD	SingleElectron-Run2017C-noSkim-Prompt-v3-miniAOD	caf	database	VALID	RUN2017C,RUN2017
 301141-301544	/SingleElectron/Run2017C-PromptReco-v3/MINIAOD	SingleElectron-Run2017C-noSkim-Prompt-v3-miniAOD	caf	database	INVALID	RUN2017C,RUN2017_DCS
-301141-301567	/SingleElectron/Run2017C-PromptReco-v3/MINIAOD	SingleElectron-Run2017C-noSkim-Prompt-v3-miniAOD	caf	database	VALID	RUN2017C,RUN2017
-301568-301941	/SingleElectron/Run2017C-PromptReco-v3/MINIAOD	SingleElectron-Run2017C-noSkim-Prompt-v3-miniAOD	caf	database	VALID	RUN2017C,RUN2017
-301942-301997	/SingleElectron/Run2017C-PromptReco-v3/MINIAOD	SingleElectron-Run2017C-noSkim-Prompt-v3-miniAOD	caf	database	VALID	RUN2017C,RUN2017
-301998-302029	/SingleElectron/Run2017C-PromptReco-v3/MINIAOD	SingleElectron-Run2017C-noSkim-Prompt-v3-miniAOD	caf	database	VALID	RUN2017C,RUN2017
-302030-302526	/SingleElectron/Run2017D-PromptReco-v1/MINIAOD	SingleElectron-Run2017D-noSkim-Prompt-v-miniAOD		caf	database	VALID	RUN2017D,RUN2017_DCS,RUN2017NEW_DCS
+301141-301567	/SingleElectron/Run2017C-PromptReco-v3/MINIAOD	SingleElectron-Run2017C-noSkim-Prompt-v3-miniAOD	caf	database	INVALID	RUN2017C,RUN2017
+301568-301941	/SingleElectron/Run2017C-PromptReco-v3/MINIAOD	SingleElectron-Run2017C-noSkim-Prompt-v3-miniAOD	caf	database	INVALID	RUN2017C,RUN2017
+301942-301997	/SingleElectron/Run2017C-PromptReco-v3/MINIAOD	SingleElectron-Run2017C-noSkim-Prompt-v3-miniAOD	caf	database	INVALID	RUN2017C,RUN2017
+301998-302029	/SingleElectron/Run2017C-PromptReco-v3/MINIAOD	SingleElectron-Run2017C-noSkim-Prompt-v3-miniAOD	caf	database	INVALID	RUN2017C,RUN2017
+300742-302029	/SingleElectron/Run2017C-PromptReco-v3/MINIAOD	SingleElectron-Run2017C-noSkim-Prompt-v3-miniAOD	caf	database	INVALID	RUN2017C,RUN2017
+302030-302663	/SingleElectron/Run2017D-PromptReco-v1/MINIAOD	SingleElectron-Run2017D-noSkim-Prompt-v1-miniAOD	caf	database	VALID	RUN2017D,RUN2017
 303574-304797	/SingleElectron/Run2017E-PromptReco-v1/MINIAOD	SingleElectron-Run2017E-noSkim-Prompt-v1-miniAOD	caf	database	VALID	RUN2017E,RUN2017
 305040-305364   /SingleElectron/Run2017F-PromptReco-v1/MINIAOD	SingleElectron-Run2017F-noSkim-Prompt-v1-miniAOD	caf	database	VALID	RUN2017F,RUN2017
-#
-allRange	/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/PhaseISpring17MiniAOD-FlatPU28to62_902_90X_upgrade2017_realistic_v20_ext1-v1/MINIAODSIM DYJets_madgraph-PhaseISpring17-miniAODv2	caf	database	VALID	RUN2017,RUN2017MC
-#
-allRange	/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6_ext2-v1/MINIAODSIM	DYJets_amcatnlo-RunIISummer16-miniAODv2	caf	database	VALID MORIOND2017A -

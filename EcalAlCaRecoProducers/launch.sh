@@ -22,20 +22,21 @@ tag_Rereco=config/reRecoTags/80X_dataRun2_2016LegacyRepro_v3.py
 tag_Moriond=config/reRecoTags/80X_dataRun2_2016SeptRepro_v7.py
 tag_PromptH=config/reRecoTags/80X_dataRun2_Prompt_v16.py
 tag_MC=config/reRecoTags/80X_mcRun2_asymptotic_2016_TrancheIV_v7.py
+tag_MC=config/reRecoTags/92X_upgrade2017_realistic_v10.py
 #tag_MC=config/reRecoTags/90X_upgrade2017_realistic_v20.py
 
 fileList=alcareco_datasets.dat
 #PERIOD=RUN2017NEW_DCS
 PERIOD=RUN2017
-#PERIOD=RUN2017MC
+PERIOD=RUN2017MC
 #PERIOD=LEGACY2016
-PERIOD=MORIOND2017A
+#PERIOD=MORIOND2017A
 #PERIOD=MORIOND17 # MC
 
 
 if  git status --porcelain -uno | grep -v launch | grep -v ZFitter/ | grep -q -v _datasets  ; then
 	echo "You have uncommitted changes, please commit everything before making a production" 
-#	exit 1
+	exit 1
 else
 	GITCOMMIT=`git rev-parse HEAD`
 	if [ "`git rev-parse HEAD`" != "`git rev-parse origin/master`" ];then
@@ -51,8 +52,8 @@ IFS=$'\n'
 datasetsData=(`./scripts/parseDatasetFile.sh $fileList | grep VALID | sed 's|$|,|' | grep "${PERIOD}," | grep -v SIM`)
 datasetsMC=(`./scripts/parseDatasetFile.sh $fileList | grep VALID | sed 's|$|,|' | grep "${PERIOD}," | grep SIM`)
 
-extraName="trackLength_no"
-for dataset in ${datasetsMC[@]} #${datasetsData[@]} #
+extraName="highEtaFix"
+for dataset in ${datasetsMC[@]} ${datasetsData[@]} #
 do
 	datasetName=`echo $dataset | awk '{print $6}'`
 #	echo $datasetName
@@ -91,7 +92,7 @@ do
 					jsonName=$jsonNamePrompt
 					;;
 			esac
-			./scripts/prodNtuples.sh --type=MINIAOD -t ${tag_Prompt} -s noSkim --scheduler=${scheduler}   --json=$json --json_name=$jsonName --useParent  ${CHECK} $dataset
+			./scripts/prodNtuples.sh --type=MINIAOD -t ${tag_Prompt} -s noSkim --scheduler=${scheduler}   --json=$json --json_name=$jsonName   ${CHECK} $dataset
 			;;
 	esac
 
