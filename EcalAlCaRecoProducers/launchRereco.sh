@@ -17,13 +17,16 @@ jsonName=271036_284044-23Sep2016
 json=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions17/13TeV/PromptReco/Cert_294927-305364_13TeV_PromptReco_Collisions17_JSON.txt
 jsonName=294927-305364_Prompt_v1
 
+json=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions17/13TeV/PromptReco/Cert_294927-305636_13TeV_PromptReco_Collisions17_JSON.txt
+jsonName=294927-305636_Prompt_v1
+
 ##
 PERIOD=LEGACY2016
 PERIOD=RUN2017
 #
 #tags=( config/reRecoTags/Cal_Sep2017_ref.py config/reRecoTags/92X_dataRun2_Prompt_v9.py )
 tags=( config/reRecoTags/Cal_Oct2017_ref.py config/reRecoTags/Cal_Oct2017_Ped_v1.py config/reRecoTags/Cal_Oct2017_Ped_v2.py ) #config/reRecoTags/Cal_Oct2017_Ped_v3.py )
-tags=(  config/reRecoTags/Cal_Oct2017_cand_v1.py  )
+tags=(  config/reRecoTags/Cal_Oct2017_cand_v2.py  )
 
 if  git status --porcelain -uno | grep -v launch | grep -v ZFitter | grep -q -v _datasets  ; then
 	echo "You have uncommitted changes, please commit everything before making a production" 
@@ -44,10 +47,10 @@ do
 #	./scripts/removeRereco.sh -t $tagfile -f ntuple_datasets.dat --json_name=$jsonName
 #	continue
 
-	for CHECK in  --check
+	for CHECK in '' --check
 	do
 		case $tagfile in 
-			*/Cal_*_ref*.py | */Cal_*_cand*.py)
+			*/Cal_*_ref*.py | */Cal_*_cand_v1*.py)
 				#./scripts/RerecoQuick.sh -p ${PERIOD} -t $tagfile  --json=$json --json_name="noJSON" ${CHECK} --alcarerecoOnly  --singleEle --weightsReco
 				./scripts/RerecoQuick.sh -p ${PERIOD} -t $tagfile  --json=$json --json_name="noJSON" ${CHECK} --alcarerecoOnly  --singleEle
 #				./scripts/RerecoQuick.sh -p ${PERIOD} -t $tagfile  --json=$json --json_name="noJSON" ${CHECK} --alcarerecoOnly 
@@ -59,7 +62,7 @@ do
 				;;
 		esac
 	done
-
+continue
 	for CHECK in  --check
 	do
 		case $tagfile in 
