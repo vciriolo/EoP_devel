@@ -18,7 +18,7 @@ jsonNamePrompt=294927-305364_Prompt_v1
 
 scheduler=caf
 tag_Prompt=config/reRecoTags/92X_dataRun2_Prompt_v11.py
-tag_Rereco=config/reRecoTags/80X_dataRun2_2016LegacyRepro_v3.py
+tag_Rereco=config/reRecoTags/80X_dataRun2_2016LegacyRepro_v4.py
 tag_Moriond=config/reRecoTags/80X_dataRun2_2016SeptRepro_v7.py
 tag_PromptH=config/reRecoTags/80X_dataRun2_Prompt_v16.py
 tag_MC=config/reRecoTags/80X_mcRun2_asymptotic_2016_TrancheIV_v7.py
@@ -29,7 +29,7 @@ fileList=alcareco_datasets.dat
 #PERIOD=RUN2017NEW_DCS
 PERIOD=RUN2017
 PERIOD=RUN2017MC
-#PERIOD=LEGACY2016
+PERIOD=LEGACY2016
 #PERIOD=MORIOND2017A
 #PERIOD=MORIOND17 # MC
 
@@ -73,10 +73,10 @@ do
 			#extraName=regressionMoriond17v2
 			./scripts/prodNtuples.sh --type=MINIAOD -t ${tag_Moriond} -s noSkim --scheduler=${scheduler}   --json=$json --json_name=$jsonName  --extraName=${extraName} ${CHECK} $dataset
 			;;
-		*18Apr2017*)
+		*07Aug17*)
 			json=$jsonRereco
 			jsonName=$jsonNameRereco
-##			./scripts/prodNtuples.sh --type=MINIAOD -t ${tag_Rereco} -s noSkim --scheduler=${scheduler}   --json=$json --json_name=$jsonName --extraName=${extraName} ${CHECK} $dataset
+			./scripts/prodNtuples.sh --type=MINIAOD -t ${tag_Rereco} -s noSkim --scheduler=${scheduler}   --json=$json --json_name=$jsonName --extraName=${extraName} ${CHECK} $dataset
 			;;
 		*miniAODv2) #MC
 			./scripts/prodNtuples.sh --type=MINIAOD --isMC -t ${tag_MC} -s noSkim --scheduler=${scheduler} --extraName=${extraName}  ${CHECK} $dataset
