@@ -26,16 +26,16 @@ PERIOD=RUN2017
 #
 #tags=( config/reRecoTags/Cal_Sep2017_ref.py config/reRecoTags/92X_dataRun2_Prompt_v9.py )
 tags=( config/reRecoTags/Cal_Oct2017_ref.py config/reRecoTags/Cal_Oct2017_Ped_v1.py config/reRecoTags/Cal_Oct2017_Ped_v2.py ) #config/reRecoTags/Cal_Oct2017_Ped_v3.py )
-tags=(  config/reRecoTags/Cal_Oct2017_cand_v3.py  )
+tags=(  config/reRecoTags/Cal_Oct2017_ref.py  )
 
 if  git status --porcelain -uno | grep -v launch | grep -v ZFitter | grep -q -v _datasets  ; then
 	echo "You have uncommitted changes, please commit everything before making a production" 
-	exit 1
+#	exit 1
 else
 	GITCOMMIT=`git rev-parse HEAD`
 	if [ "`git rev-parse HEAD`" != "`git rev-parse origin/master`" ];then
 		echo "[ERROR] You are not allowed to make any production if all commits are propagated to the master branch of the repository" >> /dev/stderr
-		exit 2
+#		exit 2
 	fi
 fi
 
@@ -47,10 +47,10 @@ do
 #	./scripts/removeRereco.sh -t $tagfile -f ntuple_datasets.dat --json_name=$jsonName
 #	continue
 
-	for CHECK in '' --check
+	for CHECK in  --check
 	do
 		case $tagfile in 
-			*/Cal_*_ref*.py | */Cal_*_cand_v1*.py)
+			*/Cal_*_rev*.py | */Cal_*_cand_v1*.py)
 				#./scripts/RerecoQuick.sh -p ${PERIOD} -t $tagfile  --json=$json --json_name="noJSON" ${CHECK} --alcarerecoOnly  --singleEle --weightsReco
 				./scripts/RerecoQuick.sh -p ${PERIOD} -t $tagfile  --json=$json --json_name="noJSON" ${CHECK} --alcarerecoOnly  --singleEle
 #				./scripts/RerecoQuick.sh -p ${PERIOD} -t $tagfile  --json=$json --json_name="noJSON" ${CHECK} --alcarerecoOnly 
@@ -62,18 +62,18 @@ do
 				;;
 		esac
 	done
-continue
-	for CHECK in  --check
+
+	for CHECK in   --check
 	do
 		case $tagfile in 
-			*/Cal_*_ref*.py)
+			*/Cal_*_rev*.py)
 #				./scripts/RerecoQuick.sh -p ${PERIOD} -t $tagfile --json=$json --json_name=$jsonName --ntupleOnly  $CHECK --singleEle --weightsReco
 				./scripts/RerecoQuick.sh -p ${PERIOD} -t $tagfile --json=$json --json_name=$jsonName --ntupleOnly --singleEle $CHECK 
 #				./scripts/RerecoQuick.sh -p ${PERIOD} -t $tagfile --json=$json --json_name=$jsonName --ntupleOnly  $CHECK 
 #				./scripts/RerecoQuick.sh -p ${PERIOD} -t $tagfile --json=$json --json_name=$jsonName --ntupleOnly  $CHECK --weightsReco #| grep 'root;//' |sort |uniq > tmp/`basename $tagfile .py`.dat
 				;;
 			*)
-				./scripts/RerecoQuick.sh -p ${PERIOD} -t $tagfile --json=$json --json_name=$jsonName --ntupleOnly  $CHECK --singleEle #| grep 'root;//' |sort |uniq > tmp/`basename $tagfile .py`.dat
+				./scripts/RerecoQuick.sh -p ${PERIOD} -t $tagfile --json=$json --json_name=$jsonName --ntupleOnly  $CHECK  #| grep 'root;//' |sort |uniq > tmp/`basename $tagfile .py`.dat
 				;;
 		esac
 	done

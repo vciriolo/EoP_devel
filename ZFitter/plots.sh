@@ -3,18 +3,20 @@
 cat > v.gpl <<EOF
 peakLabelUnit="[GeV]"
 VARIABLE="M_{ee}"
-set yrange  [88:92]
+set yrange  [84:92]
 EOF
 
 gnuplot -c macro/stability.gpl \
-	testNew/dato/rereco/Cal_Oct2017/Cal_Oct2017_ref-Z/loose25nsRun22016Moriond/invMass_ECAL_ele/anyVar/fitres/invMass_ECAL_ele-stability_runNumber.dat ref \
-	testNew/dato/rereco/Cal_Oct2017/Cal_Oct2017_PS_v1-Z/loose25nsRun22016Moriond/invMass_ECAL_ele/anyVar/fitres/invMass_ECAL_ele-stability_runNumber.dat PSv1 \
-	testNew/dato/rereco/Cal_Oct2017/Cal_Oct2017_PS_EoP_v1-Z/loose25nsRun22016Moriond/invMass_ECAL_ele/anyVar/fitres/invMass_ECAL_ele-stability_runNumber.dat PSEoPv1 \
+	testNew/dato/rereco/Cal_Oct2017/Cal_Oct2017_cand_v1-Z/loose25nsRun22016Moriond/invMass_ECAL_ele/anyVar/fitres/invMass_ECAL_ele-stability_runNumber.dat candv1 \
+	testNew/dato/rereco/Cal_Oct2017/Cal_Oct2017_cand_v2-Z/loose25nsRun22016Moriond/invMass_ECAL_ele/anyVar/fitres/invMass_ECAL_ele-stability_runNumber.dat candv2 \
+	testNew/dato/rereco/Cal_Oct2017/Cal_Oct2017_cand_v3-Z/loose25nsRun22016Moriond/invMass_ECAL_ele/anyVar/fitres/invMass_ECAL_ele-stability_runNumber.dat candv3 \
+	testNew/dato/rereco/Cal_Oct2017/Cal_Oct2017_cand_v4-Z/loose25nsRun22016Moriond/invMass_ECAL_ele/anyVar/fitres/invMass_ECAL_ele-stability_runNumber.dat candv4 
+
 
 cp stability.pdf stability-invMass.pdf
 
 
-### REF vs PS_v1
+### REF vs cand_v1
 cat > v.gpl <<EOF
 peakLabelUnit="[GeV]"
 VARIABLE="M_{ee}"
@@ -22,29 +24,41 @@ set yrange  [88:92]
 EOF
 
 gnuplot -c macro/stability.gpl \
-	testNew/dato/rereco/Cal_Oct2017/Cal_Oct2017_ref-Z/loose25nsRun22016Moriond/invMass_ECAL_ele/anyVar/fitres/invMass_ECAL_ele-stability_runNumber.dat ref  \
-	testNew/dato/rereco/Cal_Oct2017/Cal_Oct2017_PS_EoP_v1-Z/loose25nsRun22016Moriond/invMass_ECAL_ele/anyVar/fitres/invMass_ECAL_ele-stability_runNumber.dat PSEoPv1
+	testNew/dato/rereco/Cal_Oct2017/Cal_Oct2017_cand_v1-Z/loose25nsRun22016Moriond/invMass_ECAL_ele/anyVar/fitres/invMass_ECAL_ele-stability_runNumber.dat candv1 \
+	testNew/dato/rereco/Cal_Oct2017/Cal_Oct2017_cand_v2-Z/loose25nsRun22016Moriond/invMass_ECAL_ele/anyVar/fitres/invMass_ECAL_ele-stability_runNumber.dat candv2 \
+	testNew/dato/rereco/Cal_Oct2017/Cal_Oct2017_cand_v3-Z/loose25nsRun22016Moriond/invMass_ECAL_ele/anyVar/fitres/invMass_ECAL_ele-stability_runNumber.dat candv3 \
+	testNew/dato/rereco/Cal_Oct2017/Cal_Oct2017_cand_v4-Z/loose25nsRun22016Moriond/invMass_ECAL_ele/anyVar/fitres/invMass_ECAL_ele-stability_runNumber.dat candv4 
+
+#	testNew/dato/rereco/Cal_Oct2017/Cal_Oct2017_ref-Z/loose25nsRun22016Moriond/invMass_ECAL_ele/anyVar/fitres/invMass_ECAL_ele-stability_runNumber.dat ref  \
+
 cp stability.pdf stability-invMass-detailed.pdf
 
 
 gnuplot -c macro/stability_validation.gpl \
-	testNew/dato/rereco/Cal_Oct2017/Cal_Oct2017_PS_EoP_v1-Z/loose25nsRun22016Moriond/invMass_ECAL_ele/anyVar/fitres/invMass_ECAL_ele-stability_runNumber.dat 
+	testNew/dato/rereco/Cal_Oct2017/Cal_Oct2017_cand_v4-Z/loose25nsRun22016Moriond/invMass_ECAL_ele/anyVar/fitres/invMass_ECAL_ele-stability_runNumber.dat 
+
 cp stability.pdf stability-invMass-validation.pdf
 
 
 cat > v.gpl <<EOF
 peakLabelUnit=""
 VARIABLE="R_9"
-set yrange  [0.9:0.95]
+set yrange  [0.9:0.96]
 EOF
 
 gnuplot -c macro/R9stability.gpl \
-	testNew/dato/rereco/Cal_Oct2017/Cal_Oct2017_ref-Z/loose25nsRun22016Moriond/invMass_ECAL_ele/anyVar/fitres/R9Ele-stability_runNumber.dat ref \
-	testNew/dato/rereco/Cal_Oct2017/Cal_Oct2017_PS_v1-Z/loose25nsRun22016Moriond/invMass_ECAL_ele/anyVar/fitres/R9Ele-stability_runNumber.dat PSv1 \
-	testNew/dato/rereco/Cal_Oct2017/Cal_Oct2017_PS_EoP_v1-Z/loose25nsRun22016Moriond/invMass_ECAL_ele/anyVar/fitres/R9Ele-stability_runNumber.dat PSEoPv1
+	testNew/dato/rereco/Cal_Oct2017/Cal_Oct2017_cand_v1-Z/loose25nsRun22016Moriond/invMass_ECAL_ele/anyVar/fitres/R9Ele-stability_runNumber.dat candv1 \
+	testNew/dato/rereco/Cal_Oct2017/Cal_Oct2017_cand_v2-Z/loose25nsRun22016Moriond/invMass_ECAL_ele/anyVar/fitres/R9Ele-stability_runNumber.dat candv2 \
+	testNew/dato/rereco/Cal_Oct2017/Cal_Oct2017_cand_v3-Z/loose25nsRun22016Moriond/invMass_ECAL_ele/anyVar/fitres/R9Ele-stability_runNumber.dat candv3 \
+	testNew/dato/rereco/Cal_Oct2017/Cal_Oct2017_cand_v4-Z/loose25nsRun22016Moriond/invMass_ECAL_ele/anyVar/fitres/R9Ele-stability_runNumber.dat candv4
+
+
 cp stability.pdf stability-R9Ele.pdf 
 
-### REF vs PS_v1
+pdfunite stability-invMass.pdf stability-invMass-detailed.pdf stability-invMass-validation.pdf stability-R9Ele.pdf stability.pdf
+exit 0
+
+### REF vs cand_v1
 cat > v.gpl <<EOF
 peakLabelUnit="[GeV]"
 VARIABLE="ES"
@@ -53,9 +67,9 @@ unset yrange
 EOF
 
 gnuplot -c macro/stability.gpl \
-	testNew/dato/rereco/Cal_Oct2017/Cal_Oct2017_PS_v1-Z/loose25nsRun22016Moriond/invMass_ECAL_ele/anyVar/fitres/esEnergySCEle-stability_runNumber.dat PSv1 \
+	testNew/dato/rereco/Cal_Oct2017/Cal_Oct2017_cand_v1-Z/loose25nsRun22016Moriond/invMass_ECAL_ele/anyVar/fitres/esEnergySCEle-stability_runNumber.dat PSv1 \
 	testNew/dato/rereco/Cal_Oct2017/Cal_Oct2017_ES_v2-Z/loose25nsRun22016Moriond/invMass_ECAL_ele/anyVar/fitres/esEnergySCEle-stability_runNumber.dat ESv2 \
-	testNew/dato/rereco/Cal_Oct2017/Cal_Oct2017_PS_EoP_v1-Z/loose25nsRun22016Moriond/invMass_ECAL_ele/anyVar/fitres/esEnergySCEle-stability_runNumber.dat PSEoPv1 \
+	testNew/dato/rereco/Cal_Oct2017/Cal_Oct2017_cand_v2-Z/loose25nsRun22016Moriond/invMass_ECAL_ele/anyVar/fitres/esEnergySCEle-stability_runNumber.dat PSEoPv1 \
 
 cp stability.pdf stability-ES-detailed.pdf
 
