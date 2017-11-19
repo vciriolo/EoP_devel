@@ -49,10 +49,10 @@ do
 #	./scripts/removeRereco.sh -t $tagfile -f ntuple_datasets.dat --json_name=$jsonName
 #	continue
 
-	for CHECK in  --check
+	for CHECK in '' --check
 	do
 		case $tagfile in 
-			*/Cal_*_rev*.py | */Cal_*_cand_v1*.py)
+			*/Cal_*_ref*.py | */Cal_*_IC_v5*.py)
 				#./scripts/RerecoQuick.sh -p ${PERIOD} -t $tagfile  --json=$json --json_name="noJSON" ${CHECK} --alcarerecoOnly  --singleEle --weightsReco
 				./scripts/RerecoQuick.sh -p ${PERIOD} -t $tagfile  --json=$json --json_name="noJSON" ${CHECK} --alcarerecoOnly  --singleEle
 #				./scripts/RerecoQuick.sh -p ${PERIOD} -t $tagfile  --json=$json --json_name="noJSON" ${CHECK} --alcarerecoOnly 
@@ -65,10 +65,10 @@ do
 		esac
 	done
 
-	for CHECK in   --check
+	for CHECK in ''  --check
 	do
 		case $tagfile in 
-			*/Cal_*_rev*.py)
+			*/Cal_*IC_v5*.py)
 #				./scripts/RerecoQuick.sh -p ${PERIOD} -t $tagfile --json=$json --json_name=$jsonName --ntupleOnly  $CHECK --singleEle --weightsReco
 				./scripts/RerecoQuick.sh -p ${PERIOD} -t $tagfile --json=$json --json_name=$jsonName --ntupleOnly --singleEle $CHECK 
 #				./scripts/RerecoQuick.sh -p ${PERIOD} -t $tagfile --json=$json --json_name=$jsonName --ntupleOnly  $CHECK 
