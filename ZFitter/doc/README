@@ -6,6 +6,19 @@ Go to the Calibration/ZFitter directory and compile it:
 
 Calibration/ZFitter will be your working directory now on.
 
+First, familiarize with the ntuple content: \subpage NTUPLESTRUCTURE
+
+\subpage PUFILES_
+
+
+\subpage plotNtuple
+
+
+
+
+
+
+
 ---
 Package content:
  - BW_CB_pdf_class        \copybrief BW_CB_pdf_class
@@ -67,15 +80,6 @@ The inputs to the ZFitter program are given in the form of:
  - configuration files (.dat)
    - More info here: \subpage ZFitterConfigFiles
  - command line options
-
-First, familiarize with the ntuple content: \subpage NTUPLESTRUCTURE
-
-\subpage PUFILES_
-
-
-\subpage plotNtuple
-
-
 
 
 */

@@ -7,7 +7,7 @@ invMass_var=invMass_ECAL_ele
 invMass_min=65
 invMass_max=115
 configFile=data/validation/monitoring_2017_Z_dcs.dat
-runRangesFile=data/runRanges/monitoring_2017.dat
+runRangesFile=data/runRanges/monitoringRun2016-v2.dat
 baseDir=testNew
 extraOptions="--anyVarBranches=S4 --anyVarBranches=etaWidth --anyVarBranches=sigmaIEtaIEtaSCEle --anyVarBranches=R9Ele --anyVarBranches=esEnergySCEle --anyVarBranches=rawESEnergyPlane1SCEle --anyVarBranches=rawESEnergyPlane2SCEle --anyVarBranches=timeSeedSC --anyVarBranches=nPV"
 updateOnly="--updateOnly" 

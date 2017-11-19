@@ -20,13 +20,15 @@ jsonName=294927-305364_Prompt_v1
 json=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions17/13TeV/PromptReco/Cert_294927-305636_13TeV_PromptReco_Collisions17_JSON.txt
 jsonName=294927-305636_Prompt_v1
 
+json=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions17/13TeV/PromptReco/Cert_294927-306126_13TeV_PromptReco_Collisions17_JSON.txt
+jsonName=294927-306126_Prompt_v1
 ##
 PERIOD=LEGACY2016
-PERIOD=RUN2017
+PERIOD=RUN2017F
 #
 #tags=( config/reRecoTags/Cal_Sep2017_ref.py config/reRecoTags/92X_dataRun2_Prompt_v9.py )
 tags=( config/reRecoTags/Cal_Oct2017_ref.py config/reRecoTags/Cal_Oct2017_Ped_v1.py config/reRecoTags/Cal_Oct2017_Ped_v2.py ) #config/reRecoTags/Cal_Oct2017_Ped_v3.py )
-tags=(  config/reRecoTags/Cal_Oct2017_cand_v4_ES_v1.py  )
+tags=(  config/reRecoTags/Cal_Oct2017_IC_v5.py  )
 
 if  git status --porcelain -uno | grep -v launch | grep -v ZFitter | grep -q -v _datasets  ; then
 	echo "You have uncommitted changes, please commit everything before making a production" 

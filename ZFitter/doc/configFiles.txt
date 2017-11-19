@@ -36,14 +36,19 @@ There are three important directories where the proper .dat files should be put:
 
   The syntax is the following:
 \verbatim
-  #runMin-runMax nEvents        timeStampMin-timeStampMax
-  190645-190781	28734   	1333819264-1333983242
-  190782-191042	24007		1334023525-1334188134
+  #runMin lumiMin  timeMin   runMax lumiMax timeMax  nEvents  
+
 \endverbatim
   The second and third column are optional.
   
   For more information on how to produce automatically the runRanges .dat files see:  \ref runDivide
 
+------
+There a special .dat file containing the list of all the runs contained in a golden json file
+\verbatim
+json=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions17/13TeV/PromptReco/Cert_294927-306126_13TeV_PromptReco_Collisions17_JSON.txt
+brilcalc lumi -i $json --tssec -b "STABLE BEAMS"  --output-style csv  | grep -v '#'  | tr ':' ',' | tr ',' '\t' | cut -f 1-3 
+\endverbatim
 
 \section validationConfig Validation config files
 This config file contains the list of files to run on, the files
