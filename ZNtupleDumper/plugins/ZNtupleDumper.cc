@@ -179,7 +179,8 @@ private:
 	//Handles and inputTags
 private:
 	//------------------------------ Handles
-	edm::ESHandle<CaloTopology> _topologyHandle;
+	edm::ESHandle<CaloTopology>  _topologyHandle;
+	edm::ESHandle<EcalPedestals> _ped;
 
 	//--------------- for main _tree
 	edm::Handle<std::vector<pat::Electron> >       _electronsHandle;
@@ -295,7 +296,10 @@ private:
 	Float_t _icSeedSC[NELE]                   = initFloat;  ///< inter-calibration coefficient of the SC seed crystal
 	Float_t _laserSeedSC[NELE]                = initFloat;  ///< laser correction of the SC seed crystal
 	Float_t _avgLCSC[NELE]                    = initFloat;  ///< average laser correction for the SC
-	Float_t _alphaSeedSC[NELE]                = initFloat;  ///<alpha of the seed
+	Float_t _alphaSeedSC[NELE]                = initFloat;  ///< alpha of the seed
+	Float_t _pedestalSeedSC[NELE]             = initFloat;  ///< pedestal of the seed of the SC
+	Float_t _noiseSeedSC[NELE]                = initFloat;  ///< noise of the seed of the SC
+
 	Float_t _amplitudeSeedSC[NELE]            = initFloat;  ///< DetId amplitude with the second highest energy in the SC
 	// second to seed, i.e. the second highest energy crystal of the SC
 	Float_t _energySecondToSeedSC[NELE]       = initFloat;  ///< energy of the rechit with the second highest energy in the SC
@@ -674,6 +678,8 @@ void ZNtupleDumper::analyze(const edm::Event& iEvent, const edm::EventSetup& iSe
 	ResetExtraStudyVar();
 	ResetEleIDVar();
 	ResetTrackVar();
+
+	iSetup.get<EcalPedestalsRcd>().get(_ped);
 
 	//  using namespace edm;
 	_eventType = _isPartGun ? PARTGUN : UNKNOWN;
@@ -1256,8 +1262,10 @@ void ZNtupleDumper::InitNewTree()
 	_tree->Branch("timeSeedSC",       _timeSeedSC,       "timeSeedSC[3]/F");
 	_tree->Branch("timeSecondToSeedSC",       _timeSecondToSeedSC,       "timeSecondToSeedSC[3]/F");
 	_tree->Branch("icSeedSC",        _icSeedSC,        "icSeedSC[3]/F");
-	_tree->Branch("laserSeedSC",        _laserSeedSC,        "laserSeedSC[3]/F");
-	_tree->Branch("alphaSeedSC",        _alphaSeedSC,        "alphaSeedSC[3]/F");
+	_tree->Branch("laserSeedSC",     _laserSeedSC,     "laserSeedSC[3]/F");
+	_tree->Branch("alphaSeedSC",     _alphaSeedSC,     "alphaSeedSC[3]/F");
+	_tree->Branch("pedestalSeedSC",  _pedestalSeedSC,  "pedestalSeedSC[3]/F");
+	_tree->Branch("noiseSeedSC",  _noiseSeedSC,  "noiseSeedSC[3]/F");
 
 	// ES
 	_tree->Branch("esEnergySCEle", _esEnergySCEle, "esEnergySCEle[3]/F");
@@ -1315,6 +1323,8 @@ void ZNtupleDumper::ResetMainTreeVar()
 		_laserSeedSC[i] = initSingleFloat;
 		_avgLCSC[i] = initSingleFloat;
 		_alphaSeedSC[i] = initSingleFloat;
+		_pedestalSeedSC[i] = initSingleFloat;
+		_noiseSeedSC[i] = initSingleFloat;
 		_amplitudeSeedSC[i] = initSingleFloat;
 		_energySecondToSeedSC[i] = initSingleFloat;
 		_timeSecondToSeedSC[i] = initSingleFloat;
@@ -1690,6 +1700,7 @@ void ZNtupleDumper::TreeSetSingleSCVar(const reco::SuperCluster& sc, int index)
 	}
 
 	bool isEB = (seedDetId.subdetId() == EcalBarrel);
+
 	const EcalUncalibratedRecHitCollection * uncHits = isEB ? _pEBUncRecHits.product() : _pEEUncRecHits.product();
 	_amplitudeSeedSC[index] = initSingleFloat;
 	if (uncHits) {
@@ -1741,6 +1752,14 @@ void ZNtupleDumper::TreeSetSingleSCVar(const reco::SuperCluster& sc, int index)
 	const EcalLaserAlphaMap& laserAlphaMap =  myalpha->getMap();
 	_alphaSeedSC[index] = *(laserAlphaMap.find( seedDetId ));
 
+	_gainSeedSC[index] = 0;
+	if(seedRecHit->checkFlag(EcalRecHit::kHasSwitchToGain6)) _gainSeedSC[index] |= 0x01;
+	if(seedRecHit->checkFlag(EcalRecHit::kHasSwitchToGain1)) _gainSeedSC[index] |= 0x02;
+
+
+	_pedestalSeedSC[index] = _ped->find(seedDetId)->mean(1);
+	_noiseSeedSC[index]    = _ped->find(seedDetId)->rms(1);
+
 	float sumLC_E = 0.;
 	float sumE = 0.;
 
@@ -1755,9 +1774,6 @@ void ZNtupleDumper::TreeSetSingleSCVar(const reco::SuperCluster& sc, int index)
 	}
 	_avgLCSC[index] = sumLC_E / sumE;
 
-	_gainSeedSC[index] = 0;
-	if(seedRecHit->checkFlag(EcalRecHit::kHasSwitchToGain6)) _gainSeedSC[index] |= 0x01;
-	if(seedRecHit->checkFlag(EcalRecHit::kHasSwitchToGain1)) _gainSeedSC[index] |= 0x02;
 
 	return;
 }

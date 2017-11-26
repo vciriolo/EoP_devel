@@ -20,28 +20,24 @@ jsonName=294927-305364_Prompt_v1
 json=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions17/13TeV/PromptReco/Cert_294927-305636_13TeV_PromptReco_Collisions17_JSON.txt
 jsonName=294927-305636_Prompt_v1
 
-json=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions17/13TeV/PromptReco/Cert_294927-306126_13TeV_PromptReco_Collisions17_JSON.txt
-jsonName=294927-306126_Prompt_v1
-
-jsonDCSdiff=/eos/project/c/cms-ecal-calibration/data/json/306134-306793_DCSonly.json
-jsonDCSdiffName=306134-306793_DCSonly
+json=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions17/13TeV/PromptReco/Cert_294927-306462_13TeV_PromptReco_Collisions17_JSON.txt
+jsonName=294927-306462_Prompt_v1
 
 ##
 PERIOD=LEGACY2016
 PERIOD=RUN2017
 #
-#tags=( config/reRecoTags/Cal_Sep2017_ref.py config/reRecoTags/92X_dataRun2_Prompt_v9.py )
-tags=( config/reRecoTags/Cal_Oct2017_ref.py config/reRecoTags/Cal_Oct2017_Ped_v1.py config/reRecoTags/Cal_Oct2017_Ped_v2.py ) #config/reRecoTags/Cal_Oct2017_Ped_v3.py )
 tags=(  config/reRecoTags/Cal_Nov2017_ref_v1.py  )
+tags=(  config/reRecoTags/Cal_Nov2017_{PS,Ped,IC}_v1.py  )
 
 if  git status --porcelain -uno | grep -v launch | grep -v ZFitter | grep -q -v _datasets  ; then
 	echo "You have uncommitted changes, please commit everything before making a production" 
-#	exit 1
+	exit 1
 else
 	GITCOMMIT=`git rev-parse HEAD`
 	if [ "`git rev-parse HEAD`" != "`git rev-parse origin/master`" ];then
 		echo "[ERROR] You are not allowed to make any production if all commits are propagated to the master branch of the repository" >> /dev/stderr
-		exit 2
+#		exit 2
 	fi
 fi
 
@@ -53,7 +49,7 @@ do
 #	./scripts/removeRereco.sh -t $tagfile -f ntuple_datasets.dat --json_name=$jsonName
 #	continue
 
-	for CHECK in --check
+	for CHECK in  --check
 	do
 		case $tagfile in 
 			*/Cal_*_ref*.py )
@@ -64,19 +60,18 @@ do
 				;;
 			*)
 				echo 
-				./scripts/RerecoQuick.sh -p ${PERIOD} -t $tagfile  --json=$json --json_name=$jsonName ${CHECK} --alcarerecoOnly --weightsReco
+				./scripts/RerecoQuick.sh -p ${PERIOD} -t $tagfile  --json=$json --json_name=$jsonName ${CHECK} --alcarerecoOnly 
 				;;
 		esac
 	done
-continue
+
 	for CHECK in '' --check
 	do
 		case $tagfile in 
-			*/Cal_*IC_v5*.py)
+			*/Cal_*ref*.py)
 #				./scripts/RerecoQuick.sh -p ${PERIOD} -t $tagfile --json=$json --json_name=$jsonName --ntupleOnly  $CHECK --singleEle --weightsReco
-				./scripts/RerecoQuick.sh -p ${PERIOD} -t $tagfile --json=$json --json_name=$jsonName --ntupleOnly --singleEle --weightsReco $CHECK 
-				./scripts/RerecoQuick.sh -p ${PERIOD} -t $tagfile --json=$jsonDCSdiff --json_name=$jsonDCSdiffName --ntupleOnly --singleEle --weightsReco $CHECK 
-#				./scripts/RerecoQuick.sh -p ${PERIOD} -t $tagfile --json=$json --json_name=$jsonName --ntupleOnly  $CHECK 
+#				./scripts/RerecoQuick.sh -p ${PERIOD} -t $tagfile --json=$json --json_name=$jsonName --ntupleOnly --singleEle  $CHECK 
+				./scripts/RerecoQuick.sh -p ${PERIOD} -t $tagfile --json=$json --json_name=$jsonName --ntupleOnly  $CHECK 
 #				./scripts/RerecoQuick.sh -p ${PERIOD} -t $tagfile --json=$json --json_name=$jsonName --ntupleOnly  $CHECK --weightsReco #| grep 'root;//' |sort |uniq > tmp/`basename $tagfile .py`.dat
 				;;
 			*)
