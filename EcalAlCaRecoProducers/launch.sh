@@ -1,6 +1,6 @@
 #!/bin/bash
 
-CHECK=--check
+#CHECK=--check
 #CHECK=--createOnly
 #CHECK=--submitOnly
 
@@ -27,9 +27,9 @@ tag_MC=config/reRecoTags/92X_upgrade2017_realistic_v10.py
 
 fileList=alcareco_datasets.dat
 #PERIOD=RUN2017NEW_DCS
-PERIOD=RUN2017
-PERIOD=RUN2017MC
-PERIOD=LEGACY2016
+PERIOD=RUN2017H
+#PERIOD=RUN2017MC
+#PERIOD=LEGACY2016
 #PERIOD=MORIOND2017A
 #PERIOD=MORIOND17 # MC
 
@@ -52,7 +52,7 @@ IFS=$'\n'
 datasetsData=(`./scripts/parseDatasetFile.sh $fileList | grep VALID | sed 's|$|,|' | grep "${PERIOD}," | grep -v SIM`)
 datasetsMC=(`./scripts/parseDatasetFile.sh $fileList | grep VALID | sed 's|$|,|' | grep "${PERIOD}," | grep SIM`)
 
-extraName="highEtaFix"
+extraName="highEtaFixMINIAOD"
 for dataset in ${datasetsMC[@]} ${datasetsData[@]} #
 do
 	datasetName=`echo $dataset | awk '{print $6}'`

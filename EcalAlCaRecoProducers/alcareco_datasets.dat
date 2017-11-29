@@ -377,7 +377,8 @@ allRange	/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISummer17Mi
 300742-302029	/DoubleEG/Run2017C-PromptReco-v3/MINIAOD	DoubleEG-Run2017C-noSkim-Prompt-v3-miniAOD	caf	database	VALID	RUN2017C,RUN2017
 302030-302663	/DoubleEG/Run2017D-PromptReco-v1/MINIAOD	DoubleEG-Run2017D-noSkim-Prompt-v1-miniAOD	caf	database	VALID	RUN2017D,RUN2017
 303574-304797	/DoubleEG/Run2017E-PromptReco-v1/MINIAOD	DoubleEG-Run2017E-noSkim-Prompt-v1-miniAOD	caf	database	VALID	RUN2017E,RUN2017
-305040-305364   /DoubleEG/Run2017F-PromptReco-v1/MINIAOD	DoubleEG-Run2017F-noSkim-Prompt-v1-miniAOD	caf	database	VALID	RUN2017F,RUN2017
+305040-305364   /DoubleEG/Run2017F-PromptReco-v1/MINIAOD	DoubleEG-Run2017F-noSkim-Prompt-v1-miniAOD	caf	database	INVALID	RUN2017F,RUN2017
+305040-306460   /DoubleEG/Run2017F-PromptReco-v1/MINIAOD	DoubleEG-Run2017F-noSkim-Prompt-v1-miniAOD	caf	database	VALID	RUN2017F,RUN2017
 #
 296168-296174	/SingleElectron/Run2017A-PromptReco-v2/MINIAOD	SingleElectron-Run2017A-noSkim-Prompt-v2-miniAOD	caf	database	VALID	RUN2017A
 296880-297004	/SingleElectron/Run2017A-PromptReco-v3/MINIAOD	SingleElectron-Run2017A-noSkim-Prompt-v3-miniAOD	caf	database	VALID	RUN2017A
@@ -394,5 +395,15 @@ allRange	/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISummer17Mi
 300742-302029	/SingleElectron/Run2017C-PromptReco-v3/MINIAOD	SingleElectron-Run2017C-noSkim-Prompt-v3-miniAOD	caf	database	INVALID	RUN2017C,RUN2017
 302030-302663	/SingleElectron/Run2017D-PromptReco-v1/MINIAOD	SingleElectron-Run2017D-noSkim-Prompt-v1-miniAOD	caf	database	VALID	RUN2017D,RUN2017
 303574-304797	/SingleElectron/Run2017E-PromptReco-v1/MINIAOD	SingleElectron-Run2017E-noSkim-Prompt-v1-miniAOD	caf	database	VALID	RUN2017E,RUN2017
-305040-305364   /SingleElectron/Run2017F-PromptReco-v1/MINIAOD	SingleElectron-Run2017F-noSkim-Prompt-v1-miniAOD	caf	database	VALID	RUN2017F,RUN2017
-
+305040-305364   /SingleElectron/Run2017F-PromptReco-v1/MINIAOD	SingleElectron-Run2017F-noSkim-Prompt-v1-miniAOD	caf	database	INVALID	RUN2017F,RUN2017
+305040-306460	/SingleElectron/Run2017F-PromptReco-v1/MINIAOD	SingleElectron-Run2017F-noSkim-Prompt-v1-miniAOD	caf	database	VALID	RUN2017F,RUN2017
+### low PU runs for Wmass
+306828-307125	/HLTPhysics/Run2017H-PromptReco-v1/MINIAOD	HLTPhysics-Run2017H-noSkim-Prompt-v1-miniAOD	caf	database	VALID	RUN2017H
+306952-306981	/HLTPhysics0/Run2017H-PromptReco-v1/MINIAOD	HLTPhysics0-Run2017H-noSkim-Prompt-v1-miniAOD	caf	database	VALID	RUN2017H
+306952-306981	/HLTPhysics1/Run2017H-PromptReco-v1/MINIAOD	HLTPhysics1-Run2017H-noSkim-Prompt-v1-miniAOD	caf	database	VALID	RUN2017H
+306952-306981	/HLTPhysics2/Run2017H-PromptReco-v1/MINIAOD	HLTPhysics2-Run2017H-noSkim-Prompt-v1-miniAOD	caf	database	VALID	RUN2017H
+306952-306981	/HLTPhysics3/Run2017H-PromptReco-v1/MINIAOD	HLTPhysics3-Run2017H-noSkim-Prompt-v1-miniAOD	caf	database	VALID	RUN2017H
+306952-306981	/HLTPhysics4/Run2017H-PromptReco-v1/MINIAOD	HLTPhysics4-Run2017H-noSkim-Prompt-v1-miniAOD	caf	database	VALID	RUN2017H
+306952-306981	/HLTPhysics5/Run2017H-PromptReco-v1/MINIAOD	HLTPhysics5-Run2017H-noSkim-Prompt-v1-miniAOD	caf	database	VALID	RUN2017H
+306952-306981	/HLTPhysics6/Run2017H-PromptReco-v1/MINIAOD	HLTPhysics6-Run2017H-noSkim-Prompt-v1-miniAOD	caf	database	VALID	RUN2017H
+306952-306981	/HLTPhysics7/Run2017H-PromptReco-v1/MINIAOD	HLTPhysics7-Run2017H-noSkim-Prompt-v1-miniAOD	caf	database	VALID	RUN2017H

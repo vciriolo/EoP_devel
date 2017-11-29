@@ -20,15 +20,15 @@ jsonName=294927-305364_Prompt_v1
 json=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions17/13TeV/PromptReco/Cert_294927-305636_13TeV_PromptReco_Collisions17_JSON.txt
 jsonName=294927-305636_Prompt_v1
 
-json=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions17/13TeV/PromptReco/Cert_294927-306462_13TeV_PromptReco_Collisions17_JSON.txt
-jsonName=294927-306462_Prompt_v1
+json=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions17/13TeV/PromptReco/Cert_294927-306126_13TeV_PromptReco_Collisions17_JSON.txt
+jsonName=294927-306126_Prompt_v1
 
 ##
 PERIOD=LEGACY2016
 PERIOD=RUN2017
 #
-tags=(  config/reRecoTags/Cal_Nov2017_ref_v1.py  )
-tags=(  config/reRecoTags/Cal_Nov2017_{PS,Ped,IC}_v1.py  )
+tags=(  config/reRecoTags/Cal_Nov2017_{ref,IC}_v1.py  )
+#tags=(  config/reRecoTags/Cal_Nov2017_{Ped_v1,PS_v2}.py  )
 
 if  git status --porcelain -uno | grep -v launch | grep -v ZFitter | grep -q -v _datasets  ; then
 	echo "You have uncommitted changes, please commit everything before making a production" 
@@ -65,7 +65,7 @@ do
 		esac
 	done
 
-	for CHECK in '' --check
+	for CHECK in   --check
 	do
 		case $tagfile in 
 			*/Cal_*ref*.py)
