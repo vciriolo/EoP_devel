@@ -290,7 +290,7 @@ private:
 	// seed of the SC
 	Short_t _xSeedSC[NELE]                    = initInt;    ///< ieta(ix) of the SC seed in EB(EE)
 	Short_t _ySeedSC[NELE]                    = initInt;    ///< iphi(iy) of the SC seed in EB(EE)
-  UChar_t _gainSeedSC[NELE]                       = {9,9,9};    ///< Gain switch 0==gain12, 1==gain6, 2==gain1; gain status of the seed of the SC
+	UChar_t _gainSeedSC[NELE]                       = {9, 9, 9};  ///< Gain switch 0==gain12, 1==gain6, 2==gain1; gain status of the seed of the SC
 	Float_t _energySeedSC[NELE]               = initFloat;  ///< energy of the rechit seeding the SC
 	Float_t _timeSeedSC[NELE]                 = initFloat;  ///< time of the rechit seeding the SC
 	Float_t _icSeedSC[NELE]                   = initFloat;  ///< inter-calibration coefficient of the SC seed crystal
@@ -513,6 +513,7 @@ private:
 		PARTGUN,
 		UNKNOWN,
 		SINGLEELE, //no skim, no preselection and no selection are applied
+		MINIAOD,
 		DEBUG_T
 	} eventType_t;
 
@@ -683,6 +684,7 @@ void ZNtupleDumper::analyze(const edm::Event& iEvent, const edm::EventSetup& iSe
 
 	//  using namespace edm;
 	_eventType = _isPartGun ? PARTGUN : UNKNOWN;
+	if(_isMINIAOD) _eventType = MINIAOD;
 
 	_chargeEle[0] = initSingleIntCharge;
 	_chargeEle[1] = initSingleIntCharge;
@@ -769,6 +771,8 @@ void ZNtupleDumper::analyze(const edm::Event& iEvent, const edm::EventSetup& iSe
 						_eventType = SINGLEELE;
 					else if(hltName_str.find("Zmmg") != std::string::npos)
 						_eventType = ZMMG;
+					else if(_isMINIAOD)
+						_eventType = MINIAOD;
 					else
 						_eventType = UNKNOWN;
 					// this paths are exclusive, then we can skip the check of the others
@@ -776,6 +780,7 @@ void ZNtupleDumper::analyze(const edm::Event& iEvent, const edm::EventSetup& iSe
 					//	std::cout << alcaSkimPathNames.triggerName(*alcaSkimPath_itr) << "\t" << _eventType << std::endl;
 					break;
 				}
+
 			}
 			//if(_alcaSkimPathIndexes.size()==0){
 //			skipEvent = false;
@@ -910,7 +915,7 @@ void ZNtupleDumper::analyze(const edm::Event& iEvent, const edm::EventSetup& iSe
 		}
 		// always set track vars, two of them are in the main _tree
 		TreeSetTrackVar(*eleIter1, *eleIter2);
-	} else if(_eventType == ZEE || _eventType == WENU || _eventType == UNKNOWN) {
+	} else if(_eventType == ZEE || _eventType == WENU || _eventType == UNKNOWN || _eventType == MINIAOD) {
 #ifdef DEBUG
 		std::cout << "[DEBUG] Electrons in the event: " << _electronsHandle->size() << std::endl;
 #endif
@@ -945,13 +950,13 @@ void ZNtupleDumper::analyze(const edm::Event& iEvent, const edm::EventSetup& iSe
 				}
 				// always set track vars, two of them are in the main _tree
 				TreeSetTrackVar(*eleIter1, 0);
-			} else { //ZEE or UNKNOWN
+			} else { //ZEE or UNKNOWN or MINIAOD
 				// take only the fist di-electron pair (highest pt)
 				for(pat::ElectronCollection::const_iterator eleIter2 = eleIter1 + 1;
 				        eleIter2 != _electronsHandle->end() && doFill == false;
 				        eleIter2++) {
 
-					if(! elePreselection(*eleIter2)) continue;
+					if(elePreselection(*eleIter2) == false) continue;
 					if(!eleIter2->ecalDrivenSeed()) continue; // skip tracker-driven only electrons
 #ifdef DEBUG
 					std::cout << "[DEBUG] Electron passing preselection" << std::endl;
@@ -976,7 +981,8 @@ void ZNtupleDumper::analyze(const edm::Event& iEvent, const edm::EventSetup& iSe
 					if(mass < 55 ) continue;
 					doFill = true;
 
-					if(_eventType == UNKNOWN) _eventType = ZEE;
+					if(_eventType == UNKNOWN || _eventType == MINIAOD) _eventType = ZEE;
+
 					TreeSetDiElectronVar(*eleIter1, *eleIter2);
 					if(_eleID[0] < 2 || (abs(_chargeEle[1]) == 1 && _eleID[1] < 2)) {
 						// this event is not passing any _eleID, skip it
@@ -1046,7 +1052,7 @@ void ZNtupleDumper::analyze(const edm::Event& iEvent, const edm::EventSetup& iSe
 		}
 	}
 
-	if (_eventType == ZSC) { // || _eventType==UNKNOWN){ removed for miniAOD, to be put back in
+	if (_eventType == ZSC || _eventType == UNKNOWN || _eventType == MINIAOD) {
 
 		//leading pt electron in EB (patElectrons should be pt-ordered)
 		// iterators storing pat Electons and HighEta SCs
@@ -1059,7 +1065,7 @@ void ZNtupleDumper::analyze(const edm::Event& iEvent, const edm::EventSetup& iSe
 		        //stop when HighEtaSC1 is a valid SC (this means that there is a pair matching the Z mass
 		        PatEle1 != _electronsHandle->end();
 		        PatEle1++) {
-			if(!PatEle1->ecalDrivenSeed()) continue;
+			if(! elePreselection(*PatEle1)) continue;
 
 			// you have the first electrons candidate satifying the electrons criteria
 			// now look for a SC matching the Z invariant mass. If not SC is found, let's look to another electrons candidate
@@ -1496,7 +1502,9 @@ void ZNtupleDumper::TreeSetSingleElectronVar(const pat::Electron& electron, int 
 	//_R9Ele[index] = e3x3SCEle[index] / sc->rawEnergy(); //already commented
 	_R9Ele[index] = electron.full5x5_r9();
 	if(fabs(_R9Ele[index] - _energy_3x3SC[index] / sc->rawEnergy()) > 1e-4) {
-		std::cerr << "[WARNING] R9 different: " << _runNumber << "\t" << _eventNumber << "\t" << _etaEle[index] << "\t" << _R9Ele[index] << "\t" << _energy_3x3SC[index] / sc->rawEnergy() << std::endl;
+		std::cerr << "[WARNING] R9 different: "
+		          << _runNumber << "\t" << _eventNumber << "\t" << _etaEle[index]
+		          << "\t" << _R9Ele[index] << "\t" << _energy_3x3SC[index] / sc->rawEnergy() << std::endl;
 	}
 
 	eleIDMap eleID_map;
@@ -1689,6 +1697,7 @@ void ZNtupleDumper::TreeSetSingleSCVar(const reco::SuperCluster& sc, int index)
 	_R9Ele[index] = _energy_3x3SC[index] / _rawEnergySCEle[index]; //already commented
 
 	DetId seedDetId = sc.seed()->seed();
+	assert(!seedDetId.null());
 	if(seedDetId.subdetId() == EcalBarrel) {
 		EBDetId seedDetIdEcal(seedDetId);
 		_xSeedSC[index] = seedDetIdEcal.ieta();
@@ -1711,32 +1720,38 @@ void ZNtupleDumper::TreeSetSingleSCVar(const reco::SuperCluster& sc, int index)
 		} else {
 			_amplitudeSeedSC[index] = uHitSeed->amplitude();
 		}
-	} else {
-		fprintf(stderr, "NO UNCHITS - seed\n");
 	}
-
 	const EcalRecHitCollection *recHits = (seedDetId.subdetId() == EcalBarrel) ?  _clustertools->getEcalEBRecHitCollection() : _clustertools->getEcalEERecHitCollection();
 	EcalRecHitCollection::const_iterator seedRecHit = recHits->find(seedDetId) ;
-	assert(seedRecHit != recHits->end());
-	_energySeedSC[index] = seedRecHit->energy();
-	_timeSeedSC[index]   = seedRecHit->time();
-
-	// second highest energy crystal
-	auto snd_seed = findEnergySortedHit(sc, recHits, 1);
-	_energySecondToSeedSC[index] = snd_seed.second;
-	auto snd_rh = recHits->find(snd_seed.first);
-	_timeSecondToSeedSC[index]   = snd_rh->time();
 	_amplitudeSecondToSeedSC[index] = initSingleFloat;
-	if (uncHits) {
-		auto uHitSeed = uncHits->find(snd_seed.first) ;
-		if(uHitSeed == uncHits->end()) {
-			edm::LogError("ZNtupleDumper") << "No uncalibrated recHit found for xtal "  << seedDetId.rawId()
-			                               << " in subdetector " << seedDetId.subdetId() << "; continuing...";
-		} else {
-			_amplitudeSecondToSeedSC[index] = uHitSeed->amplitude();
+	_gainSeedSC[index] = 0;
+	if(seedRecHit != recHits->end()) {
+		_energySeedSC[index] = seedRecHit->energy();
+		_timeSeedSC[index]   = seedRecHit->time();
+		// second highest energy crystal
+		auto snd_seed = findEnergySortedHit(sc, recHits, 1);
+		_energySecondToSeedSC[index] = snd_seed.second;
+		auto snd_rh = recHits->find(snd_seed.first);
+		_timeSecondToSeedSC[index]   = snd_rh->time();
+
+		if (uncHits) {
+			auto uHitSeed = uncHits->find(snd_seed.first) ;
+			if(uHitSeed == uncHits->end()) {
+				edm::LogError("ZNtupleDumper") << "No uncalibrated recHit found for xtal "  << seedDetId.rawId()
+				                               << " in subdetector " << seedDetId.subdetId() << "; continuing...";
+			} else {
+				_amplitudeSecondToSeedSC[index] = uHitSeed->amplitude();
+			}
 		}
+
+		if(seedRecHit->checkFlag(EcalRecHit::kHasSwitchToGain6)) _gainSeedSC[index] |= 0x01;
+		if(seedRecHit->checkFlag(EcalRecHit::kHasSwitchToGain1)) _gainSeedSC[index] |= 0x02;
+
 	} else {
-		fprintf(stderr, "NO UNCHITS - second to seed\n");
+		_energySeedSC[index] = initSingleFloat;
+		_timeSeedSC[index]   = initSingleFloat;
+		_energySecondToSeedSC[index] = initSingleFloat;
+		_timeSecondToSeedSC[index]   = initSingleFloat;
 	}
 
 
@@ -1752,9 +1767,6 @@ void ZNtupleDumper::TreeSetSingleSCVar(const reco::SuperCluster& sc, int index)
 	const EcalLaserAlphaMap& laserAlphaMap =  myalpha->getMap();
 	_alphaSeedSC[index] = *(laserAlphaMap.find( seedDetId ));
 
-	_gainSeedSC[index] = 0;
-	if(seedRecHit->checkFlag(EcalRecHit::kHasSwitchToGain6)) _gainSeedSC[index] |= 0x01;
-	if(seedRecHit->checkFlag(EcalRecHit::kHasSwitchToGain1)) _gainSeedSC[index] |= 0x02;
 
 
 	_pedestalSeedSC[index] = _ped->find(seedDetId)->mean(1);
@@ -1990,7 +2002,7 @@ void ZNtupleDumper::TreeSetDiElectronVar(const pat::Electron& electron1, const r
 	_invMass_5x5SC   = sqrt(2 * _energy_5x5SC[0] * _energy_5x5SC[1] * /// full 5x5
 	                        angle);
 	_invMass_highEta   = sqrt(2 * _energy_ECAL_ele[0] * _energy_5x5SC[1] * /// full 5x5
-							  angle);
+	                          angle);
 
 	_invMass_ECAL_ele = sqrt(2 * _energy_ECAL_ele[0] * _energy_ECAL_ele[1] * angle);
 	_invMass_ECAL_pho = sqrt(2 * _energy_ECAL_pho[0] * _energy_ECAL_pho[1] * angle);
@@ -2592,7 +2604,7 @@ std::pair<DetId, float> ZNtupleDumper::findEnergySortedHit(const reco::SuperClus
 
 bool ZNtupleDumper::elePreselection(const pat::Electron& electron) const
 {
-	if(electron.et() < 10) return false; // minimum Et cut in preselection
+	if(electron.et() < 15) return false; // minimum Et cut in preselection
 
 	//to make alcareco/alcarereco ntuples coeherent
 	if(!electron.ecalDriven()) return false;
