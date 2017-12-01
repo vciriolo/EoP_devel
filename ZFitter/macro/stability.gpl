@@ -58,37 +58,34 @@ set tmargin 6
 ##### The real plots!
 
 if(ARGC==1){
-	file=value("ARG".ARGC)
-	categories = system("grep '#' ".file." | awk '{print $2}' |  tr '\n' ' ' ")
-	
+   file=value("ARG".ARGC)
+   categories = system("grep '#' ".file." | awk '{print $2}' |  tr '\n' ' ' ")
+
 	do for [category in categories]{
 	print category
-		set label 1 "Category: ".category noenhanced at screen 0.5, screen 0.92 center
+    set label 1 "Category: ".category noenhanced at screen 0.5, screen 0.92 center
 
-#		p for [yVar in "mean mean68"]  file u @xVar:yVar:@xVarDelta:(column("stdDev")/sqrt(0.68*column("nEvents"))):x2ticlabel(stringcolumn("timeMin").'-'.stringcolumn("runMax")) i category w xyerr pt 5 ps 0.6 title yVar #, \
-#, \
-#
-	p for [ yVar in "median" ] file u @xVar:yVar:@xVarDelta:(column("stdDev")/sqrt(column("nEvents"))) i category w xyerr pt 5 ps 0.6 title yVar,\
-   '' u @xVar:@yRes:@xVarDelta i category w xerr pt 6 ps 0.6 lc 2 axes x1y2 title 'scaled width'
-	}
+    p for [ yVar in "median" ] file u @xVar:yVar:@xVarDelta:(column("stdDev")/sqrt(column("nEvents"))) i category w xyerr pt 5 ps 0.6 title yVar,\
+       '' u @xVar:@yRes:@xVarDelta i category w xerr pt 6 ps 0.6 lc 2 axes x1y2 title 'scaled width'
+    }
 } else {
 	file=value("ARG1")
 	categories = system("grep '#' ".file." | awk '{print $2}' |  tr '\n' ' ' ")
 	do for[argIndex=1:ARGC]{
-        if(argIndex%2==1){
-			files=sprintf("%s '%s'", files, value("ARG".argIndex))
-		} else{
-			titles=sprintf("%s '%s'", titles, value("ARG".argIndex))
-		}
+       if(argIndex%2==1){
+          files=sprintf("%s '%s'", files, value("ARG".argIndex))
+        } else{
+          titles=sprintf("%s '%s'", titles, value("ARG".argIndex))
+        }
 	}
-#	print files
-#    print titles
-#	print categories
+    #	print files
+    #    print titles
+    #	print categories
 	unset y2tics
-#  unset y2label
-  unset x2tics
-#  set ylabel peakLabel
-  set grid y
+    #  unset y2label
+    unset x2tics
+    #  set ylabel peakLabel
+    set grid y
 	do for [category in categories]{
 	  	set label 1 "Category: ".category noenhanced at screen 0.5, screen 0.82 center
 	 	yVar="median"
@@ -97,20 +94,18 @@ if(ARGC==1){
 		unset y2label
 		unset y2tics
 	 	p for [id=1:words(files)] word(files,id) u @xVar:yVar:@xVarDelta:(column("stdDev")/sqrt(column("nEvents"))) i category w xyerr pt 5 ps 0.6 title word(titles,id)
+        save "tmp/gpl/".category.'.gpl'
 
+#		set y2label VARIABLE.' '.resolutionLabel
+#		set y2tics
+#		unset ylabel
+#		unset ytics
+#		p for [id=1:words(files)] word(files,id) u @xVar:@yRes:@xVarDelta i category w xerr pt 6 ps 0.6 axes x1y2 title 'scaled width '.word(titles,id)
 
-		set y2label VARIABLE.' '.resolutionLabel
-		set y2tics
-		unset ylabel
-		unset ytics
-		p for [id=1:words(files)] word(files,id) u @xVar:@yRes:@xVarDelta i category w xerr pt 6 ps 0.6 axes x1y2 title 'scaled width '.word(titles,id)
-	
 	}
 
 }
 
-
-#12:(column(int(word(obscols, k)))):17:18:x2ticlabel(stringcolumn(1)) t reg w xerr pt 7 lt 6 ps .75
 
 set output
 set term x11

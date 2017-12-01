@@ -203,7 +203,7 @@ void anyVar_class::TreeToTree(TChain *chain, std::set<TString>& branchList, unsi
 		for(unsigned int i = 0; i < modulo; ++i) {
 			TTree *reduced_data = reduced_data_vec[i].get();
 			TString title = br->GetTitle();
-			title.ReplaceAll("[3]", "[2]");
+			title.ReplaceAll("[3]", "[2]"); //the third is not yet filled, saving some memory
 			//TBranch *brr = reduced_data->Branch(br->GetName(), &bufferPtr, title);
 			reduced_data->Branch(br->GetName(), bufferPtr, title);
 		}
@@ -304,12 +304,18 @@ void anyVar_class::TreeAnalyzeShervin(std::string region, TCut cut_ele1, TCut cu
 
 	Float_t *mll = NULL;
 	Float_t branches_Float_t[MAXBRANCHES][3];
+	UChar_t nPV;
+	size_t nPV_index=-1;
 	size_t nBranches = _branchNames.size();
 	size_t indexMassBranch = -1 ;
 	for(unsigned int ibranch = 0; ibranch < nBranches; ++ibranch) {
 		//std::cout << "[DEBUG] " << ibranch << std::endl;
 		TString bname = _branchNames[ibranch];
-		reduced_data->SetBranchAddress(bname, &branches_Float_t[ibranch]);
+
+		if(bname == "nPV"){ //\fixme FIXME brutto da sistemare
+			reduced_data->SetBranchAddress(bname, &nPV);
+			nPV_index=ibranch;
+		}else reduced_data->SetBranchAddress(bname, &branches_Float_t[ibranch]);
 		if(bname == massBranchName_) {
 			mll = &(branches_Float_t[ibranch][0]);
 			indexMassBranch = ibranch;
@@ -410,7 +416,10 @@ void anyVar_class::TreeAnalyzeShervin(std::string region, TCut cut_ele1, TCut cu
 			for(size_t i = 0; i < sv.size(); ++i) {
 				auto& s = sv[i];
 				if(s.name().find("invMass") != std::string::npos) continue;
-				sv[i].add(branches_Float_t[i][iele]*scale);
+				if(s.name().find("nPV")){
+					assert(nPV_index==i);
+					if(iele==0) sv[i].add(nPV);
+					}else sv[i].add(branches_Float_t[i][iele]*scale);
 #ifdef DEBUG
 				if(i == 0 && jentry % (entries / 100) == 0) std::cout << i << "\t" << iele << "\t" << branches_Float_t[i][iele] << std::endl;
 #endif
