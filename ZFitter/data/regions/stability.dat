@@ -5,16 +5,12 @@ EB-absEta_0_1
 EB-absEta_1_1.4442
 EE-absEta_1.566_2
 EE-absEta_2_2.5
-EEp
-EEm
-#EB-absEta_0_1
-#EB-absEta_1_1.4442
-#EE-absEta_1.566_2
-#EE-absEta_2_2.5
-#EB-gold
-#EB-bad
-#EE-gold
-#EE-bad
+# EEp
+# EEm
+EB-gold
+EB-bad
+EE-gold
+EE-bad
 #EB-absEta_0_1-gold
 #EB-absEta_1_1.4442-gold
 #EE-absEta_1.566_2-gold

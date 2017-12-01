@@ -56,3 +56,11 @@ s7 EleIDSF_loose25nsRun22016Moriond /eos/project/c/cms-ecal-calibration/data/Ele
 s8 EleIDSF_loose25nsRun22016Moriond /eos/project/c/cms-ecal-calibration/data/EleIDSF/EleIDSF_loose25nsRun22016Moriond_s8-Legacy2016_17Aug17.root
 s9 EleIDSF_loose25nsRun22016Moriond /eos/project/c/cms-ecal-calibration/data/EleIDSF/EleIDSF_loose25nsRun22016Moriond_s9-Legacy2016_17Aug17.root
 s10 EleIDSF_loose25nsRun22016Moriond /eos/project/c/cms-ecal-calibration/data/EleIDSF/EleIDSF_loose25nsRun22016Moriond_s10-Legacy2016_17Aug17.root
+#
+d1	scaleEle_HggRunEtaR9	data/scales_smearings/scaleEle_HggRunEtaR9_d1-Legacy2016_17Aug17.root 
+d2	scaleEle_HggRunEtaR9	data/scales_smearings/scaleEle_HggRunEtaR9_d2-Legacy2016_17Aug17.root 
+d3	scaleEle_HggRunEtaR9	data/scales_smearings/scaleEle_HggRunEtaR9_d3-Legacy2016_17Aug17.root 
+d4	scaleEle_HggRunEtaR9	data/scales_smearings/scaleEle_HggRunEtaR9_d4-Legacy2016_17Aug17.root 
+d5	scaleEle_HggRunEtaR9	data/scales_smearings/scaleEle_HggRunEtaR9_d5-Legacy2016_17Aug17.root 
+d6	scaleEle_HggRunEtaR9	data/scales_smearings/scaleEle_HggRunEtaR9_d6-Legacy2016_17Aug17.root 
+d7	scaleEle_HggRunEtaR9	data/scales_smearings/scaleEle_HggRunEtaR9_d7-Legacy2016_17Aug17.root 

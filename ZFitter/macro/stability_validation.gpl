@@ -36,7 +36,7 @@ set autoscale y2
 
 #set x2label 'Run range [..., ...)' offset 0, -1.75
 set xlabel 'Date (day/month)' offset 0, -.5
-peakLabel="peak estimator: ".yVar." ".peakLabelUnit
+peakLabel="peak estimator of ".VARIABLE.": ".yVar." ".peakLabelUnit
 resolutionLabel="effective sigma/peak * MZ [%] "
 set ylabel peakLabel
 set y2label resolutionLabel textcolor 'blue'
@@ -47,7 +47,7 @@ set offsets graph 0.05, graph 0.05, graph 0.2, graph 0.2
 #set xrange  [1461521421:*]
 
 # invMass
-set yrange  [88:92]
+#set yrange  [88:92]
 set y2range [0.01:0.02]
 # # R9
 
@@ -94,7 +94,7 @@ if (ARGC>1){
 }else{
     set ylabel peakLabel
     p for [category in "[EB-isEle-Et_25] [EE-isEle-Et_25]" ] \
-    file  u @xVar:yVar:@xVarDelta:(column("stdDev")/sqrt(0.68*column("nEvents"))) i category w xyerr pt 5 ps 0.6 title category noenhance
+    file  u @xVar:(column("stdDev")/sqrt(column("nEvents"))<column(yVar)/500. ? column(yVar) : 1/0):@xVarDelta:(column("stdDev")/sqrt(column("nEvents"))) i category w xyerr pt 5 ps 0.6 title category noenhance
 
 #    p for [category in "[EB-absEta_1_1.4442-isEle-Et_25] [EB-absEta_1_1.4442-isEle-Et_25-nPV_35_40]" ] \
  #   file  u @xVar:yVar:@xVarDelta:(column("stdDev")/sqrt(0.68*column("nEvents"))) i category w xyerr pt 5 ps 0.6 title category noenhance

@@ -18,7 +18,7 @@ RerecoGlobalTag = cms.ESSource("PoolDBESSource",
                  ),
         cms.PSet(record = cms.string("EcalIntercalibConstantsRcd"),
                  tag = cms.string("EcalIntercalibConstants_eopPNEB_etaScalePNEE_v5_RunFonly"),
-                 connect = cms.string("frontier://FrontierProd/CMS_CONDITIONS"),
+                 connect = cms.string("frontier://FrontierPrep/CMS_CONDITIONS"),
                  ),
         ),
                                )

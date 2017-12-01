@@ -68,7 +68,7 @@ if(ARGC==1){
 #		p for [yVar in "mean mean68"]  file u @xVar:yVar:@xVarDelta:(column("stdDev")/sqrt(0.68*column("nEvents"))):x2ticlabel(stringcolumn("timeMin").'-'.stringcolumn("runMax")) i category w xyerr pt 5 ps 0.6 title yVar #, \
 #, \
 #
-	p for [ yVar in "median" ] file u @xVar:yVar:@xVarDelta:(column("stdDev")/sqrt(0.68*column("nEvents"))) i category w xyerr pt 5 ps 0.6 title yVar,\
+	p for [ yVar in "median" ] file u @xVar:yVar:@xVarDelta:(column("stdDev")/sqrt(column("nEvents"))) i category w xyerr pt 5 ps 0.6 title yVar,\
    '' u @xVar:@yRes:@xVarDelta i category w xerr pt 6 ps 0.6 lc 2 axes x1y2 title 'scaled width'
 	}
 } else {
@@ -96,7 +96,7 @@ if(ARGC==1){
 		set ytics
 		unset y2label
 		unset y2tics
-	 	p for [id=1:words(files)] word(files,id) u @xVar:yVar:@xVarDelta:(column("stdDev")/sqrt(0.68*column("nEvents"))) i category w xyerr pt 5 ps 0.6 title word(titles,id)
+	 	p for [id=1:words(files)] word(files,id) u @xVar:yVar:@xVarDelta:(column("stdDev")/sqrt(column("nEvents"))) i category w xyerr pt 5 ps 0.6 title word(titles,id)
 
 
 		set y2label VARIABLE.' '.resolutionLabel

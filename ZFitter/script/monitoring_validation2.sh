@@ -6,10 +6,11 @@ selection=loose25nsRun22016Moriond
 invMass_var=invMass_ECAL_ele
 invMass_min=65
 invMass_max=115
-configFile=data/validation/monitoring_2017_Z_dcs.dat
-runRangesFile=data/runRanges/monitoringRun2016-v2.dat
+configFile=data/validation/monitoring_2017_Z_golden.dat
+runRangesFile=data/runRanges/monitoring_2016.dat
 baseDir=testNew
-extraOptions="--anyVarBranches=S4 --anyVarBranches=etaWidth --anyVarBranches=sigmaIEtaIEtaSCEle --anyVarBranches=R9Ele --anyVarBranches=esEnergySCEle --anyVarBranches=rawESEnergyPlane1SCEle --anyVarBranches=rawESEnergyPlane2SCEle --anyVarBranches=timeSeedSC --anyVarBranches=nPV"
+extraOptions="--anyVarBranches=S4 --anyVarBranches=etaWidth --anyVarBranches=sigmaIEtaIEtaSCEle --anyVarBranches=R9Ele --anyVarBranches=esEnergySCEle --anyVarBranches=rawESEnergyPlane1SCEle --anyVarBranches=rawESEnergyPlane2SCEle --anyVarBranches=timeSeedSC"
+#extraOptions="--corrEleType=HggRunEtaR9"
 updateOnly="--updateOnly" 
 # VALIDATION=y
 # STABILITY=y
@@ -301,7 +302,7 @@ if [ -n "$ETA" ];then
     regionFile=data/regions/absEta.dat
     xVar=absEta
 	if [ -z "${ONLYTABLE}" ];then
-		./bin/ZFitter.exe --anyVar -f ${configFile} --regionsFile ${regionFile}  --runRangesFile ${runRangesFile} \
+		./bin/ZFitter.exe --anyVar -f ${configFile} --regionsFile ${regionFile}  \
 			${extraOptions} \
 			$updateOnly --commonCut=${commonCut} \
 			--invMass_var ${invMass_var} --selection=${selection} \
@@ -316,8 +317,9 @@ if [ -n "$ETA" ];then
     if [ ! -d ${imgDir} ];then
 		mkdir -p ${imgDir}
     fi
-	
-#    ./script/stability2.sh -t  ${outDirData}/fitres/${invMass_var}.dat --outDirImgData=$imgDir -x $xVar
+
+    ./script/stability2.sh -t  ${outDirData}/fitres/${invMass_var}.dat -l data \
+		 -x $xVar -y $xVar $xMin $xMax || exit 1
     
 fi    
 
@@ -326,25 +328,18 @@ if [ -n "$R9ELE" ];then
     xVar=R9Ele
     tableFile=${outDirTable}/R9Ele-${invMass_var}-${selection}-${commonCut}.tex
     if [ -z "${ONLYTABLE}" ];then
-	./bin/ZFitter.exe ${otherOptions} -f ${configFile} --regionsFile ${regionFile}  \
-	    ${extraOptions} \
-	    $updateOnly --invMass_var ${invMass_var} --commonCut=${commonCut} --selection=${selection} \
-	    --outDirFitResMC=${outDirMC}/fitres --outDirFitResData=${outDirData}/fitres \
-	    --outDirImgMC=${outDirMC}/img    --outDirImgData=${outDirData}/img > ${outDirData}/log/R9Ele.log || exit 1
+		./bin/ZFitter.exe --anyVar -f ${configFile} --regionsFile ${regionFile}  \
+			${extraOptions} \
+			$updateOnly --commonCut=${commonCut} \
+			--invMass_var ${invMass_var} --selection=${selection} \
+			--invMass_min=${invMass_min} --invMass_max=${invMass_max} \
+			--outDirFitResMC=${outDirMC}/fitres \
+			--outDirImgMC=${outDirMC}/img  \
+			--outDirFitResData=${outDirData}/fitres --outDirImgData=${outDirData}/img \
+			> ${outDirData}/log/R9Ele.log || exit 1
     fi
-    ./script/makeTable.sh --regionsFile ${regionFile}  --commonCut=${commonCut} \
-	--outDirFitResMC=${outDirMC}/fitres --outDirFitResData=${outDirData}/fitres \
-	${tableCruijffOption} >  ${tableFile} || exit 1
-
-    if [ ! -d ${outDirData}/img/stability/$xVar/$PERIOD ];then
-	mkdir -p ${outDirData}/img/stability/$xVar/$PERIOD
-    fi
-
-    ./script/stability.sh -t ${tableFile} \
-	--outDirImgData ${outDirData}/img/stability/$xVar/$PERIOD/ -x $xVar -y peak $xMin $xMax || exit 1
-    ./script/stability.sh -t ${tableFile} \
-	--outDirImgData ${outDirData}/img/stability/$xVar/$PERIOD/ -x $xVar -y scaledWidth $xMin $xMax || exit 1
-    
+    ./script/stability2.sh -t  ${outDirData}/fitres/${invMass_var}.dat -l data \
+		 -x $xVar -y $xVar $xMin $xMax || exit 1
 fi    
 
 if [ -n "${REFREG}" ];then
@@ -550,15 +545,24 @@ fi
 
 ##################################################
 if [ -n "$PLOTS" ];then
-	./script/GenRootChains.sh -f ${configFile}
+#	./script/GenRootChains.sh -f ${configFile} --corrEleType=HggRunEtaR9
 	categories="EB EE EB-gold EB-bad EE-gold EE-bad"
+
 	for category in $categories
 	do
+		# python macro/standardDataMC.py  \
+		# 	-d tmp/`basename ${configFile} .dat`/d_chain.root,data \
+		# 	-s tmp/`basename ${configFile} .dat`/s_chain.root,MC \
+		# 	--plotdir=${outDirData}/img/ --noPU --no-ratio --noEleIDSF --noScales --noSmearings \
+		# 	"$category" "(80,80,100)" invMass_ECAL_ele  -x "M_{ee} must SC [GeV]" -n "invMass_ECAL_ele-$category"
+
+		mkdir ${outDirData}/img_scales -p
 		python macro/standardDataMC.py  \
 			-d tmp/`basename ${configFile} .dat`/d_chain.root,data \
 			-s tmp/`basename ${configFile} .dat`/s_chain.root,MC \
-			--plotdir=${outDirData}/img/ --noPU --no-ratio --noEleIDSF --noScales --noSmearings \
+			--plotdir=${outDirData}/img_scales/ --noPU --no-ratio --noEleIDSF  --noSmearings \
 			"$category" "(80,80,100)" invMass_ECAL_ele  -x "M_{ee} must SC [GeV]" -n "invMass_ECAL_ele-$category"
+
 	done
 
 fi
