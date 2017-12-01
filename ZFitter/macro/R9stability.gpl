@@ -100,10 +100,11 @@ if(ARGC==1){
           if(category[11:14] eq "Et_2"){
 	         set yrange [0.88:0.93]
           }else{
-             set yrange [0.88:0.93]		
+             set yrange [0.90:0.96]		
           }
         }
       }
+unset yrange
 	  	set label 1 "Category: ".category noenhanced at screen 0.5, screen 0.82 center
 	 	yVar="median"
 		set ylabel VARIABLE.' '.peakLabel.' : '.yVar.' '.peakLabelUnit

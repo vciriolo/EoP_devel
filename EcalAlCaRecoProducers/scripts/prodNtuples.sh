@@ -486,7 +486,7 @@ case ${ORIGIN_REMOTE_DIR_BASE} in
 dataset=${DATASETPATH}
 datasetname=${DATASETNAME}
 runrange=${RUNRANGE}
-datasetsite=any
+datasetsite=T2_CH_CERN
 #dbs_url = phys03
 EOF
 		else
@@ -494,7 +494,7 @@ EOF
 dataset=${DATASETPATH}
 datasetname=${DATASETNAME}
 runrange=allRange
-datasetsite=any
+datasetsite=T2_CH_CERN
 EOF
 		fi
         ;;

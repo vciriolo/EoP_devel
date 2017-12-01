@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#CHECK=--check
+CHECK=--check
 #CHECK=--createOnly
 #CHECK=--submitOnly
 
@@ -13,8 +13,8 @@ jsonNameRereco=271036-284044_23Sep2016_v1
 jsonPrompt=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions17/13TeV/PromptReco/Cert_294927-301141_13TeV_PromptReco_Collisions17_JSON.txt
 jsonNamePrompt=294927-301141_Prompt_v1
 
-jsonPrompt=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions17/13TeV/PromptReco/Cert_294927-305364_13TeV_PromptReco_Collisions17_JSON.txt
-jsonNamePrompt=294927-305364_Prompt_v1
+jsonPrompt=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions17/13TeV/PromptReco/Cert_294927-306126_13TeV_PromptReco_Collisions17_JSON.txt
+jsonNamePrompt=294927-306126_Prompt_v1
 
 scheduler=caf
 tag_Prompt=config/reRecoTags/92X_dataRun2_Prompt_v11.py
@@ -27,7 +27,7 @@ tag_MC=config/reRecoTags/92X_upgrade2017_realistic_v10.py
 
 fileList=alcareco_datasets.dat
 #PERIOD=RUN2017NEW_DCS
-PERIOD=RUN2017H
+PERIOD=RUN2017
 #PERIOD=RUN2017MC
 #PERIOD=LEGACY2016
 #PERIOD=MORIOND2017A
@@ -36,12 +36,12 @@ PERIOD=RUN2017H
 
 if  git status --porcelain -uno | grep -v launch | grep -v ZFitter/ | grep -q -v _datasets  ; then
 	echo "You have uncommitted changes, please commit everything before making a production" 
-	exit 1
+#	exit 1
 else
 	GITCOMMIT=`git rev-parse HEAD`
 	if [ "`git rev-parse HEAD`" != "`git rev-parse origin/master`" ];then
 		echo "[ERROR] You are not allowed to make any production if all commits are propagated to the master branch of the repository" >> /dev/stderr
-		exit 2
+#		exit 2
 	fi
 fi
 
@@ -52,7 +52,7 @@ IFS=$'\n'
 datasetsData=(`./scripts/parseDatasetFile.sh $fileList | grep VALID | sed 's|$|,|' | grep "${PERIOD}," | grep -v SIM`)
 datasetsMC=(`./scripts/parseDatasetFile.sh $fileList | grep VALID | sed 's|$|,|' | grep "${PERIOD}," | grep SIM`)
 
-extraName="highEtaFixMINIAOD"
+extraName="highEtaFixTris"
 for dataset in ${datasetsMC[@]} ${datasetsData[@]} #
 do
 	datasetName=`echo $dataset | awk '{print $6}'`
